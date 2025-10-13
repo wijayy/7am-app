@@ -1,0 +1,72 @@
+<div>
+    <flux:secondary-hero text="Shop"></flux:secondary-hero>
+
+    <flux:container>
+        <div class="flex justify-center gap-4 mt-10">
+            <flux:button wire:click='toogleFilter'>Filter</flux:button>
+            <flux:input icon="magnifying-glass" wire:model.live='search' class="w-1/2!"
+                :placeholder="'Search Our Product Here'"></flux:input>
+            {{-- <flux:button icon="" variant="primary"></flux:button> --}}
+        </div>
+    </flux:container>
+
+
+    <flux:container>
+        <div class="flex flex-wrap md:flex-nowrap gap-4">
+            @if ($filter)
+                <div class="w-full md:w-1/4">
+                    <div class="font-semibold">Filters</div>
+
+                    <div class="mt-4 mb-2">Category</div>
+                    <flux:radio.group wire:model.live='category' class="">
+                        @foreach ($categories as $item)
+                            <flux:radio :label="$item->name" :value="$item->slug"></flux:radio>
+                        @endforeach
+                    </flux:radio.group>
+
+
+                    <div class="mt-4">Price Range</div>
+                    <div class="flex gap-4">
+                        <flux:input wire:model.live='min' max="{{ $max }}" type="number" step="500"
+                            min="0" :placeholder="'Min'"></flux:input>
+                        <div class="">-</div>
+                        <flux:input wire:model.live='max' min="{{ $min }}" type="number" step="500"
+                            min="0" :placeholder="'Max'"></flux:input>
+                    </div>
+
+                    <div class="mt-4 mb-2">Freshness</div>
+                    <flux:radio.group wire:model.live='freshness' class="">
+                        <flux:radio :label="'Fresh'" :value="'fresh '"></flux:radio>
+                        <flux:radio :label="'Frozen'" :value="'frozen'"></flux:radio>
+                    </flux:radio.group>
+
+                    <div class="flex gap-4 mt-4 justify-center">
+                        <flux:button variant="primary" wire:click='resetFilter' class="cursor-pointer" color="rose" >Reset</flux:button>
+                    </div>
+                </div>
+            @endif
+            <div class="w-full transition-all">
+                <div class="grid grid-cols-1 gap-2 mt-4 sm:grid-cols-2 md:grid-cols-3">
+                    @forelse ($products as $item)
+                        <a href="{{ route('shop.show', ['slug' => $item->slug]) }}" class="text-center">
+                            <img src="{{ $item->image_url }}" alt="Chocolate Croissant"
+                                class="rounded-lg shadow mb-2">
+                            <p class="font-semibold">{{ $item->name }}</p>
+                            <p class="text-gray-500">Rp. {{ number_format($item->price, 0, ',', '.') }}</p>
+                        </a>
+                    @empty
+                        <div class="h-80 px-4 md:px-12 flex justify-center items-center text-lg md:text-xl text-gray-600 col-span-3">
+                            No products match your current filter. Please adjust your selection to explore our full
+                            range of Breads and Pastries.
+                        </div>
+                    @endforelse
+                </div>
+                <div class="mt-4">
+                    {{ $products->links() }}
+                </div>
+            </div>
+        </div>
+    </flux:container>
+
+    @livewire('newsletter')
+</div>

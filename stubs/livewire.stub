@@ -1,0 +1,16 @@
+<?php
+
+namespace [namespace];
+
+use Livewire\Component;
+
+class [class] extends Component
+{
+
+    public $title = "";
+
+    public function render()
+    {
+        return view('[view]')->layout('components.layouts.app', ['title'=>$this->title]);
+    }
+}
