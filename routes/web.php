@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\JurnalAuthController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -69,6 +70,11 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
     Volt::route('newsletters/{slug}/edit', 'newsletter-create')->name('newsletter.edit');
 
     Volt::route('businesses', 'business-index')->name('business.index');
+
+    Volt::route('tests/jurnal', 'test.jurnal')->name('test.jurnal');
+
+    Route::get('/jurnal/connect', [JurnalAuthController::class, 'redirectToJurnal'])->name('jurnal.connect');
+    Route::get('/jurnal/callback', [JurnalAuthController::class, 'handleCallback'])->name('jurnal.callback');
 });
 
 require __DIR__ . '/auth.php';
