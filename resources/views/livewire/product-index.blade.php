@@ -1,3 +1,5 @@
+{{-- @dd($products) --}}
+
 <div class="space-y-4">
     <flux:session>All Product</flux:session>
 
@@ -15,22 +17,23 @@
             <div class="col-span-2 text-center">Freshness</div>
             <div class="col-span-2 text-center">Action</div>
         </div>
-        @foreach ($product as $key => $item)
+        @foreach ($products as $key => $item)
             <div class="grid grid-cols-14 items-center min-w-3xl py-1 gap-4">
                 <div class="">{{ $key + 1 }}</div>
                 <div class="col-span-3 flex items-center gap-2">
                     <div class="size-12 rounded bg-center bg-cover bg-no-repeat"
-                        style="background-image: url({{ $item->image_url }})"></div>
+                        style="background-image: url({{ $item['image']['url'] != '' ? $item['image']['url'] : asset('assets/No-Picture-Found.png') }})">
+                    </div>
                     <div class="">
-                        {{ $item->name }}
+                        {{ $item['name'] }}
                     </div>
                 </div>
-                <div class="col-span-2 text-center">{{ $item->sku }}</div>
-                <div class="col-span-2 text-center">{{ $item->category->name }}</div>
-                <div class="col-span-2 text-center">Rp. {{ number_format($item->price, 0, ',', '.') }}</div>
-                <div class="col-span-2 text-center">{{ $item->freshness }}</div>
+                <div class="col-span-2 text-center">{{ $item['product_code'] }}</div>
+                <div class="col-span-2 text-center">{{ $item['product_categories_string'] }}</div>
+                <div class="col-span-2 text-center">{{ $item['sell_price_per_unit_currency_format'] }}</div>
+                <div class="col-span-2 text-center">{{ $item['deleted_at'] }}</div>
                 <div class="col-span-2 justify-center flex gap-2">
-                    <flux:tooltip content="Edit Product">
+                    {{-- <flux:tooltip content="Edit Product">
                         <flux:button size="sm" as href="{{ route('product.edit', ['slug' => $item->slug]) }}"
                             icon="pencil-square" variant="primary" color="teal"></flux:button>
                     </flux:tooltip>
@@ -45,13 +48,13 @@
                         <div class="flex mt-4 justify-end">
                             <flux:button wire:click='delete({{ $item->id }})' variant="danger">Delete</flux:button>
                         </div>
-                    </flux:modal>
+                    </flux:modal> --}}
                 </div>
             </div>
         @endforeach
 
         <div class="mt-4">
-            {{ $product->links() }}
+            {{ $products->links() }}
         </div>
     </flux:container-sidebar>
 </div>

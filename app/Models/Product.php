@@ -13,6 +13,7 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory, Sluggable;
 
+
     /**
      * Return the sluggable configuration array for this model.
      *
@@ -88,7 +89,7 @@ class Product extends Model
     {
         $prefix = 'SKU-';
 
-        // Hitung jumlah transaksi yang sudah ada hari ini
+        // Hitung jumlah produk yang sudah
         $lastTransaction = self::orderBy('id', 'desc')
             ->first();
 

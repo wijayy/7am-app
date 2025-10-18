@@ -48,6 +48,9 @@
                 <flux:navlist.item icon="envelope-open" :href="route('newsletter.index')"
                     :current="request()->routeIs('newsletter.*')" wire:navigate='false'>{{ __('Newsletters') }}
                 </flux:navlist.item>
+                <flux:navlist.item icon="envelope-open" :href="route('jurnal.tests')"
+                    :current="request()->routeIs('newsletter.*')" wire:navigate='false'>{{ __('Jurnal Tests') }}
+                </flux:navlist.item>
             </flux:navlist.group>
         </flux:navlist>
 

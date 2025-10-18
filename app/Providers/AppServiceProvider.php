@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\JurnalApi;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(JurnalApi::class, function ($app) {
+            return new JurnalApi(
+                config('Service.jurnal.username'),
+                config('Service.jurnal.secret'),
+                config('Service.jurnal.environment', 'sandbox')
+            );
+        });
     }
 
     /**

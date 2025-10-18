@@ -1,3 +1,4 @@
+{{-- @dd($products) --}}
 <div>
     <flux:secondary-hero text="Shop"></flux:secondary-hero>
 
@@ -18,11 +19,11 @@
                     <div class="font-semibold">Filters</div>
 
                     <div class="mt-4 mb-2">Category</div>
-                    <flux:radio.group wire:model.live='category' class="">
+                    {{-- <flux:radio.group wire:model.live='category' class="">
                         @foreach ($categories as $item)
                             <flux:radio :label="$item->name" :value="$item->slug"></flux:radio>
                         @endforeach
-                    </flux:radio.group>
+                    </flux:radio.group> --}}
 
 
                     <div class="mt-4">Price Range</div>
@@ -36,7 +37,7 @@
 
                     <div class="mt-4 mb-2">Freshness</div>
                     <flux:radio.group wire:model.live='freshness' class="">
-                        <flux:radio :label="'Fresh'" :value="'fresh '"></flux:radio>
+                        <flux:radio :label="'Fresh'" :value="'fresh'"></flux:radio>
                         <flux:radio :label="'Frozen'" :value="'frozen'"></flux:radio>
                     </flux:radio.group>
 
@@ -48,11 +49,11 @@
             <div class="w-full transition-all">
                 <div class="grid grid-cols-1 gap-2 mt-4 sm:grid-cols-2 md:grid-cols-3">
                     @forelse ($products as $item)
-                        <a href="{{ route('shop.show', ['slug' => $item->slug]) }}" class="text-center">
-                            <img src="{{ $item->image_url }}" alt="Chocolate Croissant"
+                        <a href="{{ route('shop.show', ['slug' => $item['id']]) }}" class="text-center">
+                            <img src="{{ $item['image']['url'] != '' ? $item['image']['url'] : asset('assets/No-Picture-Found.png')  }}" alt="Chocolate Croissant"
                                 class="rounded-lg shadow mb-2">
-                            <p class="font-semibold">{{ $item->name }}</p>
-                            <p class="text-gray-500">Rp. {{ number_format($item->price, 0, ',', '.') }}</p>
+                            <p class="font-semibold">{{ $item['name'] }}</p>
+                            <p class="text-gray-500">{{ $item['sell_price_per_unit_currency_format'] }}</p>
                         </a>
                     @empty
                         <div class="h-80 px-4 md:px-12 flex justify-center items-center text-lg md:text-xl text-gray-600 col-span-3">

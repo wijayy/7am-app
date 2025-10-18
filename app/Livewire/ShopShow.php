@@ -4,21 +4,36 @@ namespace App\Livewire;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Services\JurnalApi;
+use App\Services\JurnalApiResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ShopShow extends Component
 {
-    public $product, $products, $qty;
+    public $product, $products = [], $qty = 1;
 
-    public function mount($slug)
+    protected $jurnalApi;
+
+    public function mount(JurnalApi $jurnalApi, $slug)
     {
         try {
             DB::beginTransaction();
-            $this->product = Product::where('slug', $slug)->firstOrFail();
-            $this->products = Product::whereNot('slug', $slug)->take(3)->get();
-            $this->qty = $this->product->moq;
+            $this->jurnalApi = $jurnalApi;
+            $this->product = $this->jurnalApi->request('GET', '/public/jurnal/api/v1/products/' . $slug);
+            $this->product = $this->product['product'];
+            // $this->products = Product::whereNot('slug', $slug)->take(3)->get();
+            // $this->qty = $this->product->moq;
+
+            // ambil daftar produk (page besar) untuk bahan rekomendasi
+            $all = $this->jurnalApi->request('GET', '/public/jurnal/api/v1/products?&per_page=1000');
+            $productsCollection = collect($all['products'] ?? []);
+
+            // dapatkan rekomendasi (mengembalikan Collection)
+            $recommender = new JurnalApiResponse($productsCollection);
+            $this->products = $recommender->recommendations($this->product, 4)->all();
+            dd($this->product);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -49,6 +64,6 @@ class ShopShow extends Component
     }
     public function render()
     {
-        return view('livewire.shop-show')->layout('components.layouts.app.header', ['title' => $this->product->name]);
+        return view('livewire.shop-show')->layout('components.layouts.app.header', ['title' => $this->product['name']]);
     }
 }

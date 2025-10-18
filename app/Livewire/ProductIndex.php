@@ -2,39 +2,38 @@
 
 namespace App\Livewire;
 
-use App\Models\Product;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use App\Services\JurnalApi;
+use App\Services\JurnalApiResponse;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class ProductIndex extends Component
 {
-    public function delete($id)
+    public $title = 'All Product';
+
+    protected $jurnalApi;
+
+    #[Url(except: '')]
+    public $search = '', $page = 1, $per_page = 50;
+
+    public function mount(JurnalApi $jurnalApi)
     {
-        try {
-            DB::beginTransaction();
-            $product = Product::find($id);
-            $image = $product->image;
-
-            $product->delete();
-            DB::commit();
-            Storage::delete($image);
-            $this->dispatch('modal-close');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            if (config('app.debug') == true) {
-                throw $th;
-            } else {
-                return back()->with('error', $th->getMessage());
-            }
-        }
-
+        $this->jurnalApi = $jurnalApi;
     }
 
     public function render()
     {
-        $product = Product::latest()->paginate(24);
+        $response = $this->jurnalApi->request('GET', '/public/jurnal/api/v1/products?&per_page=1000');
 
-        return view('livewire.product-index', compact('product'))->layout('components.layouts.app', ['title' => 'All Product']);
+        if (isset($response['products'])) {
+            $products = new JurnalApiResponse(collect($response['products'] ?? []));
+            $products = $products->filteredProducts()->orderBy('product_code')->paginate(25);
+        } else {
+            $products = [];
+        }
+
+        // dd($products);
+
+        return view('livewire.product-index', compact('products'))->layout('components.layouts.app', ['title' => 'All Product']);
     }
 }

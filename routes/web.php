@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiTestController;
 use App\Http\Controllers\JurnalAuthController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
@@ -75,6 +76,8 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
 
     Route::get('/jurnal/connect', [JurnalAuthController::class, 'redirectToJurnal'])->name('jurnal.connect');
     Route::get('/jurnal/callback', [JurnalAuthController::class, 'handleCallback'])->name('jurnal.callback');
+
+    route::get('/jurnal/test', [ApiTestController::class, 'index'])->name('jurnal.tests');
 });
 
 require __DIR__ . '/auth.php';
