@@ -6,7 +6,7 @@
 ])
 
 @php
-$icon = $name ?? $icon;
+$icon = strtolower($name ?? $icon);
 @endphp
 
 <flux:delegate-component :component="'icon.' . $icon">{{ $slot }}</flux:delegate-component>
