@@ -3,8 +3,7 @@
     <flux:container class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Left: Product Image -->
         <div class="flex justify-center">
-            <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
-                class="rounded-2xl shadow-md w-full max-w-md">
+            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="rounded-2xl shadow-md w-full max-w-md">
         </div>
 
         <!-- Right: Product Info -->
@@ -18,7 +17,7 @@
 
             <!-- Title & Category -->
             <h1 class="text-3xl font-bold capitalize text-gray-800 dark:text-gray-200">{{ $product->name }}</h1>
-            <p class="text-gray-500 mb-2">{{ $product->category->name }}</p>
+            {{-- <p class="text-gray-500 mb-2">{{ $product->category->name }}</p> --}}
 
             <!-- Price & MOQ -->
             <p class="text-2xl font-semibold text-mine-300 dark:text-rose-500">Rp.

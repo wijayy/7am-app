@@ -2,10 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Models\Category;
 use App\Models\Product;
-use App\Services\JurnalApi;
-use App\Services\JurnalApiResponse;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -13,19 +10,14 @@ use Livewire\WithPagination;
 class ShopIndex extends Component
 {
     use WithPagination;
-    public $filter = false, $response;
-
-    protected $jurnalApi;
+    public $filter = false;
 
     #[Url(except: '')]
-    public $search = '', $freshness = '', $min = '', $max = '';
+    public $search = '', $min = '', $max = '';
 
-    public function mount(JurnalApi $jurnalApi)
+    public function mount()
     {
-        $this->jurnalApi = $jurnalApi;
-
-        $this->response = $this->jurnalApi->request('GET', '/public/jurnal/api/v1/products?&per_page=1000');
-
+        // dd($this->jurnalApi);
     }
 
     public function resetFilter()
@@ -34,9 +26,12 @@ class ShopIndex extends Component
         $this->search = '';
         $this->min = '';
         $this->max = '';
-        $this->freshness = '';
     }
 
+    public function openShowModal($jurnal_id)
+    {
+        $this->dispatch('showModal', jurnal_id: $jurnal_id);
+    }
 
     public function toogleFilter()
     {
@@ -45,13 +40,11 @@ class ShopIndex extends Component
 
     public function render()
     {
-
-        if (isset($this->response['products'])) {
-            $products = new JurnalApiResponse(collect($this->response['products'] ?? []));
-            $products = $products->filteredProducts(['search' => $this->search, 'min' => $this->min, 'max' => $this->max])->orderBy('product_code')->paginate(24);
-        } else {
-            $products = [];
-        }
+        $products = Product::filters([
+            'search' => $this->search,
+            'min' => $this->min,
+            'max' => $this->max,
+        ])->where('active', true)->paginate(24)->withQueryString();
 
         return view('livewire.shop-index', compact('products'))->layout('components.layouts.app.header', ['title' => "Shop"]);
     }

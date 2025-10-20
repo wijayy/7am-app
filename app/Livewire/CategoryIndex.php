@@ -15,7 +15,7 @@ class CategoryIndex extends Component
     public function mount(JurnalApi $jurnalApi)
     {
         $this->jurnalApi = $jurnalApi;
-        $response = $jurnalApi->call('GET', '/public/jurnal/api/v1/product_categories');
+        $response = $jurnalApi->request('GET', '/public/jurnal/api/v1/product_categories');
 
         if (isset($response['product_categories'])) {
             $this->categories = $response['product_categories'];
