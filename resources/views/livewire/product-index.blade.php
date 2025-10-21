@@ -31,7 +31,7 @@
                 <div class="col-span-2 text-center">{{ $item['product_code'] }}</div>
                 <div class="col-span-2 text-center">{{ $item['product_categories_string'] }}</div>
                 <div class="col-span-2 text-center">{{ $item['price'] }}</div>
-                <div class="col-span-2 text-center">{{ $item['deleted_at'] }}</div>
+                <div class="col-span-2 text-center">{{ $item['active'] }}</div>
                 <div class="col-span-2 justify-center flex gap-2">
 
                 </div>

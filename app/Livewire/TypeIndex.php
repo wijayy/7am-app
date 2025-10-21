@@ -73,8 +73,6 @@ class TypeIndex extends Component
         }
     }
 
-
-
     public function save()
     {
         // $validated = $this->validate();
@@ -106,7 +104,6 @@ class TypeIndex extends Component
             }
         }
     }
-
 
     public function render()
     {

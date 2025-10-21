@@ -70,9 +70,8 @@ class ApiTestController extends Controller
 
         // Panggil method `call` dengan method POST, path, dan body
         $response = $this->jurnalApi->request(
-            'POST',
-            '/public/jurnal/api/v1/sales_orders',
-            $payload
+            'GET',
+            '/public/jurnal/api/v1/products?per_page=100',
         );
         // return $response;
         return response()->json($response);

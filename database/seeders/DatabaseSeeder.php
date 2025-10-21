@@ -36,9 +36,9 @@ class DatabaseSeeder extends Seeder
 
         Address::factory(3)->recycle($user)->create();
 
-        foreach (range(1, 3) as $key => $item) {
-            Category::factory(1)->create(['name' => "cat$item"]);
-        }
+        // foreach (range(1, 3) as $key => $item) {
+        //     Category::factory(1)->create(['name' => "cat$item"]);
+        // }
         // foreach (range(1, 40) as $key => $item) {
         //     Product::factory(1)->recycle(Category::all())->create(['name' => "product $item"]);
         // }

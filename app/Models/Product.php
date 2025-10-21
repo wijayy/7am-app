@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, SoftDeletes;
 
 
     /**
@@ -39,6 +39,12 @@ class Product extends Model
     {
         return $this->hasMany(Cart::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'jurnal_id');
+    }
+
     public function links()
     {
         return $this->hasMany(CouponProduct::class);

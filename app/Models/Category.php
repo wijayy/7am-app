@@ -20,7 +20,7 @@ class Category extends Model
     {
         return [
             'slug' => [
-                                'onUpdate' =>true,
+                'onUpdate' => true,
                 'source' => 'name'
             ]
         ];
@@ -29,9 +29,8 @@ class Category extends Model
     protected $guarded = ['id'];
     protected $with = ['products'];
 
-    public function products() {
-        return $this->hasMany(Product::class);
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id', 'jurnal_id');
     }
-
-
 }
