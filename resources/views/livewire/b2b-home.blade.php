@@ -3,12 +3,15 @@
         style="background-image: url({{ asset('assets/b2b/landing/banner.png') }}); background-position: 50% 45%;">
         <flux:container class="flex h-full items-center justify-start">
             <div
-                class="w-7/12 h-fit bg-white rounded-lg p-4 backdrop-blur-xs flex flex-col justify-center gap-2 md:gap-4">
-                <div class="text-xl md:text-4xl text-black font-semibold md:leading-loose ">Simplify Your Business Purchasing</div>
-                <div class="text-sm md:text-lg text-neutral-800">Discover a smarter way to order office and business essentials — fast,
-                    reliable, and efficient.</div>
+                class="w-5/12 h-fit bg-white rounded-lg p-10 backdrop-blur-xs flex flex-col justify-center space-y-4"
+            >
+                <div class="text-xl md:text-3xl text-black font-semibold md:leading-[1.4]">Empower Your Business Purchasing</div>
+                <div class="text-sm md:text-lg text-neutral-800">
+                    Streamline every order with a platform built for speed, reliability, and control.
+                    Bringing <span class="text-[#D4A373]">clarity</span> and <span class="text-[#D4A373]">confidence</span> to every order you make.
+                </div>
 
-                <a class="bg-[#D4A373] text-white py-2 px-4 rounded" href="{{ route('shop.index') }}">Shop Now</a>
+                <a class="bg-[#D4A373] mt-2 hover:bg-[#b8875c] transition text-white py-2 text-center w-[120px] rounded" href="{{ route('shop.index') }}">Shop Now</a>
             </div>
         </flux:container>
     </div>

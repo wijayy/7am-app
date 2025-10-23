@@ -69,52 +69,6 @@ class CardIndex extends Component
             ]);
     }
 
-    public function openCreateModal()
-    {
-        $this->resetForm();
-        $this->dispatch('modal-show', name: 'create-card');
-    }
-
-    public function openEditModal($id)
-    {
-        $this->resetValidation();
-        $card = $this->getCard($id);
-
-        $this->id = $card->id;
-        $this->name = $card->name;
-        $this->usage = $card->usage;
-        $this->discount_type = $card->discount_type;
-        $this->discount = $card->discount;
-        $this->card = null;
-        $this->defaultPreview = asset('storage/' . $card->card);
-
-        $this->dispatch('modal-show', name: 'create-card');
-    }
-
-    public function save()
-    {
-        $validated = $this->validate();
-
-        try {
-            DB::beginTransaction();
-
-            if ($this->card) {
-                $validated['card'] = $this->card->store('card', 'public');
-            }
-
-            Card::updateOrCreate(['id' => $this->id], $validated);
-            DB::commit();
-
-            session()->flash('success', $this->id ? 'Card updated successfully.' : 'Card created successfully.');
-
-            $this->resetForm();
-            $this->dispatch('modal-close', name: 'create-card');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            session()->flash('error', config('app.debug') ? $th->getMessage() : 'Something went wrong.');
-        }
-    }
-
     public function delete($id)
     {
         try {
@@ -138,11 +92,5 @@ class CardIndex extends Component
             throw new \Exception("Card not found");
         }
         return $card;
-    }
-
-    private function resetForm()
-    {
-        $this->resetValidation();
-        $this->reset(['id', 'name', 'usage', 'discount_type', 'discount', 'card', 'defaultPreview']);
     }
 }

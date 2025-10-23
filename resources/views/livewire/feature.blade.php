@@ -1,4 +1,4 @@
-<div class="bg-white shadow-md absolute left-[50%] -translate-x-[50%] -mt-32 flex justify-center items-center flex-wrap lg:flex-nowrap p-8 rounded-xl gap-4">
+<div class="bg-white w-[70%] shadow-md absolute left-[50%] -translate-x-[50%] -mt-32 flex justify-center items-center flex-wrap lg:flex-nowrap p-10 rounded-xl gap-4">
     <div class="title">
         <h2 class="text-3xl font-semibold">Why Choose Us?</h2>
     </div>

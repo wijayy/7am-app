@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Address;
 use App\Models\Cart as ModelsCart;
 use App\Models\Coupon;
 use App\Models\CouponProduct;
@@ -11,13 +12,23 @@ use Livewire\Component;
 
 class Cart extends Component
 {
-    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message;
+    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $address, $addresses;
+    public $fulfillment = 'delivery';
 
     public function mount()
     {
         $this->carts();
+        $this->addresses = Auth::user()->addresses;
+        $this->address = $this->addresses->first();
 
     }
+
+     public function changeAddress($id)
+     {
+        $this->address = Address::find($id);
+        $this->dispatch('modal-close', ['name' => 'address']);
+     }
+    
     public function checkout()
     {
         sleep(2);
@@ -144,6 +155,8 @@ class Cart extends Component
 
     public function render()
     {
+        // Pada render halaman cart.blade.php, buatin untuk kirim data list dari outlet yang ada juga
+        // Dan method buat change nya juga
         return view('livewire.cart')->layout('components.layouts.app.header', ['title' => 'My Cart']);
     }
 }

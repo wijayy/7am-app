@@ -7,7 +7,7 @@
 
 <body class="bg-[#E8E1D7] min-h-screen static font-poppins">
     <nav
-        class="fixed top-4 left-1/2 -translate-x-1/2 w-[98%] z-50 bg-white shadow-md rounded-full px-6 py-3 flex items-center justify-between">
+        class="fixed top-4 left-1/2 -translate-x-1/2 w-[98%] z-50 bg-white shadow-md rounded-xl px-6 py-6 flex items-center justify-between">
         <a href="{{ route('b2b-home') }}" class="ms-2 me-5 flex items-center space-x-2 rtl:space-x-reverse lg:ms-0"
             wire:navigate>
             <x-app-logo />
@@ -25,7 +25,7 @@
 
         @guest
             <ul class="flex space-x-4">
-                <li><a class="bg-[#D4A373] px-8 py-2 rounded-2xl" href="{{ route('login') }}"
+                <li><a class="bg-[#D4A373] hover:bg-[#b8875c] text-white px-8 py-2 rounded-2xl transition" href="{{ route('login') }}"
                         current="{{ request()->routeIs('login') }}">Login</a></li>
             </ul>
         @endguest

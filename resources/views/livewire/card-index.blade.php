@@ -1,10 +1,10 @@
 <div class="space-y-4">
-    <flux:session>{{ $title }}</flux:session>
 
     <flux:container-sidebar>
         <!-- Header -->
-        <div class="flex justify-end mb-2">
-            <flux:button icon="plus" variant="primary" wire:click='openCreateModal'>
+        <div class="flex justify-start mb-2">
+            <flux:session>{{ $title }}</flux:session>
+            <flux:button icon="plus" variant="primary" wire:click="$dispatch('openCreateModal')">
                 Add Card
             </flux:button>
         </div>
@@ -12,7 +12,7 @@
         <!-- Table -->
         <div class="overflow-x-auto bg-white dark:bg-neutral-800 rounded-lg">
             <table
-                class="w-2/3 mx-auto divide-y divide-gray-200 dark:divide-neutral-700 border border-gray-200 dark:border-neutral-700">
+                class="w-full mx-auto divide-y divide-gray-200 dark:divide-neutral-700 border border-gray-200 dark:border-neutral-700">
                 <thead class="bg-gray-100 dark:bg-neutral-700/60">
                     <tr>
                         <th class="px-4 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 w-12">#
@@ -100,32 +100,11 @@
             </table>
         </div>
 
-        <div class="w-2/3 mx-auto mt-6">
+        <div class="w-full mx-auto mt-6">
             {{ $cards->links() }}
         </div>
 
         <!-- Modal Create/Edit -->
-        <flux:modal name="create-card" size="lg">
-            <div class="mt-4 text-center text-lg font-semibold">
-                {{ $id ? "Edit Card $name" : 'Add New Card' }}
-            </div>
-
-            <form wire:submit='save' class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div class="md:col-span-2">
-                    <flux:input type="file" aspect="16/10" wire:model.live='card' label="Card Image"
-                        preview='{{ $defaultPreview }}'>
-                    </flux:input>
-                </div>
-
-                <flux:input wire:model.live='name' label="Card Name" required></flux:input>
-                <flux:input wire:model.live='usage' label="Usage" required></flux:input>
-                <flux:input wire:model.live='discount' label="Discount (%)" required></flux:input>
-                <flux:input wire:model.live='discount_type' label="Discount Type" required></flux:input>
-
-                <div class="flex justify-center md:col-span-2 mt-2">
-                    <flux:button variant="primary" type="submit">Submit</flux:button>
-                </div>
-            </form>
-        </flux:modal>
+        @livewire('card-modal')
     </flux:container-sidebar>
 </div>
