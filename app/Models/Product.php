@@ -68,6 +68,14 @@ class Product extends Model
         $query->when($filters["max"] ?? false, function ($query, $search) {
             return $query->where("price", "<", "$search");
         });
+
+        $query->when($filters["set_category"] ?? false, function ($query, $setCategoryId) {
+            return $query->whereHas('category', function ($q) use ($setCategoryId) {
+                $q->whereHas('setCategories', function ($sq) use ($setCategoryId) {
+                    $sq->where('set_categories.id', $setCategoryId);
+                });
+            });
+        });
     }
 
     public static function skuNumberGenerator()

@@ -22,6 +22,8 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('reservation/make', 'reservation-create')->name('reservation.create');
     Volt::route('reservation/history', 'reservation.history')->name('reservation.history');
 
+    Volt::route('set-categories', 'set-category-index')->name('setcategory.index');
+
     Volt::route('members', 'member-index')->name('member.index');
     Volt::route('members/{slug}', 'member-show')->name('member.show');
 
