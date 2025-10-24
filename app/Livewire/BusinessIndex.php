@@ -3,35 +3,50 @@
 namespace App\Livewire;
 
 use App\Models\Bussiness;
+use App\Models\SetCategory;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class BusinessIndex extends Component
 {
-    public $title = "All Registered Business";
+    public $title = "All Registered Business", $business, $setCategory;
+
+    #[Validate('required')]
+    public $status = '';
+
+    #[Validate('required_if:status,accepted')]
+    public $name = '', $set_category_id;
 
     public function mount()
     {
         // $this->business = Bussiness::all();
         // $this->request(1, 'rejected');
+        $this->setCategory = SetCategory::all();
     }
 
-    public function request($id, $status, $member = null)
+    public function openDetailModal($id)
     {
-        $business = Bussiness::find($id);
+        $this->business = Bussiness::find($id);
+        $this->dispatch('modal-show', name: 'detail-business');
+    }
+
+    public function save()
+    {
+        $business = $this->business;
+        $validated = $this->validate();
         // dd($id);
 
         try {
             DB::beginTransaction();
-            if ($status == 'rejected') {
-                $business->user()->update(['business' => 'rejected']);
-                $message = "$business->name request rejected";
-            } else {
-                $business->user()->update(['business' => 'accepted', 'member' => $member]);
-                $message = "$business->name accepted as $member customer";
-            }
+            $business->update($validated);
             DB::commit();
-            return redirect(route('business.index'))->with('success', $message);
+            $message = match ($this->status) {
+                'accepted' => 'Business berhasil diterima!',
+                'rejected' => 'Business ditolak!',
+                default => 'Business berhasil diupdate!'
+            };
+            session()->flash('Success', $message);
         } catch (\Throwable $th) {
             DB::rollBack();
             if (config('app.debug') == true) {
@@ -44,6 +59,6 @@ class BusinessIndex extends Component
 
     public function render()
     {
-        return view('livewire.business-index', ['business' => Bussiness::paginate(24)])->layout('components.layouts.app', ['title' => $this->title]);
+        return view('livewire.business-index', ['businesses' => Bussiness::paginate(24)])->layout('components.layouts.app', ['title' => $this->title]);
     }
 }
