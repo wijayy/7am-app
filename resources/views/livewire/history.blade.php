@@ -6,42 +6,89 @@
 
         <div class="grid-cols-1 mt-4 grid gap-4">
             @foreach ($transactions as $item)
-                <div class="bg-gray-200 dark:bg-neutral-700 rounded p-4 gap-4" x-data={open:false}>
+                <div class="gap-4 mt-12" x-data={open:false}>
                     <div class="">
                         <div class="sr-only">Shipping Information</div>
-                        <div class="">
-                            <div class="text-sm md:text-md font-semibold">{{ $item->shipping->name }} /
-                                {{ $item->shipping->phone }}</div>
-                            <div class="mt-2 text-xs md:text-sm">{{ $item->shipping->address }}</div>
+                        <div class="my-4 p-4 rounded-xl border border-gray-200">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-sm md:text-base">
+                                {{-- 🟢 Kolom kiri: informasi penerima --}}
+                                <div class="space-y-2">
+                                    <div class="flex">
+                                        <div class="w-24 font-semibold">Nama</div>
+                                        <div class="flex-1">: {{ $item->shipping->name }}</div>
+                                    </div>
+                                    <div class="flex">
+                                        <div class="w-24 font-semibold">Phone</div>
+                                        <div class="flex-1">: {{ $item->shipping->phone }}</div>
+                                    </div>
+                                    <div class="flex">
+                                        <div class="w-24 font-semibold">Alamat</div>
+                                        <div class="flex-1 leading-relaxed">: {{ $item->shipping->address }}</div>
+                                    </div>
+                                </div>
+
+                                {{-- 🟣 Kolom kanan: detail pengiriman --}}
+                                <div class="space-y-2 md:pl-6">
+                                    <div class="flex">
+                                        <div class="w-32 font-semibold">Shipping Date</div>
+                                        <div class="flex-1">: {{ $item->shipping_date->format('Y-m-d') }}</div>
+                                    </div>
+                                    <div class="flex">
+                                        <div class="w-32 font-semibold">Order Status</div>
+                                        <div class="flex-1">: {{ ucfirst($item->status) }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <flux:separator text="Product"></flux:separator>
+                    {{-- <flux:separator text="Product"></flux:separator> --}}
+
                     <div class="grid grid-cols-1 gap-4">
+                        <!-- Header -->
+                        <div
+                            class="grid grid-cols-6 font-semibold text-gray-800 border-b border-gray-300 py-3 text-center">
+                            <div class="col-span-2 text-left pl-4">Order</div>
+                            <div>Price</div>
+                            <div>Qty</div>
+                            <div>Total</div>
+                            <div></div>
+                        </div>
+
+                        <!-- Item Rows -->
                         @foreach ($item->items as $key => $itm)
-                            <div class="grid grid-cols-4 items-center" x-show="open||{{ $key }} == 0" x-cloak
+                            <div class="grid grid-cols-6 items-center py-4 px-4 rounded-xl hover:bg-gray-50 transition-colors duration-150 border-b border-gray-100 last:border-0"
+                                x-show="open || {{ $key }} == 0" x-cloak
                                 x-transition:enter="transition ease-out duration-300"
-                                x-transition:enter-start="opacity-0 scale-90"
+                                x-transition:enter-start="opacity-0 scale-95"
                                 x-transition:enter-end="opacity-100 scale-100"
                                 x-transition:leave="transition ease-in duration-300"
                                 x-transition:leave-start="opacity-100 scale-100"
-                                x-transition:leave-end="opacity-0 scale-90">
-                                <div class="flex items-center gap-2">
-                                    <div class="size-20 rounded bg-center bg-cover bg-no-repeat"
-                                        style="background-image: url({{ asset("storage/{$itm->product->image}") }})">
+                                x-transition:leave-end="opacity-0 scale-95">
+                                <!-- Product Info -->
+                                <div class="col-span-2 flex items-center gap-3">
+                                    <div class="w-20 h-20 rounded-lg bg-center bg-cover bg-no-repeat border border-gray-200 shadow-sm"
+                                        style="background-image: url('{{ asset("storage/{$itm->product->image}") }}')">
                                     </div>
-                                    <div class="">
-                                        <div class="font-semibold">{{ $itm->product->name }}</div>
-                                        <div class="text-xs md:text-sm">{{ $itm->product->category->name }}</div>
+                                    <div>
+                                        <div class="font-semibold text-gray-800">{{ $itm->product->name }}</div>
+                                        <div class="text-xs text-gray-500">{{ $itm->product->category->name }}</div>
                                     </div>
                                 </div>
-                                <div class="text-center">Rp.
-                                    {{ number_format($itm->price, 0, ',', '.') }}
+
+                                <!-- Price -->
+                                <div class="text-center text-gray-700">
+                                    Rp {{ number_format($itm->price, 0, ',', '.') }}
                                 </div>
-                                <div class="text-center">
-                                    {{ $itm->qty }} Pcs
+
+                                <!-- Qty -->
+                                <div class="text-center text-gray-700">
+                                    {{ $itm->qty }} pcs
                                 </div>
-                                <div class="text-center">Rp.
-                                    {{ number_format($itm->subtotal, 0, ',', '.') }}</div>
+
+                                <!-- Total -->
+                                <div class="text-center font-semibold text-[#4B2E05]">
+                                    Rp {{ number_format($itm->subtotal, 0, ',', '.') }}
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -57,13 +104,8 @@
                             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90"
                             x-on:click="open=false" x-show="open" class="w-full" variant="primary"></flux:button>
                     </div>
-                    <flux:separator text="Shipping Info"></flux:separator>
-                    <div class="mt-2 text-xs md:text-sm">
-                        <div class="">Shipping Date: {{ $item->shipping_date->format('Y-m-d') }}</div>
-                        <div class="">Order Status: {{ $item->status }}</div>
-                    </div>
-                    <flux:separator text="Order summary"></flux:separator>
-                    <div class="w-full rounded-sm mt-2 text-xs md:text-sm space-y-2 ">
+
+                    <div class="w-full rounded-sm mt-8 text-xs md:text-sm space-y-2 ">
                         <div class="flex justify-between items-center">
                             <div class="">Subtotal ({{ $item->items->count() }} items)</div>
                             <div class="">Rp. {{ number_format($item->subtotal, 0, ',', '.') }}</div>
@@ -101,7 +143,8 @@
                             <flux:separator text="Action"></flux:separator>
                             <div class="flex justify-center gap-4">
                                 <div class="mt-4 flex justify-center">
-                                    <flux:button as href="{{ route('payment', ['slug'=>$item->slug]) }}" variant="primary" color="green">Pay</flux:button>
+                                    <flux:button as href="{{ route('payment', ['slug' => $item->slug]) }}"
+                                        variant="primary" color="green">Pay</flux:button>
                                 </div>
                                 <div class="mt-4 flex justify-center">
                                     <flux:button variant="danger" color="green">Cancel</flux:button>
