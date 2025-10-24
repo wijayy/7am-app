@@ -59,10 +59,12 @@ class ProductIndex extends Component
             Product::whereNotNull('jurnal_id')->whereNotIn('jurnal_id', $jurnalProductIds)->delete();
 
             // 3. Ambil daftar Jurnal ID dari kategori yang aktif dan memiliki relasi ke set_category_items
-            $activeCategoryJurnalIds = Category::where('active', true)
-                ->whereHas('setCategoryItems')
+            $activeCategoryJurnalIds = Category
+                ::whereHas('setCategories')
                 ->pluck('jurnal_id')
                 ->toArray();
+
+            // dd($activeCategoryJurnalIds);
 
             Product::whereNotIn('category_id', $activeCategoryJurnalIds)->delete();
 
