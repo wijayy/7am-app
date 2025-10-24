@@ -6,16 +6,15 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
-use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class TransactionIndex extends Component
 {
-    #[Url(except:null)]
+    #[Url(except: null)]
     public $date;
-     public $transactions;
+    public $transactions;
 
     public function mount()
     {
@@ -37,7 +36,7 @@ class TransactionIndex extends Component
     public function export()
     {
         // Ambil data dari DB
-        $items =TransactionItem::whereIn('transaction_id', $this->transactions->pluck('id'))
+        $items = TransactionItem::whereIn('transaction_id', $this->transactions->pluck('id'))
             ->get();
 
         // Load template

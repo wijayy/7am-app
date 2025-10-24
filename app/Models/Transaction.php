@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\JurnalApi;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,26 +42,18 @@ class Transaction extends Model
         ];
     }
 
-    public static function transactionNumberGenerator()
+    public static function transactionNumberGenerator(JurnalApi $jurnalApi)
     {
-        $date = Carbon::now()->format('Ymd');
-        $prefix = 'TRX' . $date;
+        // Panggil method `call` dengan method POST, path, dan body
+        $response = $jurnalApi->request(
+            'GET',
+            '/public/jurnal/api/v1/sales_invoices?page_size=1',
+        );
 
         // Hitung jumlah transaksi yang sudah ada hari ini
-        $lastTransaction = self::whereDate('created_at', Carbon::today())
-            ->orderBy('id', 'desc')
-            ->first();
+        $lastTransaction = (int) $response['sales_invoices'][0]['transaction_no'];
 
-        $nextNumber = 1;
-
-        if ($lastTransaction) {
-            $lastNumber = (int) substr($lastTransaction->number, -4);
-            $nextNumber = $lastNumber + 1;
-        }
-
-        $formattedNumber = str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-
-        return $prefix . $formattedNumber;
+        return $lastTransaction++;
     }
 
     public function shipping()

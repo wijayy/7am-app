@@ -1,5 +1,3 @@
-{{-- @dd($products) --}}
-
 <div class="space-y-4">
     <flux:session>All Product</flux:session>
     <div class=""></div>
@@ -8,7 +6,7 @@
             <flux:input wire:model.live='search' placeholder='Search a Product' size='sm'></flux:input>
             <flux:button variant="primary" wire:click='sync' icon="plus" size="sm">Sync</flux:button>
         </div>
-        <div class="grid grid-cols-14 min-w-4xl font-semibold py-2 gap-4">
+        <div class="grid grid-cols-14 min-w-4xl font-semibold py-2 mt-4 gap-4">
             <div class="">#</div>
             <div class="col-span-3">Product</div>
             <div class="col-span-2 text-center">SKU</div>
