@@ -32,7 +32,7 @@ class ReservationIndex extends Component
         $reservations = Reservation::filters(['date' => $this->date])
             ->with(['outlet', 'section'])
             ->orderBy('date', 'desc')
-            ->paginate(10);
+            ->get();
 
         return view('livewire.reservation-index', [
             'reservations' => $reservations,
