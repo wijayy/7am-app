@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('jurnal_id')->unique();
             $table->string('slug');
-            $table->boolean('active')->default(false);
+            // $table->boolean('active')->default(false);
             $table->timestamps();
         });
     }

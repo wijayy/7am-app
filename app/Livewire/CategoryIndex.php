@@ -63,21 +63,6 @@ class CategoryIndex extends Component
         }
     }
 
-    public function toggleStatus($id)
-    {
-        try {
-            $category = Category::findOrFail($id);
-            $category->active = !$category->active;
-            $category->save();
-
-            session()->flash('success', 'Category status has been updated.');
-        } catch (\Throwable $th) {
-            session()->flash('error', 'Failed to update category status.');
-        }
-
-        $this->getCategory();
-    }
-
     public function render()
     {
         return view('livewire.category-index')->layout('components.layouts.app', ['title' => "Categories"]);

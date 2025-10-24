@@ -58,8 +58,11 @@ class ProductIndex extends Component
             // 2. Hapus produk lokal yang tidak ada lagi di Jurnal
             Product::whereNotNull('jurnal_id')->whereNotIn('jurnal_id', $jurnalProductIds)->delete();
 
-            // 3. Ambil daftar Jurnal ID dari kategori yang aktif di database lokal
-            $activeCategoryJurnalIds = Category::where('active', true)->pluck('jurnal_id')->toArray();
+            // 3. Ambil daftar Jurnal ID dari kategori yang aktif dan memiliki relasi ke set_category_items
+            $activeCategoryJurnalIds = Category::where('active', true)
+                ->whereHas('setCategoryItems')
+                ->pluck('jurnal_id')
+                ->toArray();
 
             Product::whereNotIn('category_id', $activeCategoryJurnalIds)->delete();
 

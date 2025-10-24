@@ -41,12 +41,6 @@ class Cart extends Component
         $this->setMinShippingDate();
     }
 
-     public function changeAddress($id)
-     {
-        $this->address = Address::find($id);
-        $this->dispatch('modal-close', ['name' => 'address']);
-     }
-    
     public function checkout()
     {
         sleep(2);
