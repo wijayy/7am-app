@@ -21,9 +21,11 @@
         <div class="text-xl text-center md:text-2xl lg:text-4xl font-semibold md:leading-loose">Explore Our Product Range</div>
         <div class="text-sm text-center md:text-lg">Browse through our complete catalog of business-ready products
             designed to support your company’s needs.</div>
-        <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 items-start">
             @foreach ($products as $item)
-                <a href="{{ route('shop.show', ['slug' => $item->slug]) }}" class="text-center mx-1 my-4">
+                <button 
+                    wire:click="openShowModal('{{ $item->jurnal_id }}')"
+                    class="text-center mx-1 my-4">
                     <img src="{{ $item->image_url }}" alt="{{ $item->name }}"
                         class="rounded-lg shadow mb-2">
 
@@ -33,7 +35,7 @@
                         </div>
                         <p class="text-[#D4A373] text-left">Rp. {{ number_format($item->price, 0, ',', '.') }}</p>
                     </div>
-                </a>
+                </button>
             @endforeach
         </div>
 
@@ -46,7 +48,7 @@
         </div>
     </flux:container>
 
-
+    @livewire('shop-show')
     @livewire('newsletter')
 
 

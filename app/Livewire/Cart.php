@@ -7,14 +7,12 @@ use App\Models\Address;
 use App\Models\Cart as ModelsCart;
 use App\Models\Coupon;
 use App\Models\Outlet;
-use App\Models\Address;
 use Livewire\Component;
 use App\Models\Shipping;
 use App\Models\CouponUsage;
 use App\Models\Transaction;
 use App\Models\CouponProduct;
 use App\Models\TransactionItem;
-use App\Models\Cart as ModelsCart;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,7 +33,9 @@ class Cart extends Component
 
         $this->addresses = Auth::user()->addresses;
         $this->address = $this->addresses->first();
-        $this->outlets = Auth::user()->outlets;
+
+        $outlets = Outlet::all();
+        $this->outlets = $outlets;
         $this->outlet = $this->outlets->first();
 
         $this->setMinShippingDate();
@@ -221,10 +221,9 @@ class Cart extends Component
         $this->shipping_date = $this->min;
     }
 
-    public function changeAddress($id)
+    public function openShowModal($jurnal_id)
     {
-        $this->address = Address::find($id);
-        $this->dispatch('modal-close', name: 'address');
+        $this->dispatch('showModal', jurnal_id: $jurnal_id);
     }
 
     public function changeOutlet($id)

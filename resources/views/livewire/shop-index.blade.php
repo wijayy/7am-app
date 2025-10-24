@@ -20,42 +20,43 @@
             <div class="w-full sticky top-30 md:w-1/4 bg-white p-4 rounded-lg shadow-md h-fit">
                 <div class="font-semibold">Filters</div>
 
-                    <div class="mt-4">Price Range</div>
-                    <div class="flex items-center gap-4">
-                        <flux:input wire:model.live='min' max="{{ $max }}" type="number" step="500"
-                            min="0" :placeholder="'Min'"></flux:input>
-                        <div class="">-</div>
-                        <flux:input wire:model.live='max' min="{{ $min }}" type="number" step="500"
-                            min="0" :placeholder="'Max'"></flux:input>
-                    </div>
-
-                    <div class="mt-4 mb-2">Freshness</div>
-                    <flux:radio.group wire:model.live='freshness' class="">
-                        <flux:radio :label="'Fresh'" :value="'fresh'"></flux:radio>
-                        <flux:radio :label="'Frozen'" :value="'frozen'"></flux:radio>
-                    </flux:radio.group>
-
-                    <div class="flex gap-4 mt-4 justify-start">
-                        <button wire:click='resetFilter'
-                            class="cursor-pointer w-full py-1 rounded-md hover:bg-[#CFAF8D] text-sm bg-[#D4A373]">Reset</button>
-                    </div>
+                <div class="mt-4">Price Range</div>
+                <div class="flex items-center gap-4">
+                    <flux:input wire:model.live='min' max="{{ $max }}" type="number" step="500"
+                        min="0" :placeholder="'Min'"></flux:input>
+                    <div class="">-</div>
+                    <flux:input wire:model.live='max' min="{{ $min }}" type="number" step="500"
+                        min="0" :placeholder="'Max'"></flux:input>
                 </div>
+
+                <div class="mt-4 mb-2">Freshness</div>
+                <flux:radio.group wire:model.live='freshness' class="">
+                    <flux:radio :label="'Fresh'" :value="'fresh'"></flux:radio>
+                    <flux:radio :label="'Frozen'" :value="'frozen'"></flux:radio>
+                </flux:radio.group>
+
+                <div class="flex gap-4 mt-4 justify-start">
+                    <button wire:click='resetFilter'
+                        class="cursor-pointer w-full py-1 rounded-md hover:bg-[#CFAF8D] text-sm bg-[#D4A373]">Reset</button>
+                </div>
+            </div>
             {{-- @endif  --}}
 
             <div class="w-full transition-all bg-white p-4 rounded-lg shadow-md md:w-3/4">
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 items-start">
                     @forelse ($products as $item)
-                        <a href="{{ route('shop.show', ['slug' => $item['slug']]) }}" class="text-center">
+                        <button wire:click="openShowModal('{{ $item->jurnal_id }}')" class="text-center">
                             <img src="{{ $item['image'] != '' ? $item['image'] : asset('assets/No-Picture-Found.png') }}"
                                 alt="Chocolate Croissant" class="rounded-lg shadow mb-2">
-                            
+
                             <div class="px-2">
                                 <div class="flex justify-between items-center mb-2">
                                     <p class="font-semibold text-md text-left">{{ $item->name }}</p>
                                 </div>
-                                <p class="text-[#D4A373] text-left">Rp. {{ number_format($item->price, 0, ',', '.') }}</p>
+                                <p class="text-[#D4A373] text-left">Rp. {{ number_format($item->price, 0, ',', '.') }}
+                                </p>
                             </div>
-                        </a>
+                        </button>
                     @empty
                         <div
                             class="h-80 px-4 md:px-12 flex justify-center items-center text-lg md:text-xl text-gray-600 col-span-3">
@@ -71,5 +72,6 @@
         </div>
     </flux:container>
 
+    @livewire('shop-show')
     @livewire('newsletter')
 </div>
