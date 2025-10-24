@@ -35,7 +35,7 @@ class Cart extends Component
 
         $this->addresses = Auth::user()->addresses;
         $this->address = $this->addresses->first();
-        $this->outlets = Auth::user()->outlets;
+        $this->outlets = Outlet::all();
         $this->outlet = $this->outlets->first();
 
         $this->setMinShippingDate();

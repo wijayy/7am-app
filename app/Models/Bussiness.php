@@ -12,7 +12,13 @@ class Bussiness extends Model
 
     public $guarded = ['id'];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
+    }
+
+    public function setCategory()
+    {
+        return $this->belongsTo(SetCategory::class);
     }
 }
