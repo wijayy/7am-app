@@ -67,14 +67,17 @@ class Transaction extends Model
     {
         return $this->hasOne(Shipping::class);
     }
+
     public function payment()
     {
         return $this->hasOne(Payment::class);
     }
+
     public function items()
     {
         return $this->hasMany(TransactionItem::class);
     }
+
     public function usage()
     {
         return $this->hasOne(CouponUsage::class);
@@ -86,5 +89,4 @@ class Transaction extends Model
             return $query->whereDate("shipping_date",  $search);
         });
     }
-
 }

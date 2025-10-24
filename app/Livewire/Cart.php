@@ -2,22 +2,40 @@
 
 namespace App\Livewire;
 
-use App\Models\Cart as ModelsCart;
+use Carbon\Carbon;
 use App\Models\Coupon;
-use App\Models\CouponProduct;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Models\Outlet;
+use App\Models\Address;
 use Livewire\Component;
+use App\Models\Shipping;
+use App\Models\CouponUsage;
+use App\Models\Transaction;
+use App\Models\CouponProduct;
+use App\Models\TransactionItem;
+use App\Models\Cart as ModelsCart;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Cart extends Component
 {
-    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message;
+    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $addresses, $address, $outlet, $outlets, $min, $shipping_date;
 
     public function mount()
     {
         $this->carts();
 
+        if ($this->carts->count() == 0) {
+            return redirect(route('home'));
+        }
+
+        $this->addresses = Auth::user()->addresses;
+        $this->address = $this->addresses->first();
+        $this->outlets = Auth::user()->outlets;
+        $this->outlet = $this->outlets->first();
+
+        $this->setMinShippingDate();
     }
+
     public function checkout()
     {
         sleep(2);
@@ -26,10 +44,45 @@ class Cart extends Component
             return;
         }
 
-        if ($this->c ?? false) {
-            session(['coupon' => $this->c]);
+        try {
+            DB::beginTransaction();
+            $transaction = Transaction::create([
+                'subtotal' => $this->subtotal,
+                'number' => Transaction::transactionNumberGenerator(),
+                'discount' => $this->discount,
+                'total' => $this->total,
+                'shipping_date' => $this->shipping_date,
+                'user_id' => Auth::user()->id,
+                'status' => 'ordered'
+            ]);
 
-            // dd(session('coupon'));
+            $shipping = Shipping::create([
+                'user_id' => Auth::user()->id,
+                'transaction_id' => $transaction->id,
+                'name' => $this->address->name,
+                'phone' => $this->address->phone,
+                'email' => Auth::user()->email,
+                'address' => $this->address->address,
+            ]);
+
+            foreach ($this->carts as $key => $item) {
+                TransactionItem::create([
+                    'transaction_id' => $transaction->id,
+                    'product_id' => $item->product_id,
+                    'qty' => $item->qty,
+                    'price' => $item->product->price,
+                    'subtotal' => $item->qty * $item->product->price
+                ]);
+            }
+
+            if ($this->coupon ?? false) {
+                CouponUsage::create(['coupon_id' => $this->coupon->id, 'transaction_id' => $transaction->id]);
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            if (config('app.debug', false)) throw $th;
+            return back()->with('error', '');
         }
 
         return redirect(route('checkout'));
@@ -39,6 +92,7 @@ class Cart extends Component
     {
         $this->cpn = $state;
     }
+
     public function carts()
     {
         $this->carts = ModelsCart::where('user_id', Auth::user()->id)->get();
@@ -131,7 +185,6 @@ class Cart extends Component
                     if ($link) {
                         $discount += $this->c->amount / 100 * $item->product->price * $item->qty;
                     }
-
                 }
                 if ($this->c->maximum > 0) {
                     $discount = min($discount, $this->c->maximum);
@@ -140,6 +193,33 @@ class Cart extends Component
             }
         }
         return 0;
+    }
+
+    public function setMinShippingDate()
+    {
+        $now = Carbon::now();
+
+        if ($now->lt($now->copy()->setTime(17, 0))) {
+            // sebelum jam 5 sore → minimal besok
+            $this->min = $now->copy()->addDay()->toDateString();
+        } else {
+            // setelah jam 5 sore → minimal lusa
+            $this->min = $now->copy()->addDays(2)->toDateString();
+        }
+
+        $this->shipping_date = $this->min;
+    }
+
+    public function changeAddress($id)
+    {
+        $this->address = Address::find($id);
+        $this->dispatch('modal-close', name: 'address');
+    }
+
+    public function changeOutlet($id)
+    {
+        $this->outlet = Outlet::find($id);
+        $this->dispatch('modal-close', name: 'outlet');
     }
 
     public function render()
