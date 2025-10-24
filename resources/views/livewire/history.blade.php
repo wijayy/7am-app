@@ -1,5 +1,5 @@
 <div>
-    <flux:container class="mt-20 ">
+    <flux:container class="mt-30 min-h-[55vh] bg-white py-8 px-4 md:px-8 lg:px-16 rounded-xl shadow-md">
 
         <div class="text-xl text-center md:text-2xl font-semibold md:leading-loose">Order History</div>
         <div class="text-sm text-center md:text-lg">Review your past orders and track their details.</div>
