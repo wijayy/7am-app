@@ -3,8 +3,7 @@
     <flux:container class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white py-20 px-6 rounded-3xl shadow-lg">
         <!-- Left: Product Image -->
         <div class="flex justify-center">
-            <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
-                class="rounded-2xl shadow-md w-full max-w-md">
+            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="rounded-2xl shadow-md w-full max-w-md">
         </div>
 
         <!-- Right: Product Info -->

@@ -68,6 +68,7 @@
                 </nav>
             </div>
 
+
             <!-- Logout or Footer Section -->
             <div class="p-4 border-t border-gray-300 dark:border-zinc-700">
                 <button class="w-full py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition">

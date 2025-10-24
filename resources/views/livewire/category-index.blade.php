@@ -1,41 +1,36 @@
-<div class="">
+<div class="space-y-4">
     <flux:session>Categories</flux:session>
 
     <flux:container-sidebar>
         <div class="flex justify-end">
-            <flux:button variant="primary" as href="{{ route('category.create') }}" icon="plus" size="sm">Add Category</flux:button>
+            <flux:button wire:click='sync' icon='refresh-cw' variant='primary' size='sm'>Sync</flux:button>
         </div>
         <div class="grid grid-cols-12 font-semibold py-2 gap-4">
             <div class="">#</div>
             <div class="col-span-6">Category Name</div>
-            <div class="col-span-3 text-center">Products Related</div>
-            <div class="col-span-2 text-center">Action</div>
+            <div class="text-center">Status</div>
+            <div class="text-center col-span-4">Action</div>
         </div>
         @foreach ($categories as $key => $item)
             <div class="grid grid-cols-12 py-1 gap-4">
                 <div class="">{{ $key + 1 }}</div>
                 <div class="col-span-6">{{ $item->name }}</div>
-                <div class="col-span-3 text-center">{{ $item->products->count() }}</div>
-                <div class="col-span-2 justify-center flex gap-2">
-                    <flux:tooltip content="Edit Category">
-                        <flux:button size="sm" as href="{{ route('category.edit', ['slug'=>$item->slug]) }}" icon="pencil-square" variant="primary" color="teal"></flux:button>
-                    </flux:tooltip>
-                    <flux:modal.trigger class="trigger" name="delete-{{ $key }}">
-                        <flux:tooltip content="Delete Categories">
-                            <flux:button size="sm" variant='danger' icon="trash"></flux:button>
-                        </flux:tooltip>
-                    </flux:modal.trigger>
-                    <flux:modal name="delete-{{ $key }}">
-                        <div class="font-semibold ">Delete {{ $item->name }}</div>
-                        <div class="">This action will permanently remove {{ $item->name }}.</div>
-                        <div class="flex mt-4 justify-end">
-                            <flux:button variant="danger">Delete</flux:button>
-                        </div>
-                    </flux:modal>
+                <div class="text-center">
+                    <span
+                        class="px-2 py-1 text-xs rounded-full {{ $item->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                        {{ $item->active ? 'Active' : 'Inactive' }}
+                    </span>
                 </div>
-
+                <div class="flex gap-2 justify-center col-span-4">
+                    @if ($item->active)
+                        <flux:button wire:click='toggleStatus({{ $item->id }})' icon='' variant='primary'
+                            color="red" size='sm'>Deactivate</flux:button>
+                    @else
+                        <flux:button wire:click='toggleStatus({{ $item->id }})' icon='' variant='primary'
+                            color="green" size='sm'>Activate</flux:button>
+                    @endif
+                </div>
             </div>
         @endforeach
     </flux:container-sidebar>
-
 </div>

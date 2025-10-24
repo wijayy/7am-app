@@ -13,19 +13,26 @@ return new class extends Migration {
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('category_id')->nullable(); // Changed to string to store jurnal_id
+            $table->string('jurnal_id')->unique();
+            $table->string('product_code');
             $table->string('name');
-            $table->string('sku')->unique();
-            // $table->string('slug')->unique();
-            $table->foreignIdFor(Category::class)->constrained();
             $table->string('slug')->unique();
             $table->string('image')->nullable();
             $table->text('description');
             $table->integer('price');
-            $table->integer('moq');
-            $table->enum('freshness', ['fresh', 'frozen'])->default('fresh');
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            // $table->softDeletes();
+            $table->string('unit');
+            $table->integer('moq')->default(1);
+            $table->boolean('active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
+
+            // Foreign key → categories.jurnal_id
+            $table->foreign('category_id')
+                ->references('jurnal_id')
+                ->on('categories')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
         });
     }
 

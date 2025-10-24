@@ -128,7 +128,6 @@ class CouponCreate extends Component
                 return back()->with('error', $th->getMessage());
             }
         }
-
     }
 
     public function render()

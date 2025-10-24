@@ -17,7 +17,8 @@ class SettingSeeder extends Seeder
             [
                 'key' => 'input_point',
                 'value' => 'true',
-            ]
+            ],
+            ['key' => "default_set_category", 'value' => 1],
         ];
 
         foreach ($settings as $key => $item) {

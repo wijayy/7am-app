@@ -52,38 +52,7 @@ class Checkout extends Component
     {
         try {
             DB::beginTransaction();
-            $transaction = Transaction::create([
-                'subtotal' => $this->subtotal,
-                'number' => Transaction::transactionNumberGenerator(),
-                'discount' => $this->discount,
-                'total' => $this->total,
-                'shipping_date' => $this->shipping_date,
-                'user_id' => Auth::user()->id,
-                'status' => 'ordered'
-            ]);
 
-            $shipping = Shipping::create([
-                'user_id' => Auth::user()->id,
-                'transaction_id' => $transaction->id,
-                'name' => $this->address->name,
-                'phone' => $this->address->phone,
-                'email' => Auth::user()->email,
-                'address' => $this->address->address,
-            ]);
-
-            foreach ($this->carts as $key => $item) {
-                TransactionItem::create([
-                    'transaction_id' => $transaction->id,
-                    'product_id' => $item->product_id,
-                    'qty' => $item->qty,
-                    'price' => $item->product->price,
-                    'subtotal' => $item->qty * $item->product->price
-                ]);
-            }
-
-            if ($this->coupon ?? false) {
-                CouponUsage::create(['coupon_id' => $this->coupon->id, 'transaction_id' => $transaction->id]);
-            }
 
             DB::commit();
             Cart::where('user_id', Auth::user()->id)->delete();
@@ -134,7 +103,6 @@ class Checkout extends Component
                         if ($link) {
                             $discount += $this->coupon->amount / 100 * $item->product->price * $item->qty;
                         }
-
                     }
                     if ($this->coupon->maximum > 0) {
                         $discount = min($discount, $this->coupon->maximum);

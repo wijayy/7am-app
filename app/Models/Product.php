@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, SoftDeletes;
+
 
     /**
      * Return the sluggable configuration array for this model.
@@ -24,30 +25,26 @@ class Product extends Model
             'slug' => [
                 'onUpdate' => true,
                 'source' => [
-                    'sku',
+                    'product_code',
                     'name'
                 ]
             ]
         ];
     }
 
-    public function getSlugAttributes()
-    {
-        return ['sku', 'name'];
-    }
-
     protected $guarded = ['id'];
     protected $perPage = 12;
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
 
     public function cart()
     {
         return $this->hasMany(Cart::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'jurnal_id');
+    }
+
     public function links()
     {
         return $this->hasMany(CouponProduct::class);
@@ -58,11 +55,10 @@ class Product extends Model
         return $this->belongsToMany(Coupon::class, CouponProduct::class);
     }
 
-
     public function scopeFilters(Builder $query, array $filters)
     {
         $query->when($filters["search"] ?? false, function ($query, $search) {
-            return $query->where("name", "like", "%$search%");
+            return $query->where("name", "like", "%$search%")->orwhere("product_code", "like", "%$search%");
         });
 
         $query->when($filters["min"] ?? false, function ($query, $search) {
@@ -73,13 +69,11 @@ class Product extends Model
             return $query->where("price", "<", "$search");
         });
 
-        $query->when($filters["freshness"] ?? false, function ($query, $search) {
-            return $query->where("freshness", $search);
-        });
-
-        $query->when($filters["category"] ?? false, function ($query, $search) {
-            return $query->whereHas("category", function ($query) use ($search) {
-                $query->where("slug", $search);
+        $query->when($filters["set_category"] ?? false, function ($query, $setCategoryId) {
+            return $query->whereHas('category', function ($q) use ($setCategoryId) {
+                $q->whereHas('setCategories', function ($sq) use ($setCategoryId) {
+                    $sq->where('set_categories.id', $setCategoryId);
+                });
             });
         });
     }
@@ -88,7 +82,7 @@ class Product extends Model
     {
         $prefix = 'SKU-';
 
-        // Hitung jumlah transaksi yang sudah ada hari ini
+        // Hitung jumlah produk yang sudah
         $lastTransaction = self::orderBy('id', 'desc')
             ->first();
 

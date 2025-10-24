@@ -64,7 +64,7 @@
                 {{ in_array($item->id, $selectedProducts) ? 'border-blue-500 bg-blue-50' : 'border-gray-200' }}"
                     wire:click="toggleProduct({{ $item->id }})">
                     <div class="size-10 bg-center bg-no-repeat bg-cover rounded"
-                        style="background-image: url({{ src="{{ $item->image_url }}" }});">
+                        style="background-image: url({{ $item->image_url }});">
                     </div>
                     <div>{{ $item->name }}</div>
                 </div>

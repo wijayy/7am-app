@@ -41,8 +41,7 @@ class TypeIndex extends Component
     public function render()
     {
         $types = Type::withCount('members')
-            ->orderBy('minimum_point')
-            ->paginate(10);
+            ->orderBy('minimum_point');
 
         return view('livewire.type-index', [
             'types' => $types,
