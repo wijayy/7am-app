@@ -17,11 +17,11 @@
     <flux:container class="mt-4">
         <div class="flex flex-wrap md:flex-nowrap gap-4">
             {{-- @if ($filter) --}}
-            <div class="w-full sticky top-24 md:w-1/4 bg-white p-4 rounded-lg shadow-md h-fit">
+            <div class="w-full sticky top-30 md:w-1/4 bg-white p-4 rounded-lg shadow-md h-fit">
                 <div class="font-semibold">Filters</div>
 
                     <div class="mt-4">Price Range</div>
-                    <div class="flex gap-4">
+                    <div class="flex items-center gap-4">
                         <flux:input wire:model.live='min' max="{{ $max }}" type="number" step="500"
                             min="0" :placeholder="'Min'"></flux:input>
                         <div class="">-</div>
@@ -35,20 +35,26 @@
                         <flux:radio :label="'Frozen'" :value="'frozen'"></flux:radio>
                     </flux:radio.group>
 
-                    <div class="flex gap-4 mt-4 justify-center">
-                        <flux:button variant="primary" wire:click='resetFilter' class="cursor-pointer" color="rose">
-                            Reset</flux:button>
+                    <div class="flex gap-4 mt-4 justify-start">
+                        <button wire:click='resetFilter'
+                            class="cursor-pointer w-full py-1 rounded-md hover:bg-[#CFAF8D] text-sm bg-[#D4A373]">Reset</button>
                     </div>
                 </div>
-            @endif
-            <div class="w-full transition-all">
-                <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3">
+            {{-- @endif  --}}
+
+            <div class="w-full transition-all bg-white p-4 rounded-lg shadow-md md:w-3/4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                     @forelse ($products as $item)
                         <a href="{{ route('shop.show', ['slug' => $item['slug']]) }}" class="text-center">
                             <img src="{{ $item['image'] != '' ? $item['image'] : asset('assets/No-Picture-Found.png') }}"
                                 alt="Chocolate Croissant" class="rounded-lg shadow mb-2">
-                            <p class="font-semibold">{{ $item['name'] }}</p>
-                            <p class="text-gray-500">{{ $item['price'] }}</p>
+                            
+                            <div class="px-2">
+                                <div class="flex justify-between items-center mb-2">
+                                    <p class="font-semibold text-md text-left">{{ $item->name }}</p>
+                                </div>
+                                <p class="text-[#D4A373] text-left">Rp. {{ number_format($item->price, 0, ',', '.') }}</p>
+                            </div>
                         </a>
                     @empty
                         <div

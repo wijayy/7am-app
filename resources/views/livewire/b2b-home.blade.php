@@ -29,8 +29,7 @@
 
                     <div class="px-2">
                         <div class="flex justify-between items-center mb-2">
-                            <p class="font-semibold text-xl">{{ $item->name }}</p>
-                            <p class="text-gray-500">Category : {{ $item->freshness }}</p>
+                            <p class="font-semibold text-xl text-left">{{ $item->name }}</p>
                         </div>
                         <p class="text-[#D4A373] text-left">Rp. {{ number_format($item->price, 0, ',', '.') }}</p>
                     </div>
