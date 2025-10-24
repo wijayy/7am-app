@@ -13,10 +13,6 @@ class TypeIndex extends Component
     use WithPagination;
 
     public $title = 'Membership Types';
-    public $id;
-
-    #[Validate('required')]
-    public $name, $minimum_point;
 
     protected $paginationTheme = 'tailwind'; // agar pakai Tailwind pagination
 
@@ -24,25 +20,6 @@ class TypeIndex extends Component
     {
         // reset pagination jika ada update input (biar ga stuck di halaman tinggi)
         $this->resetPage();
-    }
-
-    public function openCreateModal()
-    {
-        $this->resetValidation();
-        $this->reset(['id', 'name', 'minimum_point']);
-        $this->dispatch('modal-show', name: 'create-member');
-    }
-
-    public function openEditModal($id)
-    {
-        $this->resetValidation();
-        $type = Type::findOrFail($id);
-        $this->fill([
-            'id' => $type->id,
-            'name' => $type->name,
-            'minimum_point' => $type->minimum_point,
-        ]);
-        $this->dispatch('modal-show', name: 'create-member');
     }
 
     public function delete($id)
@@ -55,30 +32,6 @@ class TypeIndex extends Component
 
             session()->flash('success', 'Membership type deleted successfully.');
             $this->dispatch('modal-close', name: "delete-$id");
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            session()->flash('error', $th->getMessage());
-        }
-    }
-
-    public function save()
-    {
-        $this->validate();
-
-        try {
-            DB::beginTransaction();
-            Type::updateOrCreate(
-                ['id' => $this->id],
-                [
-                    'name' => $this->name,
-                    'minimum_point' => $this->minimum_point,
-                ]
-            );
-            DB::commit();
-
-            $message = $this->id ? 'Membership type updated successfully.' : 'Membership type created successfully.';
-            session()->flash('success', $message);
-            $this->dispatch('modal-close', name: 'create-member');
         } catch (\Throwable $th) {
             DB::rollBack();
             session()->flash('error', $th->getMessage());

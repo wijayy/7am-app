@@ -1,10 +1,12 @@
 {{-- @dd($products) --}}
 <div>
-    <flux:secondary-hero text="Shop"></flux:secondary-hero>
+    <flux:secondary-hero text="Our Products"
+        description="Discover our delightful range of freshly baked breads and pastries, crafted to bring joy to your taste buds every morning.">
+    </flux:secondary-hero>
 
     <flux:container>
-        <div class="flex justify-center gap-4 mt-10">
-            <flux:button wire:click='toogleFilter'>Filter</flux:button>
+        <div class="flex justify-center gap-2 mt-10">
+            {{-- <button wire:click='toogleFilter' class="cursor-pointer px-4 rounded-xl hover:bg-[#CFAF8D] text-sm bg-[#D4A373]">Filter</button> --}}
             <flux:input icon="magnifying-glass" wire:model.live='search' class="w-1/2!"
                 :placeholder="'Search Our Product Here'"></flux:input>
             {{-- <flux:button icon="" variant="primary"></flux:button> --}}
@@ -12,11 +14,11 @@
     </flux:container>
 
 
-    <flux:container>
+    <flux:container class="mt-4">
         <div class="flex flex-wrap md:flex-nowrap gap-4">
-            @if ($filter)
-                <div class="w-full md:w-1/4">
-                    <div class="font-semibold">Filters</div>
+            {{-- @if ($filter) --}}
+            <div class="w-full sticky top-24 md:w-1/4 bg-white p-4 rounded-lg shadow-md h-fit">
+                <div class="font-semibold">Filters</div>
 
                     <div class="mt-4">Price Range</div>
                     <div class="flex gap-4">
