@@ -162,6 +162,13 @@
 
                     <hr class="border-gray-300 mb-3">
 
+                    <div>
+                        <div class="mb-2 font-medium text-gray-800">Order Note</div>
+                        <flux:textarea wire:model.live='note' placeholder="Add a note for your order..."
+                            class="w-full rounded-md border border-gray-300 p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#B68B62]">
+                        </flux:textarea>
+                    </div>
+
                     <div class="mb-3">
                         {{-- <div class="space-y-2">
                             <label class="flex items-center justify-between text-sm text-gray-700 cursor-pointer">
