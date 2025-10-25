@@ -22,7 +22,7 @@ class TypeModal extends Component
     {
         $this->resetValidation();
         $this->reset(['id', 'name', 'minimum_point']);
-        $this->dispatch('modal-show', name: 'create-member');
+        $this->dispatch('modal-show', name: 'create-type');
     }
 
     public function openEditModal($id)
@@ -34,7 +34,7 @@ class TypeModal extends Component
             'name' => $type->name,
             'minimum_point' => $type->minimum_point,
         ]);
-        $this->dispatch('modal-show', name: 'create-member');
+        $this->dispatch('modal-show', name: 'create-type');
     }
 
     public function save()
@@ -54,15 +54,16 @@ class TypeModal extends Component
 
             $message = $this->id ? 'Membership type updated successfully.' : 'Membership type created successfully.';
             session()->flash('success', $message);
-            $this->dispatch('modal-hide', name: 'create-member');
+            $this->dispatch('updateType');
+            $this->dispatch('modal-close', name: 'create-type');
         } catch (\Throwable $th) {
             DB::rollBack();
             session()->flash('error', $th->getMessage());
         }
     }
-    
+
     public function render()
     {
-        return view('livewire.type-modal')->layout('components.layouts.app', ['title'=>$this->title]);
+        return view('livewire.type-modal')->layout('components.layouts.app', ['title' => $this->title]);
     }
 }

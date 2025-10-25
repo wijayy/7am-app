@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\SetCategory;
+use App\Models\SetCategoryItem;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class SetCategorySeeder extends Seeder
 {
@@ -12,6 +14,10 @@ class SetCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        SetCategory::create([
+            'name' => 'Default'
+        ]);
+
+        SetCategoryItem::factory(1)->create();
     }
 }

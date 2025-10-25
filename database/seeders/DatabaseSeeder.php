@@ -9,12 +9,24 @@ use App\Models\Category;
 use App\Models\Outlet;
 use App\Models\Product;
 use App\Models\RedeemPoint;
+use App\Models\SetCategory;
+use App\Models\SetCategoryItem;
 use App\Models\User;
+use App\Services\JurnalApi;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+// use PhpOffice\PhpSpreadsheet\Calculation\Category as CalculationCategory;
 
 class DatabaseSeeder extends Seeder
 {
+
+    protected $jurnalApi;
+
+    public function __construct(JurnalApi $jurnalApi)
+    {
+        $this->jurnalApi = $jurnalApi;
+    }
+
     /**
      * Seed the application's database.
      */
@@ -72,5 +84,11 @@ class DatabaseSeeder extends Seeder
         $this->call(SettingSeeder::class);
 
         $this->call(RedeemPointSeeder::class);
+
+        $this->call(CategorySeeder::class);
+        $this->call(SetCategorySeeder::class);
+        $this->call(ProductSeeder::class);
+
+        Cart::factory(3)->recycle([$user, Product::all()])->create();
     }
 }

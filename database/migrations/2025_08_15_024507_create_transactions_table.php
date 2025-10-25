@@ -16,6 +16,7 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
+            $table->string('transaction_number')->unique();
             $table->string('number')->nullable()->unique();
             $table->string('slug')->unique();
             $table->integer('subtotal');

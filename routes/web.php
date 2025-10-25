@@ -60,6 +60,7 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
 
     Volt::route('cart', 'cart')->name('cart');
     Volt::route('checkout', 'checkout')->name('checkout');
+    Volt::route('payment', 'payment')->name('payment');
     Volt::route('history', 'history')->name('history');
     Volt::route('invoice/{slug}', 'invoice')->name('invoice');
     Volt::route('checkout/{slug}/pay', 'payment')->name('payment');
@@ -75,9 +76,6 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
     Volt::route('businesses', 'business-index')->name('business.index');
 
     Volt::route('tests/jurnal', 'test.jurnal')->name('test.jurnal');
-
-    Route::get('/jurnal/connect', [JurnalAuthController::class, 'redirectToJurnal'])->name('jurnal.connect');
-    Route::get('/jurnal/callback', [JurnalAuthController::class, 'handleCallback'])->name('jurnal.callback');
 
     route::get('/jurnal/test', [ApiTestController::class, 'index'])->name('jurnal.tests');
 });

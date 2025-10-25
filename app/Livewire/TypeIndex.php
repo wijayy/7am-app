@@ -6,6 +6,7 @@ use App\Models\Type;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 
 class TypeIndex extends Component
@@ -16,10 +17,16 @@ class TypeIndex extends Component
 
     protected $paginationTheme = 'tailwind'; // agar pakai Tailwind pagination
 
+
     public function updating($name)
     {
         // reset pagination jika ada update input (biar ga stuck di halaman tinggi)
         $this->resetPage();
+    }
+
+    public function openEditModal($id)
+    {
+        $this->dispatch('openEditModal', id: $id);
     }
 
     public function delete($id)
@@ -38,6 +45,7 @@ class TypeIndex extends Component
         }
     }
 
+    #[On('updateType')]
     public function render()
     {
         $types = Type::withCount('members')

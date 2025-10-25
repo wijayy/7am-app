@@ -45,8 +45,8 @@ class Cart extends Component
             DB::beginTransaction();
             $transaction = Transaction::create([
                 'subtotal' => $this->subtotal,
-                'discount' => $this->discount,
-                'total' => $this->total,
+                'discount' => $this->countDiscount(),
+                'total' => $this->subtotal - $this->countDiscount(),
                 'shipping_date' => $this->shipping_date,
                 'user_id' => Auth::user()->id,
                 'status' => 'ordered'
@@ -91,6 +91,7 @@ class Cart extends Component
             }
 
             // $this->carts()->delete();
+            Cart::where('user_id', Auth::user()->id)->delete();
 
             DB::commit();
         } catch (\Throwable $th) {
@@ -98,8 +99,6 @@ class Cart extends Component
             if (config('app.debug', false)) throw $th;
             return back()->with('error', '');
         }
-
-        // return redirect(route('checkout'));
     }
 
     public function pn($state)
@@ -187,6 +186,9 @@ class Cart extends Component
 
     public function countDiscount()
     {
+        if (!$this->c ?? false) {
+            return 0;
+        }
         if ($this->subtotal > $this->c->minimum) {
             if ($this->c->type == 'fixed') {
                 return $this->c->amount;

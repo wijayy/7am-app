@@ -42,7 +42,29 @@ class Transaction extends Model
         ];
     }
 
-    public static function transactionNumberGenerator(JurnalApi $jurnalApi)
+    public static function transactionNumberGenerator()
+    {
+        $date = Carbon::now()->format('Ymd');
+        $prefix = 'TRX' . $date;
+
+        // Hitung jumlah transaksi yang sudah ada hari ini
+        $lastTransaction = self::whereDate('created_at', Carbon::today())
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $nextNumber = 1;
+
+        if ($lastTransaction) {
+            $lastNumber = (int) substr($lastTransaction->number, -4);
+            $nextNumber = $lastNumber + 1;
+        }
+
+        $formattedNumber = str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+        return $prefix . $formattedNumber;
+    }
+
+    public static function transactionNumberJurnal(JurnalApi $jurnalApi)
     {
         // Panggil method `call` dengan method POST, path, dan body
         $response = $jurnalApi->request(
