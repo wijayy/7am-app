@@ -24,7 +24,7 @@ class Transaction extends Model
         return [
             'slug' => [
                 'onUpdate' => true,
-                'source' => 'number'
+                'source' => 'transaction_number'
             ]
         ];
     }

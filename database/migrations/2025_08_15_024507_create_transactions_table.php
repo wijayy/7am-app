@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->integer('subtotal');
             $table->integer('total');
             $table->integer('discount');
+            $table->integer('packaging_fee');
             $table->date('shipping_date');
             $table->foreignIdFor(Coupon::class)->nullable()->constrained();
             $table->enum('status', ['ordered', 'paid', 'picking', 'packed', 'shipped', 'delivered', 'cancelled']);

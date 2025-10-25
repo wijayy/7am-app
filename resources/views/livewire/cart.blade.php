@@ -108,8 +108,8 @@
                         <div class="grid grid-cols-6 items-center py-4 border-b border-gray-200 text-center">
                             <a class="flex items-center gap-2 col-span-2 text-left"
                                 href="{{ route('shop.show', ['slug' => $item->product->slug]) }}">
-                                <div class="size-20 rounded bg-center bg-cover bg-no-repeat"
-                                    style="background-image: url({{ asset("storage/{$item->product->image}") }})">
+                                <div class="size-20 aspect-square rounded bg-center bg-cover bg-no-repeat"
+                                    style="background-image: url({{ $item->product->image_url }})">
                                 </div>
                                 <div class="">
                                     <div class="font-semibold text-[#4B2E05]">{{ $item->product->name }}</div>

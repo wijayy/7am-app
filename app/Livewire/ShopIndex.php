@@ -62,7 +62,8 @@ class ShopIndex extends Component
             'search' => $this->search,
             'min' => $this->min,
             'max' => $this->max,
-        ])->where('active', true)->paginate(24)->withQueryString();
+            'set_category' => Auth::user()?->bussinesses?->setCategory->id
+        ])->paginate(24)->withQueryString();
 
         return view('livewire.shop-index', compact('products'))->layout('components.layouts.app.header', ['title' => "Shop"]);
     }

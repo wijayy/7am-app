@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Cart extends Component
 {
-    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $addresses, $address, $outlet, $outlets, $min, $shipping_date;
+    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $addresses, $address, $outlet, $outlets, $min, $shipping_date, $packaging_fee;
     public $fulfillment = 'delivery';
 
     public function mount()
@@ -45,8 +45,10 @@ class Cart extends Component
             DB::beginTransaction();
             $transaction = Transaction::create([
                 'subtotal' => $this->subtotal,
+                'transaction_number' => Transaction::transactionNumberGenerator(),
                 'discount' => $this->countDiscount(),
-                'total' => $this->subtotal - $this->countDiscount(),
+                'total' => $this->subtotal + $this->packaging_fee - $this->countDiscount(),
+                'packaging_fee' => $this->packaging_fee,
                 'shipping_date' => $this->shipping_date,
                 'user_id' => Auth::user()->id,
                 'status' => 'ordered'
@@ -91,7 +93,7 @@ class Cart extends Component
             }
 
             // $this->carts()->delete();
-            Cart::where('user_id', Auth::user()->id)->delete();
+            ModelsCart::where('user_id', Auth::user()->id)->delete();
 
             DB::commit();
         } catch (\Throwable $th) {
@@ -116,6 +118,8 @@ class Cart extends Component
         foreach ($this->carts as $key => $item) {
             $this->subtotal += $item->qty * $item->product->price;
         }
+
+        $this->packaging_fee = 0.3 * $this->subtotal;
     }
 
     public function minus($id)
