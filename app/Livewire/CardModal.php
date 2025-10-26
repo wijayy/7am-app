@@ -38,6 +38,16 @@ class CardModal extends Component
 
     protected $listeners = ['openCreateModal' => 'openCreateModal', 'openEditModal' => 'openEditModal'];
 
+
+    private function getCard($id)
+    {
+        $card = Card::find($id);
+        if (!$card) {
+            throw new \Exception("Card not found");
+        }
+        return $card;
+    }
+
     public function rules()
     {
         return [
@@ -103,6 +113,6 @@ class CardModal extends Component
 
     public function render()
     {
-        return view('livewire.card-modal')->layout('components.layouts.app', ['title'=>$this->title]);
+        return view('livewire.card-modal');
     }
 }

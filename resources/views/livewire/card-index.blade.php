@@ -59,8 +59,12 @@
 
                             <td class="px-4 py-2 text-center flex justify-center items-center gap-2">
                                 <flux:tooltip content="Edit Card">
-                                    <flux:button wire:click='openEditModal({{ $item->id }})' icon="pencil-square"
-                                        size="sm" variant="primary" color="amber">
+                                    <flux:button 
+                                        wire:click="$dispatch('openEditModal', { id: {{ $item->id }} }).global"
+                                        icon="pencil-square"
+                                        size="sm" 
+                                        variant="primary" 
+                                        color="amber">
                                     </flux:button>
                                 </flux:tooltip>
 

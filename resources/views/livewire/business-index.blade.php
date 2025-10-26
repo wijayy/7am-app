@@ -1,5 +1,16 @@
 <div class="space-y-4">
-    <flux:session>{{ $title }}</flux:session>
+    <div class="flex justify-start space-x-2">
+        <flux:session>{{ $title }}</flux:session>
+        {{-- <flux:button icon="plus" variant="primary" wire:click="$dispatch('openCreateBusinessModal')">
+            Add Business
+        </flux:button> --}}
+    </div>
+
+    @if (session('Success'))
+        <div class="mb-4 p-3 bg-green-50 border border-green-200 text-green-800 rounded">
+            {{ session('Success') }}
+        </div>
+    @endif
 
     <flux:container-sidebar>
         <div class="space-y-2">
@@ -18,9 +29,17 @@
                     <div class="w-1/5 text-center">{{ $item->entity }}</div>
                     <div class="w-1/5 text-center">{{ $item->number }}</div>
                     <div class="w-1/5 text-center">
-                        {{ $item->user->business == 'accepted' ? "Accepted as {$item->user->member} customer" : $item->user->business }}
+                        {{ $item->status == 'approved' ? "Accepted as {$item->user->member} customer" : $item->user->business }}
                     </div>
                     <div class="w-1/5 text-center">
+                        <flux:tooltip content="Edit Business">
+                            <flux:button 
+                                wire:click="$dispatch('openEditBusinessModal', { id: {{ $item->id }} }).global"
+                                icon="pencil-square"
+                                size="sm" variant="primary" color="amber">
+                            </flux:button>
+                        </flux:tooltip>
+                        
                         <flux:tooltip content="See Details">
                             <flux:button variant="primary" wire:click='openDetailModal({{ $item->id }})'
                                 icon="eye" size="sm"></flux:button>
@@ -40,10 +59,10 @@
                     </div>
                     <div class="flex gap-4 text-start">
                         <div class="w-1/3">Status</div>
-                        @if ($business?->user?->business != 'accepted')
-                            <div class="w-2/3">: {{ $business?->user?->business }}</div>
+                        @if ($business?->status != 'approved')
+                            <div class="w-2/3">: {{ $business?->status }}</div>
                         @else
-                            <div class="w-2/3 text-green-500">: {{ $business?->user?->business }} as
+                            <div class="w-2/3 text-green-500">: {{ $business?->status }} as
                                 {{ $business?->user?->member }} customer</div>
                         @endif
                     </div>
@@ -91,4 +110,6 @@
             {{ $businesses->links() }}
         </div>
     </flux:container-sidebar>
+
+    @livewire('business-modal')
 </div>
