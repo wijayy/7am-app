@@ -2,9 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Product;
+// use App\Models\Category;
+use App\Models\SetCategory;
+use App\Services\JurnalApi;
+use App\Livewire\Test\Jurnal;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
@@ -37,5 +43,47 @@ class Category extends Model
     public function setCategories()
     {
         return $this->belongsToMany(SetCategory::class, 'set_category_items');
+    }
+
+    public static function sync(JurnalApi $jurnalApi)
+    {
+        $response = $jurnalApi->request('GET', '/public/jurnal/api/v1/product_categories');
+        // dd($jurnalApi);
+        $jurnalCategories = [];
+        if (isset($response['product_categories'])) {
+            $jurnalCategories = $response['product_categories'];
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // 1. Ambil semua ID dari Jurnal
+            $jurnalIds = array_column($jurnalCategories, 'id');
+
+            // 2. Hapus kategori lokal yang tidak ada lagi di Jurnal
+            // Pastikan hanya menghapus yang memiliki jurnal_id
+            self::whereNotNull('jurnal_id')->whereNotIn('jurnal_id', $jurnalIds)->delete();
+
+            // 3. Update atau buat kategori baru dari data Jurnal
+            foreach ($jurnalCategories as $item) {
+
+                self::updateOrCreate(
+                    ['jurnal_id' => $item['id']],
+                    [
+                        'name' => $item['name']
+                    ]
+                );
+            }
+
+            DB::commit();
+
+            // Muat ulang data kategori dari database lokal dan kirim pesan sukses
+            // $this->getCategory();
+            session()->flash('success', 'Categories have been successfully synchronized.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            if (config('app.debug', false)) throw $th;
+            session()->flash('error', 'Failed to synchronize categories: ' . $th->getMessage());
+        }
     }
 }

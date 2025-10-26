@@ -1,4 +1,4 @@
-<flux:modal dismissible="false" name="create-member">
+<flux:modal dismissible="false" name="create-type">
     <form wire:submit.prevent='save' class="space-y-4">
         <div class="text-center text-lg font-semibold mt-4">
             {{ $id ? "Edit Membership Type $name" : 'Add New Membership Type' }}

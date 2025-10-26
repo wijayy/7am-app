@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Cart extends Component
 {
-    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $addresses, $address, $outlet, $outlets, $min, $shipping_date;
+    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $addresses, $address, $outlet, $outlets, $min, $shipping_date, $packaging_fee;
     public $fulfillment = 'delivery';
 
     public function mount()
@@ -34,47 +34,50 @@ class Cart extends Component
         $this->addresses = Auth::user()->addresses;
         $this->address = $this->addresses->first();
 
-        $outlets = Outlet::all();
-        $this->outlets = $outlets;
+        $this->outlets = Outlet::all();
         $this->outlet = $this->outlets->first();
 
         $this->setMinShippingDate();
     }
 
-     public function changeAddress($id)
-     {
-        $this->address = Address::find($id);
-        $this->dispatch('modal-close', ['name' => 'address']);
-     }
-    
     public function checkout()
     {
-        sleep(2);
-
-        if ($this->carts->count() == 0) {
-            return;
-        }
-
         try {
             DB::beginTransaction();
             $transaction = Transaction::create([
                 'subtotal' => $this->subtotal,
-                'number' => Transaction::transactionNumberGenerator(),
-                'discount' => $this->discount,
-                'total' => $this->total,
+                'transaction_number' => Transaction::transactionNumberGenerator(),
+                'discount' => $this->countDiscount(),
+                'total' => $this->subtotal + $this->packaging_fee - $this->countDiscount(),
+                'packaging_fee' => $this->packaging_fee,
                 'shipping_date' => $this->shipping_date,
                 'user_id' => Auth::user()->id,
                 'status' => 'ordered'
             ]);
 
-            $shipping = Shipping::create([
-                'user_id' => Auth::user()->id,
-                'transaction_id' => $transaction->id,
-                'name' => $this->address->name,
-                'phone' => $this->address->phone,
-                'email' => Auth::user()->email,
-                'address' => $this->address->address,
-            ]);
+            if ($this->fulfillment === 'delivery') {
+                $shippingData = [
+                    'user_id' => Auth::user()->id,
+                    'transaction_id' => $transaction->id,
+                    'name' => $this->address->name,
+                    'type' => $this->fulfillment,
+                    'phone' => $this->address->phone,
+                    'email' => Auth::user()->email,
+                    'address' => $this->address->address,
+                ];
+            } else {
+                $shippingData = [
+                    'user_id' => Auth::user()->id,
+                    'transaction_id' => $transaction->id,
+                    'type' => $this->fulfillment,
+                    'name' => Auth::user()->bussinesses->name,
+                    'phone' => Auth::user()->phone,
+                    'email' => Auth::user()->email,
+                    'address' => $this->outlet->address,
+                ];
+            }
+
+            $shipping = Shipping::create($shippingData);
 
             foreach ($this->carts as $key => $item) {
                 TransactionItem::create([
@@ -89,14 +92,17 @@ class Cart extends Component
             if ($this->coupon ?? false) {
                 CouponUsage::create(['coupon_id' => $this->coupon->id, 'transaction_id' => $transaction->id]);
             }
+
+            // $this->carts()->delete();
+            ModelsCart::where('user_id', Auth::user()->id)->delete();
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            if (config('app.debug', false)) throw $th;
+            if (config('app.debug', false))
+                throw $th;
             return back()->with('error', '');
         }
-
-        return redirect(route('checkout'));
     }
 
     public function pn($state)
@@ -114,6 +120,8 @@ class Cart extends Component
         foreach ($this->carts as $key => $item) {
             $this->subtotal += $item->qty * $item->product->price;
         }
+
+        $this->packaging_fee = 0.3 * $this->subtotal;
     }
 
     public function minus($id)
@@ -143,7 +151,6 @@ class Cart extends Component
                 $cart->update(['qty' => $item['qty']]);
             }
         }
-        $this->carts();
     }
 
     public function delete($id)
@@ -185,6 +192,9 @@ class Cart extends Component
 
     public function countDiscount()
     {
+        if (!$this->c ?? false) {
+            return 0;
+        }
         if ($this->subtotal > $this->c->minimum) {
             if ($this->c->type == 'fixed') {
                 return $this->c->amount;

@@ -81,6 +81,7 @@ class SetCategoryCreate extends Component
             DB::commit();
 
             session()->flash('success', 'Set category saved successfully');
+            $this->dispatch('updateSetCategory');
             $this->dispatch('modal-close', name: 'set-category-create');
         } catch (\Throwable $th) {
             DB::rollBack();

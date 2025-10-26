@@ -16,11 +16,13 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
+            $table->string('transaction_number')->unique();
             $table->string('number')->nullable()->unique();
             $table->string('slug')->unique();
             $table->integer('subtotal');
             $table->integer('total');
             $table->integer('discount');
+            $table->integer('packaging_fee');
             $table->date('shipping_date');
             $table->foreignIdFor(Coupon::class)->nullable()->constrained();
             $table->enum('status', ['ordered', 'paid', 'picking', 'packed', 'shipped', 'delivered', 'cancelled']);

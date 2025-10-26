@@ -31,25 +31,11 @@
                     </div>
 
                     <div class="border border-[#B68B62] rounded-lg p-4 mb-6">
-                        <div class="flex justify-between items-center">
-                            @if ($fulfillment === 'pickup')
+                        @if ($fulfillment === 'delivery')
+                            <div class="flex justify-between items-center">
                                 <div class="">
                                     <h3 class="font-semibold mb-2">
-                                        Our Outlet :
-                                    </h3>
-                                    <div class="text-sm md:text-md">{{ $outlet->name }}</div>
-                                    <div class="mt-2 text-sm md:text-md">{{ $outlet->address }}</div>
-                                </div>
-                            
-                                <flux:modal.trigger class="trigger" name="outlet">
-                                    <button class="text-[#B68B62] text-sm font-medium hover:underline">
-                                        Change Outlet
-                                    </button>
-                                </flux:modal.trigger>
-                            @else
-                                <div class="">
-                                    <h3 class="font-semibold mb-2">
-                                        Your Address :
+                                        Your Address
                                     </h3>
                                     <div class="text-sm md:text-md">{{ $address->name }} /
                                         {{ $address->address }}
@@ -57,12 +43,27 @@
                                     <div class="mt-2 text-sm md:text-md">Phone : {{ $address->phone }} </div>
                                 </div>
                                 <flux:modal.trigger class="trigger" name="address">
-                                    <button class="text-[#B68B62] text-sm font-medium hover:underline">
-                                        Change Address
-                                    </button>
+                                    <button class="text-[#B68B62] text-sm font-medium hover:underline">Change
+                                        Address</button>
                                 </flux:modal.trigger>
-                            @endif
-                        </div>
+                            </div>
+                        @else
+                            <div class="flex justify-between items-center">
+                                <div class="">
+                                    <h3 class="font-semibold mb-2">
+                                        Our Outlet
+                                    </h3>
+                                    <div class="text-sm md:text-md">{{ $outlet->name }} /
+                                        {{ $outlet->address }}
+                                    </div>
+                                    {{-- <div class="mt-2 text-sm md:text-md">Phone : {{ $address->phone }} </div> --}}
+                                </div>
+                                <flux:modal.trigger class="trigger" name="outlet">
+                                    <button class="text-[#B68B62] text-sm font-medium hover:underline">Change
+                                        Outlet</button>
+                                </flux:modal.trigger>
+                            </div>
+                        @endif
                     </div>
 
                     <flux:modal name="address">
@@ -81,16 +82,15 @@
                     </flux:modal>
 
                     <flux:modal name="outlet">
-                        <div class="md:text-lg font-semibold">Choose Outlets</div>
+                        <div class="md:text-lg font-semibold">Choose Our Outlet</div>
                         @foreach ($outlets as $item)
                             <div wire:click='changeOutlet({{ $item->id }})'
                                 class=" cursor-pointer border mt-4 p-4  {{ $item->id == $outlet->id ? 'border-mine-200 bg-mine-200/5' : 'border-gray-200' }} rounded-lg w-full space-y-4">
                                 <div class="">
-                                    <div class="text-sm md:text-md font-semibold">{{ $item->name }} /
-                                        {{ $item->phone }}</div>
+                                    <div class="text-sm md:text-md font-semibold">{{ $item->name }}</div>
                                     <div class="mt-2">{{ $item->address }}</div>
                                 </div>
-                                <a href="" class="underline underline-offset-2">Edit address</a>
+                                {{-- <a href="" class="underline underline-offset-2">Edit address</a> --}}
                             </div>
                         @endforeach
                     </flux:modal>

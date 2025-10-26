@@ -71,15 +71,7 @@
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div class="pt-4 w-1/2 mx-auto">
-                {{ $types->links() }}
-            </div>
 
-        </div>
-
-        <div class="pt-2 w-1/2 mx-auto">
-            {{ $types->links() }}
         </div>
 
         {{-- Modal Create/Edit --}}

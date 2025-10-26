@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\JurnalApi;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,7 +24,7 @@ class Transaction extends Model
         return [
             'slug' => [
                 'onUpdate' => true,
-                'source' => 'number'
+                'source' => 'transaction_number'
             ]
         ];
     }
@@ -61,6 +62,20 @@ class Transaction extends Model
         $formattedNumber = str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
         return $prefix . $formattedNumber;
+    }
+
+    public static function transactionNumberJurnal(JurnalApi $jurnalApi)
+    {
+        // Panggil method `call` dengan method POST, path, dan body
+        $response = $jurnalApi->request(
+            'GET',
+            '/public/jurnal/api/v1/sales_invoices?page_size=1',
+        );
+
+        // Hitung jumlah transaksi yang sudah ada hari ini
+        $lastTransaction = (int) $response['sales_invoices'][0]['transaction_no'];
+
+        return $lastTransaction++;
     }
 
     public function shipping()
