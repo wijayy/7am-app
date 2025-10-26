@@ -69,6 +69,8 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
     Volt::route('categories/add', 'category-create')->name('category.create');
     Volt::route('categories/{slug}/edit', 'category-create')->name('category.edit');
 
+    Volt::route('set-category', 'set-category-index')->name('set-category.index');
+
     Volt::route('newsletters', 'newsletter-index')->name('newsletter.index');
     Volt::route('newsletters/add', 'newsletter-create')->name('newsletter.create');
     Volt::route('newsletters/{slug}/edit', 'newsletter-create')->name('newsletter.edit');

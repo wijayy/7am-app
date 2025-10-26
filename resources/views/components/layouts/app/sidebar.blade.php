@@ -45,6 +45,10 @@
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Redeem Reward
                     </a>
+                    <a href="{{ route('set-category.index') }}" current="{{ request()->routeIs('set-category.index') }}"
+                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+                        Set Categories
+                    </a>
                     <a href="{{ route('category.index') }}" current="{{ request()->routeIs('category.index') }}"
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Categories
