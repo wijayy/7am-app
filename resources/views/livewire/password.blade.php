@@ -1,4 +1,4 @@
-<flux:container class="mt-32 mb-8 min-h-[55vh] bg-white py-8 px-4 md:px-8 lg:px-16 rounded-xl shadow-md w-full">
+<flux:container class="mt-32 mb-8 min-h-[55vh] bg-white dark:bg-gray-500 py-8 px-4 md:px-8 lg:px-16 rounded-xl shadow-md w-full">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
