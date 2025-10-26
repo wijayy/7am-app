@@ -1,21 +1,21 @@
 <div>
-    <flux:container class="min-h-[55vh] mt-30">
-        <div class="bg-[#E8E1D7] min-h-screen py-10 flex flex-col items-center">
+    <flux:container class="mt-30">
+        <div class="bg-[#E8E1D7] min-h-[55vh] dark:bg-gray-800 py-10 flex flex-col items-center">
             <div class="max-w-7xl w-full flex flex-col lg:flex-row gap-8">
 
                 {{-- Left Section – Cart Items --}}
-                <div class="bg-white rounded-2xl p-6 flex-1 shadow">
+                <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 flex-1 shadow">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-semibold text-black">My Cart</h2>
+                        <h2 class="text-2xl font-semibold text-black dark:text-white">My Cart</h2>
                     </div>
 
-                    <h4 class="font-medium text-gray-800 mb-2">Shipping</h4>
+                    <h4 class="font-medium text-gray-800 dark:text-neutral-300 mb-2">Shipping</h4>
                     <div class="flex border border-gray-300 rounded-lg overflow-hidden mb-3">
                         <label class="flex-1">
                             <input type="radio" name="fulfillment" value="delivery" wire:model.live="fulfillment"
                                 class="sr-only peer" checked>
                             <div
-                                class="py-2 text-center cursor-pointer transition-colors bg-gray-100 text-gray-700 peer-checked:bg-[#B68B62] peer-checked:text-white">
+                                class="py-2 text-center cursor-pointer transition-colors bg-gray-100 text-gray-700 peer-checked:bg-[#B68B62] dark:peer-checked:bg-gray-500 peer-checked:text-white">
                                 Delivery
                             </div>
                         </label>
@@ -24,13 +24,13 @@
                             <input type="radio" name="fulfillment" value="pickup" wire:model.live="fulfillment"
                                 class="sr-only peer">
                             <div
-                                class="py-2 text-center cursor-pointer transition-colors bg-gray-100 text-gray-700 peer-checked:bg-[#B68B62] peer-checked:text-white">
+                                class="py-2 text-center cursor-pointer transition-colors bg-gray-100 text-gray-700 peer-checked:bg-[#B68B62] dark:peer-checked:bg-gray-500 peer-checked:text-white">
                                 Pick Up
                             </div>
                         </label>
                     </div>
 
-                    <div class="border border-[#B68B62] rounded-lg p-4 mb-6">
+                    <div class="border border-[#B68B62] dark:border-white rounded-lg p-4 mb-6">
                         @if ($fulfillment === 'delivery')
                             <div class="flex justify-between items-center">
                                 <div class="">
@@ -43,7 +43,7 @@
                                     <div class="mt-2 text-sm md:text-md">Phone : {{ $address->phone }} </div>
                                 </div>
                                 <flux:modal.trigger class="trigger" name="address">
-                                    <button class="text-[#B68B62] text-sm font-medium hover:underline">Change
+                                    <button class="text-[#B68B62] dark:text-white text-sm font-medium hover:underline">Change
                                         Address</button>
                                 </flux:modal.trigger>
                             </div>
@@ -59,7 +59,7 @@
                                     {{-- <div class="mt-2 text-sm md:text-md">Phone : {{ $address->phone }} </div> --}}
                                 </div>
                                 <flux:modal.trigger class="trigger" name="outlet">
-                                    <button class="text-[#B68B62] text-sm font-medium hover:underline">Change
+                                    <button class="text-[#B68B62] dark:text-white text-sm font-medium hover:underline">Change
                                         Outlet</button>
                                 </flux:modal.trigger>
                             </div>
@@ -96,7 +96,7 @@
                     </flux:modal>
 
                     <div
-                        class="grid grid-cols-6 font-semibold text-center text-sm border-b border-gray-300 pb-2 text-gray-800">
+                        class="grid grid-cols-6 font-semibold text-center text-sm border-b border-gray-300 pb-2 text-gray-800 dark:text-white">
                         <div class="col-span-2">Product</div>
                         <div>Price</div>
                         <div>Qty</div>
@@ -112,25 +112,25 @@
                                     style="background-image: url({{ asset("storage/{$item->product->image}") }})">
                                 </div>
                                 <div class="">
-                                    <div class="font-semibold text-[#4B2E05]">{{ $item->product->name }}</div>
-                                    <div class="text-xs md:text-sm">{{ $item->product->category->name }}</div>
+                                    <div class="font-semibold text-[#4B2E05] dark:text-white">{{ $item->product->name }}</div>
+                                    <div class="text-xs md:text-sm dark:text-neutral-300">{{ $item->product->category->name }}</div>
                                 </div>
                             </button>
 
-                            <div class="text-gray-800 font-medium">Rp.
+                            <div class="text-gray-800 font-medium dark:text-neutral-300">Rp.
                                 {{ number_format($item->product->price, 0, ',', '.') }}
                             </div>
 
                             <div class="flex items-center justify-center gap-2">
                                 <button wire:click='minus({{ $item->id }})' icon="minus"
-                                    class="bg-[#B68B62] px-1 text-white h-7 rounded-md text-sm font-bold cursor-pointer">
+                                    class="bg-[#B68B62] dark:bg-gray-600 px-1 text-white h-7 rounded-md text-sm font-bold cursor-pointer">
                                     <flux:icon icon="minus" class="w-5" />
                                 </button>
                                 <input wire:model.live='qty.{{ $key }}.qty'
                                     class="w-12 text-center! border rounded-md h-7" wire:change='change'
                                     min="{{ $item->product->moq }}" type="number"></input>
                                 <button wire:click='plus({{ $item->id }})' icon="plus"
-                                    class="bg-[#B68B62] px-1 text-white h-7 rounded-md text-sm font-bold cursor-pointer">
+                                    class="bg-[#B68B62] dark:bg-gray-600 px-1 text-white h-7 rounded-md text-sm font-bold cursor-pointer">
                                     <flux:icon icon="plus" class="w-5" />
                                 </button>
                             </div>
@@ -152,18 +152,18 @@
                 </div>
 
                 {{-- Right Section – Totals --}}
-                <div class="bg-white rounded-2xl p-6 w-full lg:w-80 shadow h-fit">
+                <div class="bg-white dark:bg-gray-700 rounded-2xl p-6 w-full lg:w-80 shadow h-fit">
                     <h3 class="text-xl font-semibold mb-4">Order Summary</h3>
 
                     <div class="flex justify-between text-gray-800 mb-3">
-                        <div class="">SubTotal ({{ $carts->count() }} items)</div>
-                        <div class="">Rp. {{ number_format($subtotal, 0, ',', '.') }}</div>
+                        <div class="dark:text-white">SubTotal ({{ $carts->count() }} items)</div>
+                        <div class="dark:text-white">Rp. {{ number_format($subtotal, 0, ',', '.') }}</div>
                     </div>
 
                     <hr class="border-gray-300 mb-3">
 
                     <div>
-                        <div class="mb-2 font-medium text-gray-800">Order Note</div>
+                        <div class="mb-2 font-medium text-gray-800 dark:text-white  ">Order Note</div>
                         <flux:textarea wire:model.live='note' placeholder="Add a note for your order..."
                             class="w-full rounded-md border border-gray-300 p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#B68B62]">
                         </flux:textarea>
@@ -218,7 +218,7 @@
                         </div>
                     @else
                         <button variant="primary" wire:click='pn({{ 1 }})'
-                            class="w-full! mb-2 bg-[#29303A] hover:bg-[#4C535D] text-white py-2 font-medium rounded-md text-sm transition">
+                            class="w-full! mb-2 bg-[#29303A] dark:bg-gray-600 hover:bg-[#4C535D] text-white py-2 font-medium rounded-md text-sm transition">
                             Have a coupon?</button>
                     @endif
 
