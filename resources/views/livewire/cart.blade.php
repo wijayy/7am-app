@@ -106,16 +106,16 @@
 
                     @forelse ($carts as $key => $item)
                         <div class="grid grid-cols-6 items-center py-4 border-b border-gray-200 text-center">
-                            <a class="flex items-center gap-2 col-span-2 text-left"
-                                href="{{ route('shop.show', ['slug' => $item->product->slug]) }}">
-                                <div class="size-20 aspect-square rounded bg-center bg-cover bg-no-repeat"
-                                    style="background-image: url({{ $item->product->image_url }})">
+                            <button class="flex items-center gap-2 col-span-2 text-left"
+                                wire:click="openShowModal('{{ $item->product->jurnal_id }}')">
+                                <div class="size-20 rounded bg-center bg-cover bg-no-repeat"
+                                    style="background-image: url({{ asset("storage/{$item->product->image}") }})">
                                 </div>
                                 <div class="">
                                     <div class="font-semibold text-[#4B2E05]">{{ $item->product->name }}</div>
                                     <div class="text-xs md:text-sm">{{ $item->product->category->name }}</div>
                                 </div>
-                            </a>
+                            </button>
 
                             <div class="text-gray-800 font-medium">Rp.
                                 {{ number_format($item->product->price, 0, ',', '.') }}
@@ -161,6 +161,13 @@
                     </div>
 
                     <hr class="border-gray-300 mb-3">
+
+                    <div>
+                        <div class="mb-2 font-medium text-gray-800">Order Note</div>
+                        <flux:textarea wire:model.live='note' placeholder="Add a note for your order..."
+                            class="w-full rounded-md border border-gray-300 p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#B68B62]">
+                        </flux:textarea>
+                    </div>
 
                     <div class="mb-3">
                         {{-- <div class="space-y-2">
@@ -224,5 +231,6 @@
         </div>
     </flux:container>
 
+    @livewire('shop-show')
     @livewire('newsletter')
 </div>

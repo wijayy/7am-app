@@ -33,6 +33,7 @@ class Cart extends Component
 
         $this->addresses = Auth::user()->addresses;
         $this->address = $this->addresses->first();
+
         $this->outlets = Outlet::all();
         $this->outlet = $this->outlets->first();
 
@@ -98,7 +99,8 @@ class Cart extends Component
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            if (config('app.debug', false)) throw $th;
+            if (config('app.debug', false))
+                throw $th;
             return back()->with('error', '');
         }
     }
@@ -229,10 +231,9 @@ class Cart extends Component
         $this->shipping_date = $this->min;
     }
 
-    public function changeAddress($id)
+    public function openShowModal($jurnal_id)
     {
-        $this->address = Address::find($id);
-        $this->dispatch('modal-close', name: 'address');
+        $this->dispatch('showModal', jurnal_id: $jurnal_id);
     }
 
     public function changeOutlet($id)

@@ -13,6 +13,11 @@ class B2bHome extends Component
         $this->products = Product::latest()->take(12)->get();
     }
 
+    public function openShowModal($jurnal_id)
+    {
+        $this->dispatch('showModal', jurnal_id: $jurnal_id);
+    }
+
     public function render()
     {
         return view('livewire.b2b-home')->layout('components.layouts.app.header', ['title' => "Home"]);

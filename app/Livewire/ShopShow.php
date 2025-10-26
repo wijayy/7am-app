@@ -45,6 +45,6 @@ class ShopShow extends Component
 
     public function render()
     {
-        return view('livewire.shop-show')->layout('components.layouts.app.header', ['title' => $this->product['name']]);
+        return view('livewire.shop-show')->layout('components.layouts.app', ['title' => "asd"]);
     }
 }

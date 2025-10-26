@@ -1,4 +1,4 @@
-<flux:container class="w-full mt-20">
+<flux:container class="mt-32 mb-8 min-h-[55vh] bg-white py-8 px-4 md:px-8 lg:px-16 rounded-xl shadow-md w-full">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Appearance')" :subheading=" __('Update the appearance settings for your account')">

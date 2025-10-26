@@ -116,6 +116,12 @@
                             </flux:menu.item>
                         </flux:menu.radio.group>
 
+                        <flux:menu.radio.group>
+                            <flux:menu.item :href="route('settings.bussiness-info')" icon="home-modern" wire:navigate>
+                                {{ __('Business Info') }}
+                            </flux:menu.item>
+                        </flux:menu.radio.group>
+
                         <flux:menu.separator />
 
                         <form method="POST" action="{{ route('logout') }}" class="w-full">
