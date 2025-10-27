@@ -220,14 +220,22 @@ class Cart extends Component
     {
         $now = Carbon::now();
 
-        if ($now->lt($now->copy()->setTime(17, 0))) {
+        $min = 1;
+
+        if (!$now->lt($now->copy()->setTime(17, 0))) {
             // sebelum jam 5 sore → minimal besok
-            $this->min = $now->copy()->addDay()->toDateString();
-        } else {
-            // setelah jam 5 sore → minimal lusa
-            $this->min = $now->copy()->addDays(2)->toDateString();
+            $min++;
         }
 
+        // Jika ada produk sourdough di cart, min++
+        foreach ($this->carts as $item) {
+            if (stripos($item->product->name, 'sourdough') !== false) {
+                $min++;
+                break;
+            }
+        }
+
+        $this->min = $now->copy()->addDays($min)->toDateString();
         $this->shipping_date = $this->min;
     }
 
@@ -240,6 +248,12 @@ class Cart extends Component
     {
         $this->outlet = Outlet::find($id);
         $this->dispatch('modal-close', name: 'outlet');
+    }
+
+    public function changeAddress($id)
+    {
+        $this->address = Address::find($id);
+        $this->dispatch('modal-close', ['name' => 'address']);
     }
 
     public function render()

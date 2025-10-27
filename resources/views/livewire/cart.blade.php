@@ -160,11 +160,28 @@
                         <div class="">Rp. {{ number_format($subtotal, 0, ',', '.') }}</div>
                     </div>
 
+                    @if ($c ?? false)
+                        <div class="flex justify-between text-gray-800 mb-3">
+                            <div class="">Coupon</div>
+                            <div class="">{{ $c->code }}</div>
+                        </div>
+                        <div class="flex justify-between text-gray-800 mb-3">
+                            <div class="">Discount</div>
+                            <div class="">Rp. {{ number_format($this->countDiscount(), 0, ',', '.') }}</div>
+                        </div>
+                    @endif
+
                     <hr class="border-gray-300 mb-3">
 
-                    <div>
-                        <div class="mb-2 font-medium text-gray-800">Order Note</div>
-                        <flux:textarea wire:model.live='note' placeholder="Add a note for your order..."
+                    <div class="">
+                        <flux:input wire:model.live='shipping_date' min="{{ $min }}" type="date"
+                            label="Shipping Date">
+                        </flux:input>
+                    </div>
+                    <div class="mt-2">
+                        {{-- <div class="mb-2 font-medium text-gray-800">Order Note</div> --}}
+                        <flux:textarea wire:model.live='note' label="Order Note"
+                            placeholder="Add a note for your order..."
                             class="w-full rounded-md border border-gray-300 p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#B68B62]">
                         </flux:textarea>
                     </div>
@@ -188,17 +205,6 @@
                             </label>
                         </div> --}}
                     </div>
-
-                    @if ($c ?? false)
-                        <div class="flex text-xs md:text-sm mt-4 justify-between">
-                            <div class="">Coupon</div>
-                            <div class="">{{ $c->code }}</div>
-                        </div>
-                        <div class="flex text-xs md:text-sm mt-4 justify-between">
-                            <div class="">Discount</div>
-                            <div class="">Rp. {{ number_format($this->countDiscount(), 0, ',', '.') }}</div>
-                        </div>
-                    @endif
 
                     @if ($cpn)
                         <div class="h-fit space-y-4 items-end rounded mb-2">

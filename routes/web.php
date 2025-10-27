@@ -65,6 +65,9 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
     Volt::route('invoice/{slug}', 'invoice')->name('invoice');
     Volt::route('checkout/{slug}/pay', 'payment')->name('payment');
 
+    Volt::route('set-categories', 'set-category-index')->name('setcategory.index');
+
+
     Volt::route('categories', 'category-index')->name('category.index');
     Volt::route('categories/add', 'category-create')->name('category.create');
     Volt::route('categories/{slug}/edit', 'category-create')->name('category.edit');
