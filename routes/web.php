@@ -22,7 +22,7 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('reservation/make', 'reservation-create')->name('reservation.create');
     Volt::route('reservation/history', 'reservation.history')->name('reservation.history');
 
-    Volt::route('set-categories', 'set-category-index')->name('setcategory.index');
+    // Volt::route('set-categories', 'set-category-index')->name('setcategory.index');
 
     Volt::route('members', 'member-index')->name('member.index');
     Volt::route('members/{slug}', 'member-show')->name('member.show');
@@ -71,6 +71,8 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
     Volt::route('categories', 'category-index')->name('category.index');
     Volt::route('categories/add', 'category-create')->name('category.create');
     Volt::route('categories/{slug}/edit', 'category-create')->name('category.edit');
+
+    Volt::route('set-category', 'set-category-index')->name('set-category.index');
 
     Volt::route('newsletters', 'newsletter-index')->name('newsletter.index');
     Volt::route('newsletters/add', 'newsletter-create')->name('newsletter.create');

@@ -13,7 +13,11 @@ use Livewire\Component;
 class SetCategoryCreate extends Component
 {
 
-    public $title = "", $categories, $selectedCategories, $id;
+    public $title = "Create New Set Category", $categories, $selectedCategories, $id;
+    protected $listeners = [
+        'createModal' => 'openCreateModal',
+        'editModal' => 'openEditModal'
+    ];
 
     #[Validate('required')]
     public $name = '';
