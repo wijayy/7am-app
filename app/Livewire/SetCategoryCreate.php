@@ -47,7 +47,7 @@ class SetCategoryCreate extends Component
 
         $this->id = $setCategory->id;
         $this->name = $setCategory->name;
-        $this->selectedCategories = $setCategory->categories()->pluck('id')->toArray();
+        $this->selectedCategories = $setCategory->categories()->pluck('categories.id')->toArray();
 
         $this->dispatch('modal-show', name: 'set-category-create');
     }
