@@ -242,6 +242,12 @@ class Cart extends Component
         $this->dispatch('modal-close', name: 'outlet');
     }
 
+    public function changeAddress($id)
+    {
+        $this->address = Address::find($id);
+        $this->dispatch('modal-close', name: 'address');
+    }
+
     public function render()
     {
         // Pada render halaman cart.blade.php, buatin untuk kirim data list dari outlet yang ada juga
