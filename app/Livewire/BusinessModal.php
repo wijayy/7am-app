@@ -4,18 +4,19 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Bussiness;
+use App\Models\SetCategory;
 use Illuminate\Support\Facades\DB;
 
 class BusinessModal extends Component
 {
-    public $title = "All Registered Business", $business, $setCategory;
+    public $title = "All Registered Business", $business, $setCategory=[];
     public $id = null;
     protected $paginationTheme = 'tailwind';
 
     #[Validate('required')]
     public $status = '';
 
-    #[Validate('required_if:status,accepted')]
+    #[Validate('required_if:status,appproved')]
     public $name = '', $set_category_id;
 
     protected $listeners = [
@@ -28,6 +29,7 @@ class BusinessModal extends Component
         return [
             'name' => 'nullable|string|max:100',
             'status' => 'nullable|string|max:50',
+            'set_category_id' => 'nullable|exists:set_categories,id',
         ];
     }
 
@@ -47,9 +49,11 @@ class BusinessModal extends Component
     {
         $this->resetValidation();
         $this->business = Bussiness::find($id);
+        $this->setCategory = SetCategory::all();
         $this->id = $this->business->id;
         $this->name = $this->business->name;
         $this->status = $this->business->status;
+        $this->set_category_id = "";
 
         $this->dispatch('modal-show', name: 'business-modal');
     }
