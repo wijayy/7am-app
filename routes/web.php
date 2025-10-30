@@ -45,6 +45,8 @@ Route::prefix('b2b')->group(function () {
 
     Volt::route('shop', 'shop-index')->name('shop.index');
     Volt::route('shop/{slug}', 'shop-show')->name('shop.show');
+
+    Volt::route('wholesale', 'wholesale-index')->name('wholesale.index');
 });
 
 Route::prefix('b2b')->middleware(['auth'])->group(function () {
