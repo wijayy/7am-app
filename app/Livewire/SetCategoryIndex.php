@@ -36,6 +36,8 @@ class SetCategoryIndex extends Component
         if ($setCategory) {
             $setCategory->delete();
             session()->flash('success', 'Set category deleted successfully');
+            $this->dispatch('modal-close', name: 'delete-'.$id);
+            $this->redirect(route('set-category.index'));
         } else {
             session()->flash('error', 'Set category not found');
         }

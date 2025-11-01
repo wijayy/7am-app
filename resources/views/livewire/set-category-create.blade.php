@@ -1,4 +1,4 @@
-<flux:modal name="set-category-create" size="lg">
+<flux:modal name="set-category-create" class="w-1/2">
     <div class="font-semibold text-lg">{{ $title }}</div>
     <div class="mt-4">
         <form wire:submit.prevent="save">

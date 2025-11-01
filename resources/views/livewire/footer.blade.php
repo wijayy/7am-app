@@ -1,4 +1,4 @@
-<footer class="border-t border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-sm">
+<footer class="border-t border-gray-300 dark:border-neutral-700 bg-white dark:bg-gray-800 text-sm">
     <div class="w-full [:where(&)]:max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-5 gap-6">
         <!-- Company Name -->
         <div class="md:col-span-5">

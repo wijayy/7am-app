@@ -253,7 +253,8 @@ class Cart extends Component
     public function changeAddress($id)
     {
         $this->address = Address::find($id);
-        $this->dispatch('modal-close', ['name' => 'address']);
+
+        $this->dispatch('modal-close', name: 'address');
     }
 
     public function render()

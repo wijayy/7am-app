@@ -11,8 +11,8 @@
         <div class="flex gap-4 text-start items-center">
             <div class="w-1/3">Status</div>
             <div class="w-2/3 flex items-center"> :
-                <flux:select wire:model.live="status" placeholder="Choose status">
-                    <flux:select.option value="">-- Choose status --</flux:select.option>
+                <flux:select wire:model.live="status">
+                    <flux:select.option value="" disabled selected>-- Choose status --</flux:select.option>
                     <flux:select.option value="approved">Approved</flux:select.option>
                     <flux:select.option value="rejected">Rejected</flux:select.option>
                 </flux:select>
@@ -42,6 +42,14 @@
             <div class="w-1/3">Registered Address</div>
             <div class="w-2/3">: {{ $business?->address }}</div>
         </div>
+
+        <flux:select label="Select Categories" class="h-full" wire:model.defer="set_category_id">
+            <option value="" disabled selected>Choose Category</option>
+            @foreach ($setCategory as $category)
+                <option value={{ $category->id }}>{{ $category->name }}</option>
+            @endforeach
+        </flux:select>
+
         <flux:separator text="Representative"></flux:separator>
         <div class="flex gap-4 text-start">
             <div class="w-1/3">Representative</div>

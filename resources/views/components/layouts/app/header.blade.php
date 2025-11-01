@@ -17,6 +17,7 @@
             <li><a href="{{ route('b2b-home') }}" current="{{ request()->routeIs('home') }}">Home</a></li>
             <li><a href="{{ route('shop.index') }}" current="{{ request()->routeIs('shop.*') }}">Shop</a></li>
             <li><a href="{{ route('contact') }}" current="{{ request()->routeIs('contact') }}">Contact</a></li>
+            <li><a href="{{ route('wholesale.index') }}" current="{{ request()->routeIs('wholesale.*') }}">Wholesale</a></li>
             @auth
                 <li><a href="{{ route('history') }}" current="{{ request()->routeIs('history') }}">History</a></li>
                 <li><a href="{{ route('checkout') }}" current="{{ request()->routeIs('checkout') }}">Checkout</a></li>
@@ -137,7 +138,9 @@
         @endauth
     </nav>
 
-    {{ $slot }}
+    <div class="min-h-[55vh]">
+        {{ $slot }}
+    </div>
 
     @livewire('footer')
     @livewire('copyright')

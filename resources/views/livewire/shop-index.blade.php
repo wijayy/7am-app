@@ -1,6 +1,8 @@
 {{-- @dd($products) --}}
 <div>
-    <flux:secondary-hero text="Our Products"
+    <flux:secondary-hero
+        url="assets/shop/banner.png"
+        text="Our Products"
         description="Discover our delightful range of freshly baked breads and pastries, crafted to bring joy to your taste buds every morning.">
     </flux:secondary-hero>
 

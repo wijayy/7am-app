@@ -15,12 +15,12 @@
                 </nav>
 
                 <div>
-                    <h1 class="text-md font-bold capitalize text-[#4B2E05]">{{ $product->name }}</h1>
+                    <h1 class="text-md font-bold capitalize text-[#4B2E05] dark:text-white">{{ $product->name }}</h1>
                     <p class="text-gray-500 mb-2 text-xs">Category : {{ $product->category->name }}</p>
                 </div>
 
                 <div>
-                    <p class="text-md font-semibold text-[#4B2E05]">Rp.
+                    <p class="text-md font-semibold text-[#4B2E05] dark:text-white">Rp.
                         {{ number_format($product->price, 0, ',', '.') }}</p>
                     <p class="text-xs text-gray-500 mb-4">Minimum Order Quantity: {{ $product->moq }}</p>
                 </div>
