@@ -7,6 +7,8 @@
  *
  */
 
+use App\Models\District;
+use App\Models\Province;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -21,13 +23,10 @@ class CreateRegenciesTables extends Migration
     public function up()
     {
         Schema::create('regencies', function (Blueprint $table) {
-            $table->char('id', 4)->primary();
-            $table->char('province_id', 2);
+            $table->id();
             $table->string('name', 50);
-            $table->foreign('province_id')
-                ->references('id')
-                ->on('provinces')
-                ->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignIdFor(Province::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

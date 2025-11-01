@@ -38,9 +38,12 @@
                                         Your Address
                                     </h3>
                                     <div class="text-sm md:text-md">{{ $address->name }} /
-                                        {{ $address->address }}
+                                        {{ $address->phone }}
                                     </div>
-                                    <div class="mt-2 text-sm md:text-md">Phone : {{ $address->phone }} </div>
+                                    <div class="mt-2 text-sm md:text-md">Phone : {{ $address->address }} </div>
+                                    <div class="text-xs md:text-sm">{{ $item->regency->name }} -
+                                        {{ $item->district->name }} -
+                                        {{ $item->village->name }}</div>
                                 </div>
                                 <flux:modal.trigger class="trigger" name="address">
                                     <button
@@ -166,12 +169,13 @@
 
                     @if ($c ?? false)
                         <div class="flex justify-between text-gray-800 mb-3">
-                            <div class="">Coupon</div>
-                            <div class="">{{ $c->code }}</div>
+                            <div class="dark:text-white">Coupon</div>
+                            <div class="dark:text-white">{{ $c->code }}</div>
                         </div>
                         <div class="flex justify-between text-gray-800 mb-3">
-                            <div class="">Discount</div>
-                            <div class="">Rp. {{ number_format($this->countDiscount(), 0, ',', '.') }}</div>
+                            <div class="dark:text-white">Discount</div>
+                            <div class="dark:text-white">Rp. {{ number_format($this->countDiscount(), 0, ',', '.') }}
+                            </div>
                         </div>
                     @endif
 
@@ -223,7 +227,7 @@
                                 </flux:input>
                             </div>
                             @if ($c)
-                                <div class="text-mine-200">Coupon applied</div>
+                                <div class="text-mine-200 dark:bg-white">Coupon applied</div>
                             @endif
                         </div>
                     @else

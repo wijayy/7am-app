@@ -1,17 +1,17 @@
 <div class="space-y-4">
     <flux:session>{{ $title }}</flux:session>
 
-    <div class="p-4 bg-white dark:bg-neutral-800 shadow rounded space-y-4">
+    <flux:container-sidebar>
         <div class="flex justify-end">
             <flux:button icon="plus" variant="primary" wire:click="$dispatch('openCreateModal')">
                 Add Membership Type
             </flux:button>
         </div>
 
-        <div class="overflow-x-auto rounded-lg">
-            <div class="w-full mx-auto border border-gray-200 dark:border-neutral-700 rounded-lg overflow-hidden">
+        <div class="overflow-x-auto mt-4 rounded-lg">
+            <div class="w-full mx-auto border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
                 <div
-                    class="hidden md:grid grid-cols-5 bg-gray-100 dark:bg-neutral-700/60 text-sm font-semibold text-gray-700 dark:text-gray-300 px-4 py-2">
+                    class="hidden md:grid grid-cols-5 bg-gray-100 dark:bg-gray-800/60 text-sm font-semibold text-gray-700 dark:text-gray-300 px-4 py-2">
                     <div>#</div>
                     <div>Name</div>
                     <div class="text-center">Minimum Point</div>
@@ -76,5 +76,5 @@
 
         {{-- Modal Create/Edit --}}
         @livewire('type-modal')
-    </div>
+        </flux:container->
 </div>

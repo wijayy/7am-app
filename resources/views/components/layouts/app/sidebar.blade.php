@@ -5,12 +5,12 @@
     @include('partials.head')
 </head>
 
-<body class="bg-[#E8E1D7] min-h-screen bg-mine-100 dark:bg-zinc-800">
+<body class="min-h-screen bg-mine-100 dark:bg-gray-800">
     <div class="flex h-screen w-full">
 
         <!-- 🧭 SIDEBAR -->
         <aside
-            class="sidebar w-2/12 stick top-0 bg-[#DFD5BA] dark:bg-zinc-900 flex flex-col justify-between border-r border-gray-200 dark:border-zinc-700">
+            class="sidebar w-2/12 stick top-0 bg-[#DFD5BA] dark:bg-gray-900 flex flex-col justify-between border-r border-gray-200 dark:border-zinc-700">
             <div>
                 <!-- Logo -->
                 <div class="py-8 flex items-center justify-center border-b border-gray-300 dark:border-zinc-700">
@@ -45,7 +45,8 @@
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Redeem Reward
                     </a>
-                    <a href="{{ route('set-category.index') }}" current="{{ request()->routeIs('set-category.index') }}"
+                    <a href="{{ route('set-category.index') }}"
+                        current="{{ request()->routeIs('set-category.index') }}"
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Set Categories
                     </a>

@@ -1,7 +1,7 @@
 <div class="space-y-4">
     <flux:session>{{ $title }}</flux:session>
 
-    <div class="p-4 rounded bg-white dark:bg-neutral-700">
+    <flux:container-sidebar>
         <!-- Header -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
             <div class="flex items-center justify-between gap-4 w-full">
@@ -18,7 +18,7 @@
                 <div class="w-full border border-gray-200 dark:border-neutral-600 rounded-lg overflow-hidden">
                     {{-- Header --}}
                     <div
-                        class="hidden text-center md:grid grid-cols-[60px_1fr_1fr_80px_150px_1fr_1fr_1fr] bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-gray-300 text-sm font-semibold border-b border-gray-200 dark:border-neutral-600">
+                        class="hidden text-center md:grid grid-cols-[60px_1fr_1fr_80px_150px_1fr_1fr_1fr] bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-semibold border-b border-gray-200 dark:border-neutral-600">
                         <div class="px-4 py-3">#</div>
                         <div class="px-4 py-3">Name</div>
                         <div class="px-4 py-3">Phone</div>
@@ -101,5 +101,5 @@
                 You have not made any reservations yet.
             </div>
         @endif
-    </div>
+    </flux:container-sidebar>
 </div>

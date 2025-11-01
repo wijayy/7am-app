@@ -132,10 +132,7 @@ class Product extends Model
             self::whereNotNull('jurnal_id')->whereNotIn('jurnal_id', $jurnalProductIds)->delete();
 
             // 3. Ambil daftar Jurnal ID dari kategori yang aktif dan memiliki relasi ke set_category_items
-            $activeCategoryJurnalIds = Category
-                ::whereHas('setCategories')
-                ->pluck('jurnal_id')
-                ->toArray();
+            $activeCategoryJurnalIds = Category::where('active', true)->pluck('jurnal_id')->toArray();
 
             // dd($activeCategoryJurnalIds);
 
@@ -145,9 +142,9 @@ class Product extends Model
             foreach ($products as $key => $item) {
                 // Dapatkan Jurnal ID kategori dari produk ini
                 $productCategoryId = $item['product_categories'][0]['id'] ?? null;
-
                 // Lanjutkan hanya jika kategori produk ada di daftar kategori aktif
                 if ($productCategoryId && in_array($productCategoryId, $activeCategoryJurnalIds)) {
+                    // dd($productCategoryId);
                     self::updateOrCreate(
                         ['jurnal_id' => $item['id']],
                         [
@@ -172,6 +169,7 @@ class Product extends Model
             if (config('app.debug', false)) {
                 throw $th;
             }
+            dd($id);
             session()->flash('error', 'Failed to synchronize products: ' . $th->getMessage());
         }
     }

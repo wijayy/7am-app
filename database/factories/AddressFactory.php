@@ -3,6 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Regency;
+use App\Models\Village;
+use App\Models\District;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,10 +21,10 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'=>User::factory(),
-            'name'=>fake()->name(),
+            'user_id' => User::factory(),
+            'name' => fake()->name(),
             'phone' => fake()->phoneNumber(),
-            'address'=>fake()->address()
+            'address' => fake()->address(),
         ];
     }
 }

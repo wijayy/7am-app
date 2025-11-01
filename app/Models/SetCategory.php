@@ -36,6 +36,12 @@ class SetCategory extends Model
      */
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'set_category_items');
+        return $this->belongsToMany(
+            Category::class,             // model tujuan
+            'set_category_items',        // tabel pivot
+            'set_category_id',           // FK dari SetCategory
+            'category_id'                // FK dari Category
+        )
+            ->select('categories.*'); // 👈 cegah "ambiguous column id"
     }
 }

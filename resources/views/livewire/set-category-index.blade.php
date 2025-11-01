@@ -9,61 +9,44 @@
         </div>
 
         <!-- Table -->
-        {{-- <div class="overflow-x-auto bg-white dark:bg-neutral-800 rounded-lg">
+        <div class="overflow-x-auto bg-white dark:bg-neutral-800 rounded-lg">
             <table
                 class="w-full mx-auto divide-y divide-gray-200 dark:divide-neutral-700 border border-gray-200 dark:border-neutral-700">
                 <thead class="bg-gray-100 dark:bg-neutral-700/60">
                     <tr>
                         <th class="px-4 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 w-12">#
                         </th>
-                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Card</th>
-                        <th class="px-4 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Usage
-                        </th>
+                        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">Set
+                            Category</th>
                         <th class="px-4 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            Discount</th>
-                        <th class="px-4 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            Discount Type</th>
-                        <th class="px-4 py-2 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">Action
+                            Categories
                         </th>
                     </tr>
                 </thead>
 
                 <tbody class="divide-y divide-gray-100 dark:divide-neutral-700">
-                    @forelse ($cards as $item)
+                    @forelse ($setCategories as $item)
                         <tr class="hover:bg-gray-50 dark:hover:bg-neutral-700/40 transition">
                             <td class="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
                                 {{ $loop->iteration }}
                             </td>
 
-                            <td class="px-4 py-2 text-sm text-gray-800 dark:text-gray-200">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-20 h-14 bg-center bg-cover bg-no-repeat rounded-md border border-gray-200 dark:border-neutral-600"
-                                        style="background-image: url('{{ asset("storage/$item->card") }}')">
-                                    </div>
-                                    <span class="font-medium">{{ $item->name }}</span>
+                            <td class="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                                {{ $item->name }}
+                            </td>
+
+                            <td class="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                                <div class="">
+                                    @foreach ($item->items as $itm)
+                                        <div class="">{{ $itm->category->name }}</div>
+                                    @endforeach
                                 </div>
-                            </td>
-
-                            <td class="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
-                                {{ $item->usage }}
-                            </td>
-
-                            <td class="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
-                                {{ $item->discount }}%
-                            </td>
-
-                            <td class="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300 capitalize">
-                                {{ $item->discount_type }}
                             </td>
 
                             <td class="px-4 py-2 text-center flex justify-center items-center gap-2">
                                 <flux:tooltip content="Edit Card">
-                                    <flux:button 
-                                        wire:click="$dispatch('openEditModal', { id: {{ $item->id }} }).global"
-                                        icon="pencil-square"
-                                        size="sm" 
-                                        variant="primary" 
-                                        color="amber">
+                                    <flux:button wire:click="openEditModal({{ $item->id }})" icon="pencil-square"
+                                        size="sm" variant="primary" color="amber">
                                     </flux:button>
                                 </flux:tooltip>
 
@@ -101,7 +84,7 @@
                     @endforelse
                 </tbody>
             </table>
-        </div> --}}
+        </div>
 
         <!-- Modal Create/Edit -->
         @livewire('set-category-create')

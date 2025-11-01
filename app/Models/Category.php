@@ -42,7 +42,13 @@ class Category extends Model
 
     public function setCategories()
     {
-        return $this->belongsToMany(SetCategory::class, 'set_category_items');
+        return $this->belongsToMany(
+            SetCategory::class,          // model tujuan
+            'set_category_items',        // tabel pivot
+            'category_id',               // FK dari Category
+            'set_category_id'            // FK dari SetCategory
+        )
+            ->select('set_categories.*'); // 👈 cegah konflik id
     }
 
     public static function sync(JurnalApi $jurnalApi)
@@ -70,7 +76,8 @@ class Category extends Model
                 self::updateOrCreate(
                     ['jurnal_id' => $item['id']],
                     [
-                        'name' => $item['name']
+                        'name' => $item['name'],
+                        'active' => true,
                     ]
                 );
             }

@@ -13,7 +13,7 @@ use Livewire\Component;
 class SetCategoryCreate extends Component
 {
 
-    public $title = "Create New Set Category", $categories, $selectedCategories, $id;
+    public $title = "Create New Set Category", $categories, $selectedCategories = [], $id;
     protected $listeners = [
         'createModal' => 'openCreateModal',
         'editModal' => 'openEditModal'
@@ -52,7 +52,7 @@ class SetCategoryCreate extends Component
         $this->dispatch('modal-show', name: 'set-category-create');
     }
 
-    public function togglecategory($categoryId)
+    public function toggleCategory($categoryId)
     {
         if (in_array($categoryId, $this->selectedCategories)) {
             // kalau sudah ada → hapus

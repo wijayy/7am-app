@@ -18,6 +18,6 @@ class SetCategorySeeder extends Seeder
             'name' => 'Default'
         ]);
 
-        SetCategoryItem::factory(1)->create();
+        SetCategoryItem::factory(2)->create();
     }
 }

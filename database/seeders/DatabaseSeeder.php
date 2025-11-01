@@ -6,12 +6,15 @@ use App\Models\Address;
 use App\Models\Bussiness;
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\District;
 use App\Models\Outlet;
 use App\Models\Product;
 use App\Models\RedeemPoint;
+use App\Models\Regency;
 use App\Models\SetCategory;
 use App\Models\SetCategoryItem;
 use App\Models\User;
+use App\Models\Village;
 use App\Services\JurnalApi;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -46,7 +49,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        Address::factory(3)->recycle($user)->create();
 
         // foreach (range(1, 3) as $key => $item) {
         //     Category::factory(1)->create(['name' => "cat$item"]);
@@ -82,6 +84,19 @@ class DatabaseSeeder extends Seeder
         $this->call(MemberSeeder::class);
 
         $this->call(SettingSeeder::class);
+        $this->call(IndoRegionSeeder::class);
+
+        foreach (range(1, 3) as $key => $item) {
+            $regency = Regency::inRandomOrder()->first();
+            $district = District::where('regency_id', $regency->id)->inRandomOrder()->first();
+            $village = Village::where('district_id', $district->id)->inRandomOrder()->first();
+
+            Address::factory()->recycle([$user])->create([
+                'regency_id' => $regency->id,
+                'district_id' => $district->id,
+                'village_id' => $village->id
+            ]);
+        }
 
         $this->call(RedeemPointSeeder::class);
 

@@ -35,6 +35,8 @@ class ShopIndex extends Component
             $setCategory = SetCategory::find($defaultSetCategoryId);
             $this->categories = $setCategory?->category ?? collect();
         }
+
+        // dd(Auth::user()?->bussinesses?->setCategory->id);
     }
 
     public function resetFilter()
@@ -62,7 +64,7 @@ class ShopIndex extends Component
             'search' => $this->search,
             'min' => $this->min,
             'max' => $this->max,
-            'set_category' => Auth::user()?->bussinesses?->setCategory->id
+            'set_category' => Auth::user()?->bussinesses?->setCategory->id ?? Setting::where('key', 'default_set_category')->value('value')
         ])->paginate(24)->withQueryString();
 
         return view('livewire.shop-index', compact('products'))->layout('components.layouts.app.header', ['title' => "Shop"]);
