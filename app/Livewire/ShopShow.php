@@ -26,6 +26,13 @@ class ShopShow extends Component
 
     public function addToCart()
     {
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect(route('login'));
+        }
+
         try {
             $cart = Cart::where('user_id', Auth::user()->id)->where('product_id', $this->product->id)->firstOrFail();
 

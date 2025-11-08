@@ -1,4 +1,5 @@
-<div class="bg-white dark:bg-gray-700 w-[70%] shadow-md absolute left-[50%] -translate-x-[50%] -mt-32 flex justify-center items-center flex-wrap lg:flex-nowrap p-10 rounded-xl gap-4">
+<div
+    class="bg-white dark:bg-gray-700 w-[70%] shadow-md absolute left-[50%] -translate-x-[50%] -mt-32 flex justify-center items-center flex-wrap lg:flex-nowrap p-10 rounded-xl gap-4">
     <div class="title">
         <h2 class="text-3xl font-semibold">Why Choose Us?</h2>
     </div>
@@ -18,8 +19,9 @@
                 <flux:icon.truck class="size-14!"></flux:icon.truck>
             </div>
             <div class="w-4/5">
-                <div class=" lg:text-lg font-semibold">Free Shipping</div>
-                <div class="text-sm lg:text-base text-[#D4A373] dark:text-neutral-300">On Denpasar, Badung, Gianyar area</div>
+                <div class=" lg:text-lg font-semibold">Free Shipping*</div>
+                <div class="text-sm lg:text-base text-[#D4A373] dark:text-neutral-300">On Uluwatu, Sanur, Canggu, Ubud,
+                    Nyanyi area</div>
             </div>
         </div>
         <div class="flex gap-4 min-w-56">
@@ -28,7 +30,8 @@
             </div>
             <div class="w-4/5">
                 <div class=" lg:text-lg font-semibold">Time Limit</div>
-                <div class="text-sm lg:text-base text-[#D4A373] dark:text-neutral-300">On 5PM for next day shipping</div>
+                <div class="text-sm lg:text-base text-[#D4A373] dark:text-neutral-300">On 5PM for next day shipping**
+                </div>
             </div>
         </div>
         <div class="flex gap-4 min-w-56">

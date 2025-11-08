@@ -21,7 +21,7 @@
         <flux:separator text="Business Info"></flux:separator>
         <div class="flex gap-4 text-start items-center">
             <div class="w-1/3">Business Name</div>
-            @if ($status != 'approved')
+            @if ($business?->status != 'approved')
                 <div class="w-2/3 flex items-center">
                     :
                     <flux:input wire:model.live="name" />
@@ -31,24 +31,34 @@
             @endif
         </div>
         <div class="flex gap-4 text-start">
-            <div class="w-1/3">Business Entity</div>
-            <div class="w-2/3">: {{ $business?->entity }}</div>
-        </div>
-        <div class="flex gap-4 text-start">
             <div class="w-1/3">Registered Number</div>
-            <div class="w-2/3">: {{ $business?->number }}</div>
+            <div class="w-2/3">: {{ $business?->npwp }}</div>
         </div>
         <div class="flex gap-4 text-start">
             <div class="w-1/3">Registered Address</div>
             <div class="w-2/3">: {{ $business?->address }}</div>
         </div>
 
-        <flux:select label="Select Categories" class="h-full" wire:model.defer="set_category_id">
+        <flux:select label="Select Categories" class="h-full" wire:model.live="set_category_id">
             <option value="" disabled selected>Choose Category</option>
             @foreach ($setCategory as $category)
                 <option value={{ $category->id }}>{{ $category->name }}</option>
             @endforeach
         </flux:select>
+
+        <flux:separator text="Bank Info"></flux:separator>
+        <div class="flex gap-4 text-start">
+            <div class="w-1/3">Bank</div>
+            <div class="w-2/3">: {{ $business?->bank }}</div>
+        </div>
+        <div class="flex gap-4 text-start">
+            <div class="w-1/3">Account Number</div>
+            <div class="w-2/3">: {{ $business?->account_number }}</div>
+        </div>
+        <div class="flex gap-4 text-start">
+            <div class="w-1/3">Account Name</div>
+            <div class="w-2/3">: {{ $business?->account_name }}</div>
+        </div>
 
         <flux:separator text="Representative"></flux:separator>
         <div class="flex gap-4 text-start">
@@ -56,17 +66,9 @@
             <div class="w-2/3">: {{ $business?->representative }}</div>
         </div>
         <div class="flex gap-4 text-start">
-            <div class="w-1/3">Job Title/Position</div>
-            <div class="w-2/3">: {{ $business?->position }}</div>
-        </div>
-        <div class="flex gap-4 text-start">
             <div class="w-1/3">Phone Number</div>
             <a target="_blank" href="https://wa.me/{{ $business?->phone }}" class="w-2/3">:
                 {{ $business?->phone }}</a>
-        </div>
-        <div class="flex gap-4 text-start">
-            <div class="w-1/3">Email</div>
-            <div class="w-2/3">: {{ $business?->email }}</div>
         </div>
         <div class="flex justify-center flex-wrap gap-4">
             <flux:button variant="primary" type="submit">Submit</flux:button>

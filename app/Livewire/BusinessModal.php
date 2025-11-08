@@ -6,10 +6,11 @@ use Livewire\Component;
 use App\Models\Bussiness;
 use App\Models\SetCategory;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Validate;
 
 class BusinessModal extends Component
 {
-    public $title = "All Registered Business", $business, $setCategory=[];
+    public $title = "All Registered Business", $business, $setCategory = [];
     public $id = null;
     protected $paginationTheme = 'tailwind';
 
@@ -53,7 +54,7 @@ class BusinessModal extends Component
         $this->id = $this->business->id;
         $this->name = $this->business->name;
         $this->status = $this->business->status;
-        $this->set_category_id = "";
+        $this->set_category_id = $this->business?->set_category_id ?? '';
 
         $this->dispatch('modal-show', name: 'business-modal');
     }

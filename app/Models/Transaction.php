@@ -55,7 +55,7 @@ class Transaction extends Model
         $nextNumber = 1;
 
         if ($lastTransaction) {
-            $lastNumber = (int) substr($lastTransaction->number, -4);
+            $lastNumber = (int) substr($lastTransaction->transaction_number, -4);
             $nextNumber = $lastNumber + 1;
         }
 
@@ -96,6 +96,11 @@ class Transaction extends Model
     public function usage()
     {
         return $this->hasOne(CouponUsage::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function scopeFilters(Builder $query, array $filters)

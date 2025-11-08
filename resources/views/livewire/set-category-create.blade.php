@@ -8,7 +8,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                 @foreach ($categories as $item)
                     <div class="p-2 flex border gap-2 items-center rounded-lg cursor-pointer
-                {{ in_array($item->id, $selectedCategories) ? 'border-blue-500 bg-blue-50' : 'border-gray-200' }}"
+                {{ in_array($item->id, $selectedCategories) ? 'border-blue-500 bg-blue-50 dark:bg-gray-600' : 'border-gray-200 bg-gray-700' }}"
                         wire:click="toggleCategory({{ $item->id }})">
                         <div class="size-10 bg-center bg-no-repeat bg-cover rounded"
                             style="background-image: url({{ $item->image_url }});">

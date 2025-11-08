@@ -103,8 +103,8 @@ class Product extends Model
 
     public function getImageUrlAttribute()
     {
-        if ($this->image && file_exists(public_path('storage/' . $this->image))) {
-            return asset('storage/' . $this->image);
+        if ($this->image) {
+            return $this->image;
         }
 
         return asset('assets/No-Picture-Found.png');

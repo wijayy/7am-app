@@ -67,11 +67,13 @@
                                 <!-- Product Info -->
                                 <div class="col-span-2 flex items-center gap-3">
                                     <div class="w-20 h-20 rounded-lg bg-center bg-cover bg-no-repeat border border-gray-200 shadow-sm"
-                                        style="background-image: url('{{ asset("storage/{$itm->product->image}") }}')">
+                                        style="background-image: url('{{ $itm->product->image_url }}')">
                                     </div>
                                     <div>
-                                        <div class="font-semibold text-gray-800 dark:text-white">{{ $itm->product->name }}</div>
-                                        <div class="text-xs text-gray-500 dark:text-neutral-300">{{ $itm->product->category->name }}</div>
+                                        <div class="font-semibold text-gray-800 dark:text-white">
+                                            {{ $itm->product->name }}</div>
+                                        <div class="text-xs text-gray-500 dark:text-neutral-300">
+                                            {{ $itm->product->category->name }}</div>
                                     </div>
                                 </div>
 
@@ -143,13 +145,13 @@
                             <flux:separator text="Action"></flux:separator>
                             <div class="flex justify-center gap-4">
                                 <div class="mt-4 flex justify-center">
-                                    <flux:button as href="{{ route('payment', ['slug' => $item->slug]) }}"
+                                    <flux:button as href="{{ route('checkout', ['slug' => $item->slug]) }}"
                                         variant="primary" color="green">Pay</flux:button>
                                 </div>
                                 <div class="mt-4 flex justify-center">
                                     <flux:button variant="danger" color="green">Cancel</flux:button>
                                 </div>
-                            </div>
+                            </div>p
                         @endif
                     </div>
                 </div>

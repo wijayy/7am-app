@@ -41,9 +41,9 @@
                                         {{ $address->phone }}
                                     </div>
                                     <div class="mt-2 text-sm md:text-md">Phone : {{ $address->address }} </div>
-                                    <div class="text-xs md:text-sm">{{ $item->regency->name }} -
-                                        {{ $item->district->name }} -
-                                        {{ $item->village->name }}</div>
+                                    <div class="text-xs md:text-sm">{{ $address->regency->name }} -
+                                        {{ $address->district->name }} -
+                                        {{ $address->village->name }}</div>
                                 </div>
                                 <flux:modal.trigger class="trigger" name="address">
                                     <button
@@ -166,6 +166,10 @@
                         <div class="dark:text-white">SubTotal ({{ $carts->count() }} items)</div>
                         <div class="dark:text-white">Rp. {{ number_format($subtotal, 0, ',', '.') }}</div>
                     </div>
+                    <div class="flex justify-between text-gray-800 mb-3">
+                        <div class="dark:text-white">Packaging Fee</div>
+                        <div class="dark:text-white">Rp. {{ number_format($packaging_fee, 2, ',', '.') }}</div>
+                    </div>
 
                     @if ($c ?? false)
                         <div class="flex justify-between text-gray-800 mb-3">
@@ -240,6 +244,10 @@
                         class="bg-[#B68B62] hover:bg-[#9c724e] text-white w-full py-2 font-medium rounded-md text-sm transition">
                         Checkout
                     </button>
+
+                    <x-action-message class="me-3 mt-4 text-red-500" on="error">
+                        {{ __('Please Verified Your Business First') }}
+                    </x-action-message>
                 </div>
             </div>
         </div>

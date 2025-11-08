@@ -17,10 +17,11 @@
             <li><a href="{{ route('b2b-home') }}" current="{{ request()->routeIs('home') }}">Home</a></li>
             <li><a href="{{ route('shop.index') }}" current="{{ request()->routeIs('shop.*') }}">Shop</a></li>
             <li><a href="{{ route('contact') }}" current="{{ request()->routeIs('contact') }}">Contact</a></li>
-            <li><a href="{{ route('wholesale.index') }}" current="{{ request()->routeIs('wholesale.*') }}">Wholesale</a></li>
+            <li><a href="{{ route('wholesale.index') }}" current="{{ request()->routeIs('wholesale.*') }}">Wholesale</a>
+            </li>
             @auth
                 <li><a href="{{ route('history') }}" current="{{ request()->routeIs('history') }}">History</a></li>
-                <li><a href="{{ route('checkout') }}" current="{{ request()->routeIs('checkout') }}">Checkout</a></li>
+                {{-- <li><a href="{{ route('checkout') }}" current="{{ request()->routeIs('checkout') }}">Checkout</a></li> --}}
             @endauth
         </ul>
 
@@ -145,7 +146,29 @@
     @livewire('footer')
     @livewire('copyright')
 
+    <script class="script"></script>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+
+            var Tawk_API = Tawk_API || {},
+                Tawk_LoadStart = new Date();
+            (function() {
+                var s1 = document.createElement("script"),
+                    s0 = document.getElementsByClassName("script")[0] || document.body.lastChild;
+                s1.async = true;
+                s1.src = 'https://embed.tawk.to/6906c8f74a15fd1950a7e444/1j919lnua';
+                s1.charset = 'UTF-8';
+                s1.setAttribute('crossorigin', '*');
+                s0.parentNode.insertBefore(s1, s0);
+            })();
+        });
+    </script>
+    <!--End of Tawk.to Script-->
+
     @fluxScripts
+
 </body>
 
 </html>

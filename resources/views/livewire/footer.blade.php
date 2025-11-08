@@ -43,10 +43,8 @@
 
         <!-- Map -->
         <div class="flex justify-center md:justify-end">
-            <iframe
-                src="https://www.google.com/maps?q=Gudang+Kayu+Kekeran&output=embed"
-                class="w-full md:w-56 h-40 rounded-lg border border-gray-300 dark:border-neutral-600"
-                allowfullscreen=""
+            <iframe src="https://www.google.com/maps?q=Gudang+Kayu+Kekeran&output=embed"
+                class="w-full md:w-56 h-40 rounded-lg border border-gray-300 dark:border-neutral-600" allowfullscreen=""
                 loading="lazy">
             </iframe>
         </div>
@@ -64,11 +62,14 @@
         <!-- Social Media -->
         <div>
             <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-2">Our Social Media</h3>
-            <ul class="space-y-1 text-gray-600 dark:text-gray-300">
-                <li>WhatsApp: @7am.bakers</li>
-                <li>Instagram: @7am.bakers</li>
-                <li>TikTok: @7am.bakers</li>
-            </ul>
+            <div class="flex gap-4 ">
+                <flux:button variant='filled' icon='instagram' href="https://www.instagram.com/7am.bakers/"
+                    target="_blank" class="size-5"></flux:button>
+                <flux:button variant='filled' icon='tiktok' href="https://www.tiktok.com/@7am.bakersbali"
+                    target="_blank" class="size-5"></flux:button>
+                <flux:button variant='filled' icon='whatsapp' href="https://wa.me/628113850303" target="_blank"
+                    class="size-5"></flux:button>
+            </div>
         </div>
     </div>
 </footer>

@@ -61,7 +61,7 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
     Volt::route('transaction', 'transaction-index')->name('transaction.index');
 
     Volt::route('cart', 'cart')->name('cart');
-    Volt::route('checkout', 'checkout')->name('checkout');
+    Volt::route('checkout/{slug}', 'checkout')->name('checkout');
     Volt::route('payment', 'payment')->name('payment');
     Volt::route('history', 'history')->name('history');
     Volt::route('invoice/{slug}', 'invoice')->name('invoice');

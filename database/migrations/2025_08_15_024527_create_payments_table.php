@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->foreignIdFor(Transaction::class)->constrained();
             $table->enum('payment_status', ['unpaid', 'partial', 'paid']);
             $table->integer('amount')->default(0);
+            $table->string('payment_type');
             $table->timestamps();
         });
     }

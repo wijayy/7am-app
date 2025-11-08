@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
+        $this->call(SettingSeeder::class);
+
 
         foreach (range(1, 10) as $key => $item) {
             $user = User::factory()->create(['business' => 'requested', 'email' => "user{$item}@admin.com"]);
@@ -48,6 +50,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@admin.com',
             'role' => 'admin'
         ]);
+
+
+
 
 
         // foreach (range(1, 3) as $key => $item) {
@@ -105,5 +110,12 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductSeeder::class);
 
         Cart::factory(3)->recycle([$user, Product::all()])->create();
+
+        Bussiness::factory()->recycle($user)->create([
+            'status' => "approved",
+            'set_category_id' => 1
+        ]);
+
+        $this->call(TransactionSeeder::class);
     }
 }

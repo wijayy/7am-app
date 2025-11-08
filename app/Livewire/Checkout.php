@@ -2,116 +2,116 @@
 
 namespace App\Livewire;
 
-use App\Models\Address;
-use App\Models\Cart;
-use App\Models\CouponProduct;
-use App\Models\CouponUsage;
+use Exception;
+use Midtrans\Snap;
+use Midtrans\Config;
+use App\Models\Payment;
+use Livewire\Component;
 use App\Models\Shipping;
 use App\Models\Transaction;
-use App\Models\TransactionItem;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Illuminate\Support\Facades\DB;
-use Livewire\Component;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class Checkout extends Component
 {
 
-    public $carts, $addresses, $address, $min, $shipping_date, $subtotal, $total, $discount = 0, $coupon;
+    public $transaction, $snapToken;
 
-    public function mount()
+    public function mount($slug)
     {
-        $this->carts = Cart::where('user_id', Auth::user()->id)->get();
 
-        if ($this->carts->count() == 0) {
-            return redirect(route('home'));
+        // if (is_null(Auth::user()->bussinesses) || Auth::user()->bussinesses?->status != 'approved') {
+        //     return redirect(route('b2b-home'))->with('error', "Please Verified Business First!");
+        // }
+
+        try {
+            $this->transaction = Transaction::where('slug', $slug)->first();
+
+            if (!$this->transaction) {
+                throw new Exception("Sorry, Your order not found!");
+            }
+
+            Config::$serverKey = config('midtrans.serverKey');
+            Config::$isProduction = config('midtrans.isProduction');
+            Config::$isSanitized = config('midtrans.isSanitized');
+            Config::$is3ds = config('midtrans.is3ds');
+
+
+            if (!$this->transaction->snap_token) {
+
+                $midtransParams = [
+                    'transaction_details' => [
+                        'order_id' => $this->transaction->transaction_number,
+                        'gross_amount' => $this->transaction->total,
+                    ],
+                    'customer_details' => [
+                        'first_name' => $this->transaction->shipping->name,
+                        'phone' => $this->transaction->shipping->phone,
+                        'email' => $this->transaction->shipping->email,
+                        // 'address' => $this->transaction->shipping->address,
+                    ],
+                ];
+                $this->snapToken = Snap::getSnapToken($midtransParams);
+
+                $this->transaction->snap_token = $this->snapToken;
+                $this->transaction->save();
+            } else {
+                $this->snapToken = $this->transaction->snap_token;
+            }
+
+            // dd(env('MIDTRANS_TARGET_LINK'));
+
+            // dd($this->snapToken);
+        } catch (\Throwable $th) {
+            throw $th;
+            return redirect(route('history'))->with('error', $th->getMessage());
         }
-
-        $this->addresses = Auth::user()->addresses;
-        $this->address = $this->addresses->first();
-
-        if (session()->has('coupon')) {
-            $this->coupon = session('coupon');
-        }
-        // dd($this->coupon);
-
-        $this->setMinShippingDate();
-
-        $this->subtotal = 0;
-
-        foreach ($this->carts as $key => $item) {
-            $this->subtotal += $item->qty * $item->product->price;
-        }
-
-        $this->discount = $this->countDiscount();
-
-        $this->total = $this->subtotal - $this->discount;
     }
 
-    public function checkout()
+    #[On('paymentSuccess')]
+    public function paymentSuccess($result)
     {
+        // $arrya = [
+        //     "status_code" => "200",
+        //     "status_message" => "Success, transaction is found",
+        //     "transaction_id" => "f1a30dab-c5dc-4c51-b9ef-919915d8c5e8",
+        //     "order_id" => "TRX202511050003",
+        //     "gross_amount" => "1.00",
+        //     "payment_type" => "qris",
+        //     "transaction_time" => "2025-11-05 12:49:29",
+        //     "transaction_status" => "settlement",
+        //     "fraud_status" => "accept",
+        //     "finish_redirect_url" => "http://example.com?order_id=TRX202511050003&status_code=200&transaction_status=settlement",
+        // ];
+
+        // dd($result['order_id']);
+
         try {
             DB::beginTransaction();
+            $transaction = Transaction::where('transaction_number', $result['order_id'])->firstOrFail();
 
+            // dd($transaction);
 
+            $transaction->update(['status' => "paid"]);
+
+            Payment::create([
+                'transaction_id' => $transaction->id,
+                'amount' => $result['gross_amount'],
+                'payment_type' => $result['payment_type'],
+                'payment_status' => 'paid',
+            ]);
             DB::commit();
-            Cart::where('user_id', Auth::user()->id)->delete();
-            session(['coupon' => null]);
-            return redirect(route('payment', ['slug' => $transaction->slug]));
+
+            return redirect(route('invoice', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {
             DB::rollBack();
-            if (config('app.debug') == true) {
+            if (config('app.debug', true)) {
                 throw $th;
-            } else {
-                return back()->with('error', $th->getMessage());
             }
+            // return back()->with('error', '');
         }
-    }
-
-    public function setMinShippingDate()
-    {
-        $now = Carbon::now();
-
-        if ($now->lt($now->copy()->setTime(17, 0))) {
-            // sebelum jam 5 sore → minimal besok
-            $this->min = $now->copy()->addDay()->toDateString();
-        } else {
-            // setelah jam 5 sore → minimal lusa
-            $this->min = $now->copy()->addDays(2)->toDateString();
-        }
-
-        $this->shipping_date = $this->min;
-    }
-
-    public function changeAddress($id)
-    {
-        $this->address = Address::find($id);
-        $this->dispatch('modal-close', ['name' => 'address']);
-    }
-
-    public function countDiscount()
-    {
-        if ($this->coupon ?? false) {
-            if ($this->subtotal > $this->coupon->minimum) {
-                if ($this->coupon->type == 'fixed') {
-                    return $this->coupon->amount;
-                } else {
-                    $discount = 0;
-                    foreach ($this->carts as $key => $item) {
-                        $link = CouponProduct::where('coupon_id', $this->coupon->id)->where('product_id', $item->product->id)->first();
-
-                        if ($link) {
-                            $discount += $this->coupon->amount / 100 * $item->product->price * $item->qty;
-                        }
-                    }
-                    if ($this->coupon->maximum > 0) {
-                        $discount = min($discount, $this->coupon->maximum);
-                    }
-                    return $discount;
-                }
-            }
-        }
-        return 0;
     }
 
     public function render()

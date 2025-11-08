@@ -19,13 +19,13 @@ return new class extends Migration {
             $table->string('transaction_number')->unique();
             $table->string('number')->nullable()->unique();
             $table->string('slug')->unique();
-            $table->integer('subtotal');
-            $table->integer('total');
-            $table->integer('discount');
-            $table->integer('packaging_fee');
+            $table->float('subtotal', 2);
+            $table->float('total', 2);
+            $table->float('discount', 2);
+            $table->float('packaging_fee', 2);
             $table->date('shipping_date');
             $table->foreignIdFor(Coupon::class)->nullable()->constrained();
-            $table->enum('status', ['ordered', 'paid', 'picking', 'packed', 'shipped', 'delivered', 'cancelled']);
+            $table->enum('status', ['ordered', 'paid', 'checkout'])->default('ordered');
             $table->text('note')->nullable();
             $table->text('snap_token')->nullable();
             $table->timestamps();

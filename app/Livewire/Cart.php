@@ -12,6 +12,7 @@ use App\Models\Shipping;
 use App\Models\CouponUsage;
 use App\Models\Transaction;
 use App\Models\CouponProduct;
+use App\Models\Payment;
 use App\Models\TransactionItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +43,14 @@ class Cart extends Component
 
     public function checkout()
     {
+        // dd(Auth::user()->bussinesses?->status);
+
+
+        if (is_null(Auth::user()->bussinesses) || Auth::user()->bussinesses?->status != 'approved') {
+            $this->dispatch('error');
+            return;
+        }
+
         try {
             DB::beginTransaction();
             $transaction = Transaction::create([
@@ -52,7 +61,14 @@ class Cart extends Component
                 'packaging_fee' => $this->packaging_fee,
                 'shipping_date' => $this->shipping_date,
                 'user_id' => Auth::user()->id,
-                'status' => 'ordered'
+                'status' => 'paid'
+            ]);
+
+            Payment::create([
+                'transaction_id' => $transaction->id,
+                'payment_type' => 'qris',
+                'payment_status' => 'paid',
+                'amount' => $transaction->total
             ]);
 
             if ($this->fulfillment === 'delivery') {
@@ -97,6 +113,7 @@ class Cart extends Component
             ModelsCart::where('user_id', Auth::user()->id)->delete();
 
             DB::commit();
+            $this->redirect(route('checkout', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {
             DB::rollBack();
             if (config('app.debug', false))
@@ -121,7 +138,8 @@ class Cart extends Component
             $this->subtotal += $item->qty * $item->product->price;
         }
 
-        $this->packaging_fee = 0.3 * $this->subtotal;
+        $this->packaging_fee = 0.03 * $this->subtotal;
+        // dd($this->packaging_fee);
     }
 
     public function minus($id)

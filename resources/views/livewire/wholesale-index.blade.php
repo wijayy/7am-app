@@ -14,10 +14,11 @@
     <flux:container class="bg-white px-8 py-8 md:px-12 md:py-12 my-10 rounded-lg shadow-md">
         <div class="flex flex-col md:flex-row gap-6 md:gap-20 justify-between items-center">
             <div class="w-[40%]">
-                <img src="/assets/b2b/wholesale/register-image2.jpg" alt="" class="object-cover rounded-lg shadow-md">
+                <img src="/assets/b2b/wholesale/register-image2.jpg" alt=""
+                    class="object-cover rounded-lg shadow-md">
             </div>
             <div class="w-[60%]">
-                <h3 class="text-4xl">Register Your Account</h3>
+                <h3 class="text-4xl text-black font-semibold dark:text-black">Register Your Account</h3>
                 <ol class="list-decimal list-outside pl-4 mt-4 space-y-2 text-gray-700">
                     <li>Register</li>
                     <li>Fill in your business details</li>
