@@ -12,10 +12,13 @@ use App\Models\Shipping;
 use App\Models\CouponUsage;
 use App\Models\Transaction;
 use App\Models\CouponProduct;
+use App\Models\MinimumOrder;
 use App\Models\Payment;
 use App\Models\TransactionItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Minimum;
+use Session;
 
 class Cart extends Component
 {
@@ -51,6 +54,16 @@ class Cart extends Component
             return;
         }
 
+
+
+        if ($this->fulfillment === 'delivery') {
+            $minimumOrder = MinimumOrder::where('village_id', $this->address->village_id)->first();
+            if ($this->subtotal < $minimumOrder->minimum) {
+                Session::flash('error', 'Minimum order to ' . $minimumOrder->village->name . ' is Rp. ' . number_format($minimumOrder->minimum, 0, ',', '.'));
+                return;
+            }
+        }
+
         try {
             DB::beginTransaction();
             $transaction = Transaction::create([
@@ -61,14 +74,7 @@ class Cart extends Component
                 'packaging_fee' => $this->packaging_fee,
                 'shipping_date' => $this->shipping_date,
                 'user_id' => Auth::user()->id,
-                'status' => 'paid'
-            ]);
-
-            Payment::create([
-                'transaction_id' => $transaction->id,
-                'payment_type' => 'qris',
-                'payment_status' => 'paid',
-                'amount' => $transaction->total
+                'status' => 'ordered'
             ]);
 
             if ($this->fulfillment === 'delivery') {

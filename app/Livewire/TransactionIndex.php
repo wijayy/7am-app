@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Setting;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use App\Models\Transaction;
@@ -114,15 +115,15 @@ class TransactionIndex extends Component
                     "address" => $transaction->user?->bussinesses->address ?? "dirumah",
                     "term_name" => $transaction->payment->payment_type,
                     "due_date" => $transaction->created_at->format('D-m-y'),
-                    "deposit_to_name" => "Cash",
+                    "deposit_to_name" => Setting::where('key', 'deposit_to_name')->value('value'),
                     "deposit" => 0,
                     "discount_unit" => $transaction->discount,
-                    "witholding_account_name" => "Cash",
-                    "witholding_value" => 0,
-                    "witholding_type" => "percent",
+                    "witholding_account_name" => Setting::where('key', 'witholding_account_name')->value('value'),
+                    "witholding_value" => (int) Setting::where('key', 'witholding_value')->value('value'),
+                    "witholding_type" => Setting::where('key', 'witholding_type')->value('value'),
                     "discount_type_name" => "percent",
-                    "warehouse_name" => "Store 1",
-                    "warehouse_code" => "G1",
+                    "warehouse_name" => Setting::where('key', 'warehouse_name')->value('value'),
+                    "warehouse_code" => Setting::where('key', 'warehouse_code')->value('value'),
                     "person_name" => $transaction->user?->bussinesses->name ?? "Toko 1",
                     "tags" => [],
                     "email" => $transaction->shipping->email,
@@ -132,7 +133,7 @@ class TransactionIndex extends Component
                     "custom_id" => "",
                     "source" => "Website B2B 7AM",
                     "use_tax_inclusive" => false,
-                    "tax_after_discount" => false,
+                    "tax_after_discount" => true,
                 ],
             ];
 
@@ -142,8 +143,8 @@ class TransactionIndex extends Component
                     "rate" => $item->price,
                     "discount" => 0,
                     "product_name" => $item->product->name,
-                    "line_tax_id" => 1046858,
-                    "line_tax_name" => "Packaging and Handling"
+                    "line_tax_id" => (int) Setting::where('key', 'line_tax_id')->value('value'),
+                    "line_tax_name" => "Setting::where('key', 'line_tax_name')->value('value')"
                 ];
             }
 
@@ -171,14 +172,14 @@ class TransactionIndex extends Component
                         ],
                     ],
                     "custom_id" => "ReceivePayment" . $transaction->number,
-                    "payment_method_name" => "Cash",
-                    "payment_method_id" => 3764640,
+                    "payment_method_name" => Setting::where('key', 'payment_method_name')->value('value'),
+                    "payment_method_id" => (int) Setting::where('key', 'payment_method_id')->value('value'),
                     "is_draft" => false,
-                    "deposit_to_name" => "Cash",
+                    "deposit_to_name" => Setting::where('key', 'payment_deposit_to_name')->value('value'),
                     "memo" => "Payment order $transaction->number",
-                    "witholding_account_name" => "Cash",
-                    "witholding_value" => 0,
-                    "witholding_type" => "percent",
+                    "witholding_account_name" => Setting::where('key', 'payment_witholding_account_name')->value('value'),
+                    "witholding_value" => (int) Setting::where('key', 'payment_witholding_value')->value('value'),
+                    "witholding_type" => Setting::where('key', 'payment_witholding_type')->value('value'),
                 ],
             ];
 

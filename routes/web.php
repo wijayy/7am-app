@@ -68,6 +68,8 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
     Volt::route('checkout/{slug}/pay', 'payment')->name('payment');
 
     Volt::route('set-categories', 'set-category-index')->name('setcategory.index');
+    Volt::route('minimum-orders', 'minimum-order-index')->name('minimum-order.index');
+    Volt::route('setting', 'setting-index')->name('setting.index');
 
 
     Volt::route('categories', 'category-index')->name('category.index');
@@ -83,6 +85,7 @@ Route::prefix('b2b')->middleware(['auth'])->group(function () {
     Volt::route('businesses', 'business-index')->name('business.index');
 
     Volt::route('tests/jurnal', 'test.jurnal')->name('test.jurnal');
+
 
     route::get('/jurnal/test', [ApiTestController::class, 'index'])->name('jurnal.tests');
 });

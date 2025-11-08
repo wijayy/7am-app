@@ -9,6 +9,10 @@
                         <h2 class="text-2xl font-semibold text-black dark:text-white">My Cart</h2>
                     </div>
 
+                    @if (session()->has('error'))
+                        <div class="text-red-500 text-sm font-semibold">{{ session('error') }}</div>
+                    @endif
+
                     <h4 class="font-medium text-gray-800 dark:text-neutral-300 mb-2">Shipping</h4>
                     <div class="flex border border-gray-300 rounded-lg overflow-hidden mb-3">
                         <label class="flex-1">

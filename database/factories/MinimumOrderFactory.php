@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Village;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,8 @@ class MinimumOrderFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'village_id' => 1,
+            'minimum' => 0,
         ];
     }
 }

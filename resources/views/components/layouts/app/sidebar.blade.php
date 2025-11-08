@@ -6,11 +6,10 @@
 </head>
 
 <body class="min-h-screen bg-mine-100 dark:bg-gray-800">
-    <div class="flex h-screen w-full">
-
+    <div class="flex min-h-screen w-full">
         <!-- 🧭 SIDEBAR -->
         <aside
-            class="sidebar w-2/12 stick top-0 bg-[#DFD5BA] dark:bg-gray-900 flex flex-col justify-between border-r border-gray-200 dark:border-zinc-700">
+            class="sidebar w-2/12 stick top-0 bg-[#DFD5BA]  dark:bg-gray-900 flex flex-col justify-between border-r border-gray-200 dark:border-zinc-700">
             <div>
                 <!-- Logo -->
                 <div class="py-8 flex items-center justify-center border-b border-gray-300 dark:border-zinc-700">
@@ -66,6 +65,10 @@
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Transaction
                     </a>
+                    <a href="{{ route('minimum-order.index') }}" current="{{ request()->routeIs('minimum-order.*') }}"
+                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+                        Minimum Orders
+                    </a>
                     <a href="{{ route('newsletter.index') }}" current="{{ request()->routeIs('newsletter.index') }}"
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Newsletters
@@ -83,9 +86,9 @@
         </aside>
 
         <!-- 📦 MAIN CONTENT SLOT -->
-        <main class="flex-1 p-6 overflow-y-auto">
+        <div class="flex-1 overflow-y-auto">
             {{ $slot }}
-        </main>
+        </div>
 
     </div>
 
