@@ -6,26 +6,43 @@ use App\Models\Address;
 use App\Models\Bussiness;
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\District;
 use App\Models\Outlet;
 use App\Models\Product;
 use App\Models\RedeemPoint;
+use App\Models\Regency;
+use App\Models\SetCategory;
+use App\Models\SetCategoryItem;
 use App\Models\User;
+use App\Models\Village;
+use App\Services\JurnalApi;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+// use PhpOffice\PhpSpreadsheet\Calculation\Category as CalculationCategory;
 
 class DatabaseSeeder extends Seeder
 {
+
+    protected $jurnalApi;
+
+    public function __construct(JurnalApi $jurnalApi)
+    {
+        $this->jurnalApi = $jurnalApi;
+    }
+
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
         // User::factory(10)->create();
+        $this->call(SettingSeeder::class);
+
 
         foreach (range(1, 10) as $key => $item) {
-            $user = User::factory()->create(['business' => 'requested', 'email' => "user{$item}@admin.com"]);
+            // $user = User::factory()->create(['business' => 'requested', 'email' => "user{$item}@admin.com"]);
 
-            Bussiness::factory()->recycle($user)->create();
+            // Bussiness::factory()->recycle($user)->create();
         }
 
         $user = User::factory()->create([
@@ -34,16 +51,18 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        Address::factory(3)->recycle($user)->create();
 
-        foreach (range(1, 3) as $key => $item) {
-            Category::factory(1)->create(['name' => "cat$item"]);
-        }
-        foreach (range(1, 40) as $key => $item) {
-            Product::factory(1)->recycle(Category::all())->create(['name' => "product $item"]);
-        }
 
-        Cart::factory(3)->recycle([$user, Product::all()])->create();
+
+
+        // foreach (range(1, 3) as $key => $item) {
+        //     Category::factory(1)->create(['name' => "cat$item"]);
+        // }
+        // foreach (range(1, 40) as $key => $item) {
+        //     Product::factory(1)->recycle(Category::all())->create(['name' => "product $item"]);
+        // }
+
+        // Cart::factory(3)->recycle([$user, Product::all()])->create();
 
         $this->call(NewsletterSeeder::class);
         $this->call(CouponSeeder::class);
@@ -70,8 +89,33 @@ class DatabaseSeeder extends Seeder
         $this->call(MemberSeeder::class);
 
         $this->call(SettingSeeder::class);
+        $this->call(IndoRegionSeeder::class);
+
+        foreach (range(1, 3) as $key => $item) {
+            $regency = Regency::inRandomOrder()->first();
+            $district = District::where('regency_id', $regency->id)->inRandomOrder()->first();
+            $village = Village::where('district_id', $district->id)->inRandomOrder()->first();
+
+            Address::factory()->recycle([$user])->create([
+                'regency_id' => $regency->id,
+                'district_id' => $district->id,
+                'village_id' => $village->id
+            ]);
+        }
 
         $this->call(RedeemPointSeeder::class);
 
+        // $this->call(CategorySeeder::class);
+        // $this->call(SetCategorySeeder::class);
+        // $this->call(ProductSeeder::class);
+
+        // Cart::factory(3)->recycle([$user, Product::all()])->create();
+
+        // Bussiness::factory()->recycle($user)->create([
+        //     'status' => "approved",
+        //     'set_category_id' => 1
+        // ]);
+
+        // $this->call(TransactionSeeder::class);
     }
 }

@@ -114,7 +114,8 @@ class CouponCreate extends Component
                 ]
             );
 
-            $coupon->products()->sync($this->selectedProducts);
+            $coupon->products()->detach(); // hapus semua relasi lama
+            $coupon->products()->attach($this->selectedProducts); // tambahkan yang baru
 
             // dd($coupon);
             DB::commit();
@@ -128,7 +129,6 @@ class CouponCreate extends Component
                 return back()->with('error', $th->getMessage());
             }
         }
-
     }
 
     public function render()

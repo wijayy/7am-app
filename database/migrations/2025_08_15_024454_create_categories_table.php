@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('jurnal_id')->unique();
             $table->string('slug');
+            $table->boolean('active')->default(false);
             $table->timestamps();
         });
     }

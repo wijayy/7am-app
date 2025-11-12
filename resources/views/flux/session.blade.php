@@ -1,4 +1,4 @@
-<div class="py-2 px-4 w-full bg-white h-fit rounded dark:bg-neutral-700">
+<div class="py-2 px-4 w-full bg-white h-fit rounded dark:bg-gray-700">
     <div class="font-semibold md:text-lg">{{ $slot }}</div>
     <div class="">
         @if (session()->has('success'))

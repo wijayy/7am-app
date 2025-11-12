@@ -10,7 +10,7 @@
         </div>
         <div class="grid-cols-1 mt-4 grid gap-4">
             @foreach ($transactions as $item)
-                <div class="bg-gray-200 dark:bg-neutral-700 rounded p-4 gap-4" x-data={open:false}>
+                <div class="bg-gray-200 dark:bg-gray-600 rounded p-4 gap-4" x-data={open:false}>
                     <div class="">
                         <div class="sr-only">Shipping Information</div>
                         <div class="">
@@ -31,7 +31,7 @@
                                 x-transition:leave-end="opacity-0 scale-90">
                                 <div class="flex items-center gap-2">
                                     <div class="size-20 rounded bg-center bg-cover bg-no-repeat"
-                                        style="background-image: url({{ asset("storage/{$itm->product->image}") }})">
+                                        style="background-image: url({{ $itm->product->image_url }})">
                                     </div>
                                     <div class="">
                                         <div class="font-semibold">{{ $itm->product->name }}</div>
@@ -72,6 +72,10 @@
                             <div class="">Subtotal ({{ $item->items->count() }} items)</div>
                             <div class="">Rp. {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                         </div>
+                        <div class="flex justify-between items-center">
+                            <div class="">Packaging </div>
+                            <div class="">Rp. {{ number_format($item->packaging_fee, 0, ',', '.') }}</div>
+                        </div>
                         @if ($item->coupon)
                             <div class="flex justify-between items-center">
                                 <div class="">Coupon</div>
@@ -92,18 +96,24 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <div class="">Payment Method</div>
-                            <div class="">
-                                <img src="{{ asset('assets/bca.png') }}" alt="">
+
+                        @if ($item->payment ?? false)
+                            <div class="flex justify-between items-center">
+                                <div class="">Payment Method</div>
+                                <div class="capitalize">{{ $item->payment->payment_type }}</div>
                             </div>
-                        </div>
+                        @endif
                         <flux:separator></flux:separator>
                         <div class="flex justify-between items-center">
                             <div class="">Total</div>
                             <div class="">Rp. {{ number_format($item->total, 0, ',', '.') }}</div>
                         </div>
                     </div>
+                    @if ($item->status == 'paid')
+                        <div class="flex justify-center ">
+                            <flux:button wire:click='import({{ $item->id }})'>Import to Jurnal</flux:button>
+                        </div>
+                    @endif
                 </div>
             @endforeach
         </div>

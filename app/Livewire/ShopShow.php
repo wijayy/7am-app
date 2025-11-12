@@ -5,32 +5,34 @@ namespace App\Livewire;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ShopShow extends Component
 {
-    public $product, $products, $qty;
+    public $product, $products = [], $qty = 1;
 
-    public function mount($slug)
+    protected $jurnalApi;
+
+    #[On('showModal')]
+    public function openShowModal($jurnal_id)
     {
-        try {
-            DB::beginTransaction();
-            $this->product = Product::where('slug', $slug)->firstOrFail();
-            $this->products = Product::whereNot('slug', $slug)->take(3)->get();
-            $this->qty = $this->product->moq;
-            DB::commit();
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            if (config('app.debug') == true) {
-                throw $th;
-            } else {
-                return back()->with('error', $th->getMessage());
-            }
-        }
+        $this->product = Product::where('jurnal_id', $jurnal_id)->firstOrFail();
+
+        $this->qty = $this->product->moq;
+
+        $this->dispatch('modal-show', name: 'shop-show');
     }
+
     public function addToCart()
     {
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect(route('login'));
+        }
+
         try {
             $cart = Cart::where('user_id', Auth::user()->id)->where('product_id', $this->product->id)->firstOrFail();
 
@@ -47,8 +49,9 @@ class ShopShow extends Component
 
         $this->qty = $this->product->moq;
     }
+
     public function render()
     {
-        return view('livewire.shop-show')->layout('components.layouts.app.header', ['title' => $this->product->name]);
+        return view('livewire.shop-show')->layout('components.layouts.app', ['title' => "asd"]);
     }
 }

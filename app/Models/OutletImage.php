@@ -9,4 +9,6 @@ class OutletImage extends Model
 {
     /** @use HasFactory<\Database\Factories\OutletImageFactory> */
     use HasFactory;
+
+    protected $guarded = ['id'];
 }

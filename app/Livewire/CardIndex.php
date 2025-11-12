@@ -7,72 +7,68 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 class CardIndex extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
 
-    public $title = "All Cards", $id, $cards, $old_card, $defaultPreview;
+    protected $paginationTheme = 'tailwind';
+
+    public $title = "All Cards";
+
+    public $id = null;
+    public $old_card = null;
+    public $defaultPreview = null;
 
     #[Validate('required|string')]
-    public $name = '', $usage, $discount_type;
+    public $name = '';
 
-    // #[Validate('nullable|file|image')]
+    #[Validate('required|string')]
+    public $usage = '';
 
-
-    public $card = '';
+    #[Validate('required|string')]
+    public $discount_type = '';
 
     #[Validate('required|integer|min:1|max:100')]
-    public $discount = '';
+    public $discount = 0;
+
+    public $card; // file upload
+    public $search = '';
 
     public function rules()
     {
         return [
-            'card' => $this->id ? 'nullable|file|image' : 'required|file|image'
+            'card' => $this->id ? 'nullable|image|max:2048' : 'required|image|max:2048',
+            'name' => 'required|string|max:100',
+            'usage' => 'required|string|max:50',
+            'discount' => 'required|integer|min:1|max:100',
+            'discount_type' => 'required|string|max:50',
         ];
     }
 
-    public function openCreateModal()
+    public function updatingSearch()
     {
-        $this->resetValidation();
-
-        $this->id = null;
-        $this->name = '';
-        $this->usage = '';
-        $this->discount_type = '';
-        $this->discount = '';
-        $this->card = '';
-        $this->defaultPreview = null;
-
-        $this->dispatch('modal-show', name: 'create-card');
+        $this->resetPage(); // Reset ke page 1 setiap kali search berubah
     }
 
-    public function openEditModal($id)
+    public function render()
     {
-        $this->resetValidation();
+        $cards = Card::query()
+            ->when(
+                $this->search,
+                fn($q) =>
+                $q->where('name', 'like', "%{$this->search}%")
+            )
+            ->orderBy('id', 'desc')
+            ->paginate(5);
 
-        $card = $this->getCard($id);
-
-        $this->id = $card->id;
-        $this->name = $card->name;
-        $this->usage = $card->usage;
-        $this->discount_type = $card->discount_type;
-        $this->discount = $card->discount;
-        $this->card = '';
-        $this->defaultPreview = asset('storage/' . $card->card);
-
-        $this->dispatch('modal-show', name: 'create-card');
+        return view('livewire.card-index', compact('cards'))
+            ->layout('components.layouts.app', [
+                'title' => $this->title,
+            ]);
     }
 
-    public function getCard($id)
-    {
-        $card = Card::find($id);
-        if (!$card) {
-            throw new \Exception("Card not found");
-        }
-
-        return $card;
-    }
     public function delete($id)
     {
         try {
@@ -81,71 +77,20 @@ class CardIndex extends Component
             $card->delete();
             DB::commit();
 
-            $this->cards = Card::all();
-
             session()->flash('success', 'Card deleted successfully.');
-
-            // optional: notify frontend to close any delete confirmation
             $this->dispatch('modal-close', name: "delete-$id");
         } catch (\Throwable $th) {
             DB::rollBack();
-            if (config('app.debug') == true) {
-                throw $th;
-            } else {
-                session()->flash('error', $th->getMessage());
-            }
+            session()->flash('error', config('app.debug') ? $th->getMessage() : 'Failed to delete card.');
         }
     }
 
-    public function mount()
+    private function getCard($id)
     {
-        $this->cards = Card::all();
-
-
-        // $this->openEditModal(1);
-    }
-
-    public function save()
-    {
-        try {
-            DB::beginTransaction();
-            $validated = $this->validate();
-
-            // dd($this->card);
-            if ($this->card != '') {
-                // save image
-                $path = $this->card->store('card');
-                $validated['card'] = $path;
-            } else {
-                unset($validated['card']);
-            }
-
-            Card::updateOrCreate(['id' => $this->id], $validated);
-
-            DB::commit();
-
-            // refresh list
-            $this->cards = Card::all();
-            // success message
-            $message = $this->id ? 'Card updated successfully.' : 'Card created successfully.';
-            session()->flash('success', $message);
-
-            // reset validations and close modal
-            $this->resetValidation();
-            $this->dispatch('modal-close', name: 'create-card');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            if (config('app.debug') == true) {
-                session()->flash('error', $th->getMessage());
-                throw $th;
-            } else {
-                session()->flash('error', $th->getMessage());
-            }
+        $card = Card::find($id);
+        if (!$card) {
+            throw new \Exception("Card not found");
         }
-    }
-    
-    public function render()
-    {
-        return view('livewire.card-index')->layout('components.layouts.app', ['title' => $this->title]);
+        return $card;
     }
 }

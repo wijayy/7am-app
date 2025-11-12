@@ -17,9 +17,10 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(Transaction::class)->constrained();
+            $table->enum('type', ['delivery', 'pickup']);
             $table->text('address');
             $table->string('name');
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->string('email');
             $table->string('shipped_photo')->nullable();
             $table->timestamps();

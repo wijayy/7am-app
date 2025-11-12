@@ -2,38 +2,74 @@
 
 namespace App\Livewire;
 
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\SetCategory;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class ShopIndex extends Component
 {
     use WithPagination;
-    public $categories, $category, $filter = false, $search, $freshness, $min, $max;
+    public $filter = false, $categories;
+
+    #[Url(except: '')]
+    public $search = '', $min = '', $max = '';
+
+    #[Url(except: '')]
+    public $category = '';
 
     public function mount()
     {
-        $this->categories = Category::all();
+        $user = Auth::user();
+
+        // Jika user login, punya relasi bussinesses, dan relasi setCategory pada salah satu bussinesses
+        if ($user && $user->bussinesses && $user->bussinesses->setCategory) {
+            // Jika user punya bisnis dan bisnis itu punya setCategory
+            $this->categories = $user->bussinesses->setCategory->categories ?? collect();
+
+            dd(true, $this->categories);
+        } else {
+            // Jika tidak, gunakan set category default dari setting
+            $defaultSetCategoryId = Setting::where('key', 'default_set_category')->value('value');
+            $defaultSetCategory = SetCategory::find($defaultSetCategoryId);
+
+            $this->categories = $defaultSetCategory->categories ?? collect();
+            // dd(false, $this->categories, $defaultSetCategory);
+        }
+
+        // dd(Auth::user()?->bussinesses?->setCategory->id);
     }
 
-    public function resetFilter() {
-        $this->category = '';
+    public function resetFilter()
+    {
+        // $this->category = '';
         $this->search = '';
         $this->min = '';
         $this->max = '';
-        $this->freshness = '';
+        $this->category = '';
     }
 
+    public function openShowModal($jurnal_id)
+    {
+        $this->dispatch('showModal', jurnal_id: $jurnal_id);
+    }
 
     public function toogleFilter()
     {
         $this->filter = !$this->filter;
     }
+
     public function render()
     {
-        $products = Product::filters(['freshness'=>$this->freshness, 'min'=>$this->min, 'max'=>$this->max, 'category'=>$this->category, 'search'=>$this->search])->paginate();
-
+        $products = Product::filters([
+            'search' => $this->search,
+            'min' => $this->min,
+            'max' => $this->max,
+            'set_category' => Auth::user()?->bussinesses?->setCategory->id ?? Setting::where('key', 'default_set_category')->value('value')
+        ])->paginate(24)->withQueryString();
 
         return view('livewire.shop-index', compact('products'))->layout('components.layouts.app.header', ['title' => "Shop"]);
     }

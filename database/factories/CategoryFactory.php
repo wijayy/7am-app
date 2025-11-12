@@ -18,6 +18,7 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => fake()->sentence(3, false),
+            'active' => true,
         ];
     }
 }

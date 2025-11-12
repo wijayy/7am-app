@@ -3,38 +3,51 @@
 namespace App\Livewire;
 
 use App\Models\Product;
+use App\Services\JurnalApi;
+use App\Models\Category;
+use App\Services\JurnalApiResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class ProductIndex extends Component
 {
-    public function delete($id)
+    public $title = 'All Product';
+
+    protected $jurnalApi;
+
+    #[Url(except: '')]
+    public $search = '';
+
+    #[Url(except: 1)]
+    public $page = 1;
+
+    #[Url(except: 50)]
+    public $per_page = 50;
+
+
+    public function mount(JurnalApi $jurnalApi)
     {
-        try {
-            DB::beginTransaction();
-            $product = Product::find($id);
-            $image = $product->image;
-
-            $product->delete();
-            DB::commit();
-            Storage::delete($image);
-            $this->dispatch('modal-close');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            if (config('app.debug') == true) {
-                throw $th;
-            } else {
-                return back()->with('error', $th->getMessage());
-            }
-        }
-
+        $this->jurnalApi = $jurnalApi;
     }
+
+    public function updatedSearch()
+    {
+        // $this->resetPage();
+    }
+
+    public function sync(JurnalApi $jurnalApi)
+    {
+        Product::sync($jurnalApi);
+    }
+
 
     public function render()
     {
-        $product = Product::latest()->paginate(24);
+        $products = Product::filters(['search' => $this->search])->paginate($this->per_page)->withQueryString();
 
-        return view('livewire.product-index', compact('product'))->layout('components.layouts.app', ['title' => 'All Product']);
+        // dd($products);
+
+        return view('livewire.product-index', compact('products'))->layout('components.layouts.app', ['title' => 'All Product']);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\JurnalApi;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,7 +24,7 @@ class Transaction extends Model
         return [
             'slug' => [
                 'onUpdate' => true,
-                'source' => 'number'
+                'source' => 'transaction_number'
             ]
         ];
     }
@@ -54,7 +55,7 @@ class Transaction extends Model
         $nextNumber = 1;
 
         if ($lastTransaction) {
-            $lastNumber = (int) substr($lastTransaction->number, -4);
+            $lastNumber = (int) substr($lastTransaction->transaction_number, -4);
             $nextNumber = $lastNumber + 1;
         }
 
@@ -63,21 +64,43 @@ class Transaction extends Model
         return $prefix . $formattedNumber;
     }
 
+    public static function transactionNumberJurnal(JurnalApi $jurnalApi)
+    {
+        // Panggil method `call` dengan method POST, path, dan body
+        $response = $jurnalApi->request(
+            'GET',
+            '/public/jurnal/api/v1/sales_invoices?page_size=1',
+        );
+
+        // Hitung jumlah transaksi yang sudah ada hari ini
+        $lastTransaction = (int) $response['sales_invoices'][0]['transaction_no'];
+
+        return $lastTransaction++;
+    }
+
     public function shipping()
     {
         return $this->hasOne(Shipping::class);
     }
+
     public function payment()
     {
         return $this->hasOne(Payment::class);
     }
+
     public function items()
     {
         return $this->hasMany(TransactionItem::class);
     }
+
     public function usage()
     {
         return $this->hasOne(CouponUsage::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function scopeFilters(Builder $query, array $filters)
@@ -86,5 +109,4 @@ class Transaction extends Model
             return $query->whereDate("shipping_date",  $search);
         });
     }
-
 }
