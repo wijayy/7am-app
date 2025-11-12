@@ -40,5 +40,22 @@
         </div>
     </flux:container>
 
+    <div class="w-full h-64 flex justify-center items-center bg-center bg-no-repeat bg-cover"
+        style="background-image: url({{ asset('assets/IMG_7189_11zon.jpg') }})">
+        <flux:container>
+            <div class="py-8 px-4 rounded-lg backdrop-blur-sm">
+                <div class="text-xl text-black md:text-3xl font-semibold text-center">Ready to Scale Your Business?
+                </div>
+                <div class="text-lg text-black md:text-xl text-center">Click and see how our B2B platform can help your
+                    business
+                    grow faster.</div>
+
+                <div class="flex justify-center mt-8">
+                    <flux:button href="{{ route('b2b-home') }}" variant="primary">Visit B2B Portal</flux:button>
+                </div>
+            </div>
+        </flux:container>
+    </div>
+
     {{-- @livewire('loyality-show') --}}
 </div>

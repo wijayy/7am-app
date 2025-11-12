@@ -73,6 +73,10 @@
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Newsletters
                     </a>
+                    <a href="{{ route('admin.index') }}" current="{{ request()->routeIs('admin.index') }}"
+                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+                        Admin
+                    </a>
                 </nav>
             </div>
 

@@ -53,7 +53,7 @@ class Category extends Model
 
     public static function sync(JurnalApi $jurnalApi)
     {
-        $response = $jurnalApi->request('GET', '/public/jurnal/api/v1/product_categories');
+        $response = $jurnalApi->request('GET', '/public/jurnal/api/v1/product_categories?page_size=100');
         // dd($jurnalApi);
         $jurnalCategories = [];
         if (isset($response['product_categories'])) {

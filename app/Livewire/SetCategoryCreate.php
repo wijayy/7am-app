@@ -81,7 +81,8 @@ class SetCategoryCreate extends Component
             );
 
             // Sync categories
-            $setCategory->categories()->sync($this->selectedCategories);
+            $setCategory->categories()->detach();
+            $setCategory->categories()->attach($this->selectedCategories);
             DB::commit();
 
             session()->flash('success', 'Set category saved successfully');

@@ -3,14 +3,27 @@
 namespace App\Livewire;
 
 use App\Models\Product;
+use App\Models\SetCategory;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class B2bHome extends Component
 {
-    public $products;
+    public $products, $categories;
     public function mount()
     {
-        $this->products = Product::latest()->take(12)->get();
+        $user = Auth::user();
+        // Jika user login, punya relasi bussinesses, dan relasi setCategory pada salah satu bussinesses
+        if ($user && $user->bussinesses && $user->bussinesses->setCategory) {
+            // Jika user punya bisnis dan bisnis itu punya setCategory
+            $setCategory = $user->bussinesses->setCategory;
+        } else {
+            // Jika tidak, gunakan set category default dari setting
+            $setCategory = Setting::where('key', 'default_set_category')->value('value');
+            // dd(false, $this->categories, $defaultSetCategory);
+        }
+        $this->products = Product::latest()->filters(['set_category_id' => $setCategory])->take(12)->get();
     }
 
     public function openShowModal($jurnal_id)

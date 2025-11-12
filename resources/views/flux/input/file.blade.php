@@ -18,9 +18,6 @@
 
     [$styleAttributes, $attributes] = Flux::splitAttributes($attributes);
 
-
-    // dd($name);
-
     // Cek jika preview disediakan (berasal dari nilai lama image pada wire:model.live)
     if (!empty($preview)) {
         // Jika $preview sudah berupa URL, langsung gunakan
@@ -35,8 +32,8 @@
         $defaultPreview = '';
     }
 
-
     // dd($preview, $defaultPreview);
+
 @endphp
 
 <div {{ $styleAttributes->class($classes) }} data-flux-input-file wire:ignore tabindex="0" x-data="{
@@ -81,7 +78,7 @@
         @if ($name) name="{{ $name }}" @endif>
 
     {{-- PREVIEW IMAGE --}}
-    <div class="aspect-{{ $aspect }} relative flex items-center border  rounded-xl bg-white dark:bg-zinc-700 w-full bg-cover bg-no-repeat bg-center"
+    <div class="aspect-{{ $aspect }} relative flex items-center border  rounded-xl bg-white dark:bg-gray-700 w-full bg-cover bg-no-repeat bg-center"
         :style="'background-image: url(' + previewUrl + ')'">
         <div x-cloak x-show="!previewUrl" class="w-full text-xs font-semibold text-center">No file chosen</div>
     </div>

@@ -1,8 +1,6 @@
 {{-- @dd($products) --}}
 <div>
-    <flux:secondary-hero
-        url="assets/shop/banner.png"
-        text="Our Products"
+    <flux:secondary-hero url="assets/shop/banner.png" text="Our Products"
         description="Discover our delightful range of freshly baked breads and pastries, crafted to bring joy to your taste buds every morning.">
     </flux:secondary-hero>
 
@@ -30,10 +28,11 @@
                         min="0" :placeholder="'Max'"></flux:input>
                 </div>
 
-                <div class="mt-4 mb-2">Freshness</div>
-                <flux:radio.group wire:model.live='freshness' class="">
-                    <flux:radio :label="'Fresh'" :value="'fresh'"></flux:radio>
-                    <flux:radio :label="'Frozen'" :value="'frozen'"></flux:radio>
+                <div class="mt-4 mb-2">Category</div>
+                <flux:radio.group wire:model.live='category' class="">
+                    @foreach ($categories as $item)
+                        <flux:radio :label="$item->name" :value="$item->slug"></flux:radio>
+                    @endforeach
                 </flux:radio.group>
 
                 <div class="flex gap-4 mt-4 justify-start">
@@ -46,10 +45,11 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 items-start">
                     @forelse ($products as $item)
                         <button wire:click="openShowModal('{{ $item->jurnal_id }}')" class="text-center">
-                            <img src="{{ $item['image'] != '' ? $item['image'] : asset('assets/No-Picture-Found.png') }}"
+                            <img class="aspect-square"
+                                src="{{ $item['image'] != '' ? $item['image'] : asset('assets/No-Picture-Found.png') }}"
                                 alt="Chocolate Croissant" class="rounded-lg shadow mb-2">
 
-                            <div class="px-2">
+                            <div class="px-2 mt-2">
                                 <div class="flex justify-between items-center mb-2">
                                     <p class="font-semibold text-md text-left">{{ $item->name }}</p>
                                 </div>

@@ -23,6 +23,14 @@ class CategoryIndex extends Component
         $this->categories = Category::all();
     }
 
+    public function toggleStatus($id)
+    {
+        $category = Category::find($id);
+        $category->active = !$category->active;
+        $category->save();
+        $this->getCategory();
+    }
+
     public function sync(JurnalApi $jurnalApi)
     {
         Category::sync($jurnalApi);

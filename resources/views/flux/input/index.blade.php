@@ -20,6 +20,7 @@
     'icon' => null,
     'kbd' => null,
     'as' => null,
+    'aspect' => null,
     'only_number' => null,
     'format_number' => null,
 ])
@@ -143,7 +144,7 @@
 
 <?php if ($type === 'file'): ?>
 <flux:with-field :$attributes :$name>
-    <flux:input.file :$attributes :$name :$size />
+    <flux:input.file :$attributes :$name :$size :$aspect />
 </flux:with-field>
 <?php elseif ($as !== 'button'): ?>
 <flux:with-field :$attributes :$name>

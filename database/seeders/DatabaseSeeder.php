@@ -40,9 +40,9 @@ class DatabaseSeeder extends Seeder
 
 
         foreach (range(1, 10) as $key => $item) {
-            $user = User::factory()->create(['business' => 'requested', 'email' => "user{$item}@admin.com"]);
+            // $user = User::factory()->create(['business' => 'requested', 'email' => "user{$item}@admin.com"]);
 
-            Bussiness::factory()->recycle($user)->create();
+            // Bussiness::factory()->recycle($user)->create();
         }
 
         $user = User::factory()->create([
@@ -105,17 +105,17 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RedeemPointSeeder::class);
 
-        $this->call(CategorySeeder::class);
-        $this->call(SetCategorySeeder::class);
-        $this->call(ProductSeeder::class);
+        // $this->call(CategorySeeder::class);
+        // $this->call(SetCategorySeeder::class);
+        // $this->call(ProductSeeder::class);
 
-        Cart::factory(3)->recycle([$user, Product::all()])->create();
+        // Cart::factory(3)->recycle([$user, Product::all()])->create();
 
-        Bussiness::factory()->recycle($user)->create([
-            'status' => "approved",
-            'set_category_id' => 1
-        ]);
+        // Bussiness::factory()->recycle($user)->create([
+        //     'status' => "approved",
+        //     'set_category_id' => 1
+        // ]);
 
-        $this->call(TransactionSeeder::class);
+        // $this->call(TransactionSeeder::class);
     }
 }

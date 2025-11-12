@@ -26,14 +26,18 @@ class ShopIndex extends Component
         $user = Auth::user();
 
         // Jika user login, punya relasi bussinesses, dan relasi setCategory pada salah satu bussinesses
-        if ($user && $user->bussinesses && $user->bussinesses?->setCategory) {
-            // Ambil category dari setCategory milik bussiness pertama user
-            $this->categories = $user->bussinesses->setCategory->category ?? collect();
+        if ($user && $user->bussinesses && $user->bussinesses->setCategory) {
+            // Jika user punya bisnis dan bisnis itu punya setCategory
+            $this->categories = $user->bussinesses->setCategory->categories ?? collect();
+
+            dd(true, $this->categories);
         } else {
-            // Fallback: ambil setCategory dari setting default
+            // Jika tidak, gunakan set category default dari setting
             $defaultSetCategoryId = Setting::where('key', 'default_set_category')->value('value');
-            $setCategory = SetCategory::find($defaultSetCategoryId);
-            $this->categories = $setCategory?->category ?? collect();
+            $defaultSetCategory = SetCategory::find($defaultSetCategoryId);
+
+            $this->categories = $defaultSetCategory->categories ?? collect();
+            // dd(false, $this->categories, $defaultSetCategory);
         }
 
         // dd(Auth::user()?->bussinesses?->setCategory->id);

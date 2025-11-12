@@ -1,5 +1,6 @@
 <div>
-    <flux:secondary-hero text="Contact"></flux:secondary-hero>
+    <flux:secondary-hero text="Get in Touch" description="Have a question or idea? Our team is just a message away!"
+        :url="'assets/2nd.jpg'"></flux:secondary-hero>
 
     <flux:container>
         <div class="grid grid-cols-1 mt-4 md:grid-cols-3 gap-4">
