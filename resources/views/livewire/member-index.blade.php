@@ -75,86 +75,10 @@
                 </div>
             @endforeach
         </div>
-        <flux:modal name="create-member" class="w-3xl!">
-            <div class="mt-4">{{ $id ? "Edit Data Member $name" : 'Register New Member' }}</div>
-            <form wire:submit='save' class="grid grid-cols-1 mt-4 md:grid-cols-2 gap-4">
-                <div class="">
-                    <flux:input wire:model.live='name' label="Member Name" required></flux:input>
-                </div>
-                <div class="">
-                    <flux:input wire:model.live='code' only_number label="Code on Card" required></flux:input>
-                </div>
-                <div class="">
-                    <flux:select wire:model.live='type_id' label="Membership Type">
-                        <flux:select.option value="">--Select Membership Type--</flux:select.option>
-                        @foreach ($types as $item)
-                            <flux:select.option value="{{ $item->id }}">{{ $item->name }}</flux:select.option>
-                        @endforeach
-                    </flux:select>
-                </div>
-                <div class="">
-                    <flux:input wire:model.live='point' only_number label="Point" :readonly="$id || $input_point">
-                    </flux:input>
-                </div>
-                <div class="">
-                    <flux:input wire:model.live='phone' only_number label="Phone Number" required></flux:input>
-                </div>
-                <div class="">
-                    <flux:input wire:model.live='email' label="Email" required></flux:input>
-                </div>
-                <div class="">
-                    <flux:input wire:model.live='birthday' type="date" label="Birthday" required></flux:input>
-                </div>
-                <div class=""></div>
-                <div class="">
-                    <flux:button variant="primary" type="submit">Submit</flux:button>
-                </div>
-            </form>
-        </flux:modal>
-
-        <flux:modal name='redeem-point'>
-            <div class="mt-4">{{ $code }} {{ $name }} Redeeming Point</div>
-            <form wire:submit='redeem' class="grid grid-cols-1 mt-4 gap-4">
-                <div class="">
-                    <flux:select wire:model.live='outlet_id' :disabled="Auth::user()->outlet" label="Outlet">
-                        <flux:select.option value="">--Select Outlet--</flux:select.option>
-                        @foreach ($outlets as $item)
-                            <flux:select.option value="{{ $item->id }}">{{ $item->name }}</flux:select.option>
-                        @endforeach
-                    </flux:select>
-                    <flux:select wire:model.live='redeem_id' label="Redeem Reward">
-                        <flux:select.option value="">--Select Redeem Reward--</flux:select.option>
-                        @foreach ($redeems as $item)
-                            <flux:select.option value="{{ $item->id }}">{{ $item->name }}</flux:select.option>
-                        @endforeach
-                    </flux:select>
-                </div>
-                <div class="">
-                    <flux:button variant="primary" type="submit">Submit</flux:button>
-                </div>
-            </form>
-        </flux:modal>
-        <flux:modal name='transaction'>
-            <div class="mt-4">{{ $code }} {{ $name }} Input Transaction</div>
-            <form wire:submit='inputTransaction' class="grid grid-cols-1 mt-4 gap-4">
-                <div class="">
-                    <flux:select wire:model.live='outlet_id' :disabled="Auth::user()->outlet" label="Redeem Reward">
-                        <flux:select.option value="">--Select Outlet--</flux:select.option>
-                        @foreach ($outlets as $item)
-                            <flux:select.option value="{{ $item->id }}">{{ $item->name }}</flux:select.option>
-                        @endforeach
-                    </flux:select>
-                </div>
-                <div class="">
-                    <flux:input wire:model.live='amount' type="number" label="Transaction Amount" required></flux:input>
-                </div>
-                <div class="">
-                    <flux:input wire:model.live='poin' label="Point Gained" readonly></flux:input>
-                </div>
-                <div class="">
-                    <flux:button variant="primary" type="submit">Submit</flux:button>
-                </div>
-            </form>
-        </flux:modal>
     </flux:container-sidebar>
+    @livewire('member-create')
+    @livewire('member-redeem')
+
+    @livewire('member-transaction')
+
 </div>

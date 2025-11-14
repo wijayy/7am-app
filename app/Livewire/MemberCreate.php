@@ -95,7 +95,7 @@ class MemberCreate extends Component
             DB::commit();
 
             // refresh list
-            $this->getMembers();
+            // $this->getMembers();
 
             // success message
             $message = $this->id ? 'Member updated successfully.' : 'Member created successfully.';

@@ -89,7 +89,7 @@
             <div class="text-lg md:text-xl font-semibold">Top Month</div>
             <div class="text-2xl md:text-3xl font-bold">{{ $topMonthName }}</div>
             <div class="text-lg md:text-xl font-semibold">Top Year</div>
-            <div class="text-2xl md:text-3xl font-bold">{{ $topYear->year }}</div>
+            <div class="text-2xl md:text-3xl font-bold">{{ $topYear?->year }}</div>
 
 
         </div>

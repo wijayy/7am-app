@@ -137,7 +137,7 @@ class Dashboard extends Component
             $topMonth->name = Carbon::create($topMonth->year, $topMonth->month, 1)->translatedFormat('F Y');
         }
 
-        $this->topMonthName = $topMonth->name;
+        $this->topMonthName = $topMonth?->name;
 
         // === Top Year (Tahun dengan Penjualan Tertinggi Sepanjang Waktu) ===
         $this->topYear = DB::table('transactions')

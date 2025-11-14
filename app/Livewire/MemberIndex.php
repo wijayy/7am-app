@@ -119,16 +119,7 @@ class MemberIndex extends Component
 
     public function openTransactionModal($id)
     {
-        $this->resetValidation();
-        $member = $this->getMember($id);
-
-        $this->id = $member->id;
-        $this->name = $member->name;
-        $this->code = $member->code;
-        $this->amount = 0;
-        $this->outlet_id = Auth::user()->outlet_id ?? null;
-
-        $this->dispatch('modal-show', name: 'transaction');
+        $this->dispatch('addTransaction', id: $id);
     }
 
     public function updatedAmount()
@@ -138,47 +129,6 @@ class MemberIndex extends Component
         }
     }
 
-    public function inputTransaction()
-    {
-        // $validated = [];
-        try {
-            DB::beginTransaction();
-            // validasi hanya 3 field
-            $validated = $this->validate([
-                'amount' => 'required|numeric|min:1',
-                'poin' => 'required|integer|min:0',
-                'outlet_id' => 'required|exists:outlets,id',
-            ]);
-
-            $validated['member_id'] = $this->id;
-
-            MemberTransaction::create($validated);
-
-            $member = $this->getMember($this->id);
-
-            $member->increment('total_point', $this->poin);
-            $member->increment('active_point', $this->poin);
-
-            DB::commit();
-
-            $this->getMembers();
-
-            // success message
-            $message = "$this->code $this->name successfully get $this->poin points";
-            session()->flash('success', $message);
-
-            // reset validations and close modal
-            $this->resetValidation();
-            $this->dispatch('modal-close', name: 'transaction');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            if (config('app.debug') == true) {
-                throw $th;
-            } else {
-                session()->flash('error', $th->getMessage());
-            }
-        }
-    }
 
     public function render()
     {
