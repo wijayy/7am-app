@@ -16,7 +16,7 @@
                 x-transition:leave-end="opacity-0 scale-90">
                 <div class="flex items-center col-span-2 gap-2">
                     <div class="size-20 rounded bg-center bg-cover bg-no-repeat"
-                        style="background-image: url({{ asset("storage/{$itm->product->image}") }})">
+                        style="background-image: url({{ $itm->product->image_url }})">
                     </div>
                     <div class="">
                         <div class="font-semibold">{{ $itm->product->name }}</div>
@@ -51,12 +51,7 @@
                 <div class="">Rp. {{ number_format($transaction->discount, 0, ',', '.') }}</div>
             </div>
         @endif
-        <div class="flex mt-2 justify-between items-center">
-            <div class="">Payment Method</div>
-            <div class="">
-                <img src="{{ asset('assets/bca.png') }}" alt="">
-            </div>
-        </div>
+        <div class="mt-4"></div>
         <flux:separator></flux:separator>
         <div class="flex justify-between items-center">
             <div class="">Total</div>

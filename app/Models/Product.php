@@ -72,6 +72,12 @@ class Product extends Model
             return $query->where("price", "<", "$search");
         });
 
+        $query->when($filters["category"] ?? false, function ($query, $category) {
+            return $query->whereHas('category', function ($q) use ($category) {
+                $q->where('slug', $category);
+            });
+        });
+
         $query->when($filters["set_category"] ?? false, function ($query, $setCategoryId) {
             return $query->whereHas('category', function ($q) use ($setCategoryId) {
                 $q->whereHas('setCategories', function ($sq) use ($setCategoryId) {

@@ -30,7 +30,7 @@ class ShopIndex extends Component
             // Jika user punya bisnis dan bisnis itu punya setCategory
             $this->categories = $user->bussinesses->setCategory->categories ?? collect();
 
-            dd(true, $this->categories);
+            // dd(true, $this->categories);
         } else {
             // Jika tidak, gunakan set category default dari setting
             $defaultSetCategoryId = Setting::where('key', 'default_set_category')->value('value');
@@ -66,6 +66,7 @@ class ShopIndex extends Component
     {
         $products = Product::filters([
             'search' => $this->search,
+            'category' => $this->category,
             'min' => $this->min,
             'max' => $this->max,
             'set_category' => Auth::user()?->bussinesses?->setCategory->id ?? Setting::where('key', 'default_set_category')->value('value')
