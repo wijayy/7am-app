@@ -65,7 +65,7 @@ class SetCategoryCreate extends Component
 
     public function mount()
     {
-        $this->categories = Category::all();
+        $this->categories = Category::where('active', 1)->get();
     }
 
     public function save()

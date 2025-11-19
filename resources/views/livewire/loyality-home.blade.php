@@ -63,7 +63,7 @@
 
         <div class="grid grid-cols-1 mt-4 md:grid-cols-3 gap-4">
             @foreach ($cards as $item)
-                <div class="rounded-lg p-4 bg-mine-100">
+                <div class="rounded-lg p-4 bg-mine-100 dark:bg-neutral-700">
                     <div class="aspect-16/10 bg-center rounded bg-no-repeat bg-cover"
                         style="background-image: url({{ asset("storage/$item->card") }})"></div>
                     <div class="font-semibold mt-4 text-center">{{ $item->name }}</div>

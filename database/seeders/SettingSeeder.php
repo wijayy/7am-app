@@ -28,22 +28,22 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'deposit_to_name',
-                'value' => '',
+                'value' => 'BCA  Airport Bakery Service',
                 'type' => 'text',
             ],
             [
                 'key' => 'witholding_account_name',
-                'value' => '',
+                'value' => 'Deposit In Transit B2B',
                 'type' => 'text',
             ],
             [
                 'key' => 'witholding_value',
-                'value' => '',
+                'value' => '0',
                 'type' => 'number',
             ],
             [
                 'key' => 'witholding_type',
-                'value' => '',
+                'value' => 'value',
                 'type' => 'text',
             ],
             [
@@ -58,29 +58,29 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'line_tax_id',
-                'value' => '',
+                'value' => '1047236',
                 'type' => 'number',
             ],
             [
                 'key' => 'line_tax_name',
-                'value' => '',
+                'value' => 'Packaging and Handling',
                 'type' => 'text',
             ],
 
             // Receive Payment Settings
             [
                 'key' => 'payment_method_name',
-                'value' => '',
+                'value' => 'Bank Transfer',
                 'type' => 'text',
             ],
             [
                 'key' => 'payment_method_id',
-                'value' => '',
+                'value' => '3082237',
                 'type' => 'number',
             ],
             [
                 'key' => 'payment_deposit_to_name',
-                'value' => '',
+                'value' => 'BCA  Airport Bakery Service',
                 'type' => 'text',
             ],
             [
@@ -90,18 +90,18 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'payment_witholding_value',
-                'value' => '',
+                'value' => '0',
                 'type' => 'number',
             ],
             [
                 'key' => 'payment_witholding_type',
-                'value' => '',
+                'value' => 'value',
                 'type' => 'text',
             ],
         ];
 
         foreach ($settings as $key => $item) {
-            Setting::create($item);
+            Setting::updateOrCreate(['key' => $item['key']], $item);
         }
     }
 }

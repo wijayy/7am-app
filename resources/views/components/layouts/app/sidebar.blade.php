@@ -44,6 +44,10 @@
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Redeem Reward
                     </a>
+                    <a href="{{ route('outlet.index') }}" current="{{ request()->routeIs('outlet.index') }}"
+                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+                        Outlets
+                    </a>
                     <a href="{{ route('set-category.index') }}"
                         current="{{ request()->routeIs('set-category.index') }}"
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
@@ -76,6 +80,10 @@
                     <a href="{{ route('admin.index') }}" current="{{ request()->routeIs('admin.index') }}"
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Admin
+                    </a>
+                    <a href="{{ route('setting.index') }}" current="{{ request()->routeIs('setting.index') }}"
+                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+                        Settings
                     </a>
                 </nav>
             </div>

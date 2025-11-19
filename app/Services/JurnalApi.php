@@ -64,7 +64,7 @@ class JurnalApi
 
 
         $response = curl_exec($ch);
-        // dd($ch);
+        // dd($response);
         if (curl_errno($ch)) {
             throw new Exception('cURL Error: ' . curl_error($ch));
         } else {

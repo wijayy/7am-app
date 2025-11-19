@@ -77,7 +77,7 @@ class Category extends Model
                     ['jurnal_id' => $item['id']],
                     [
                         'name' => $item['name'],
-                        'active' => true,
+                        // 'active' => falsep,
                     ]
                 );
             }

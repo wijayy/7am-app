@@ -15,7 +15,7 @@
     </div>
     <flux:container class="mt-8 mb-4">
         <div class="text-center  md:text-2xl font-semibold">Choose Your Favorite Outlets</div>
-        <div class="text-center text-sm md:text-lg">Choose Your Favorite Outlets</div>
+        <div class="text-center text-sm md:text-lg">Select the best outlet for your experience</div>
 
         <div class="grid grid-cols-1 mt-4 gap-4 md:grid-cols-3">
             @foreach ($outlets as $item)

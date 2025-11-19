@@ -8,11 +8,12 @@ use App\Models\Category;
 use App\Services\JurnalApiResponse;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class ProductIndex extends Component
 {
-    public $title = 'All Product';
+    public $title = 'All Product', $id;
 
     protected $jurnalApi;
 
@@ -24,6 +25,12 @@ class ProductIndex extends Component
 
     #[Url(except: 50)]
     public $per_page = 50;
+
+    #[Validate('required')]
+    public $name = '';
+
+    #[Validate()]
+    public $moq = 1;
 
 
     public function mount(JurnalApi $jurnalApi)
@@ -39,6 +46,27 @@ class ProductIndex extends Component
     public function sync(JurnalApi $jurnalApi)
     {
         Product::sync($jurnalApi);
+    }
+
+    public function setMOQ($id)
+    {
+        $this->id = $id;
+        $product = Product::find($id);
+        $this->name = $product->name;
+        $this->moq = $product->moq ?? 1;
+
+        $this->dispatch('modal-show', name: 'set-moq');
+    }
+
+    public function save()
+    {
+        $this->validate();
+
+        $product = Product::find($this->id);
+        $product->moq = $this->moq;
+        $product->save();
+
+        $this->dispatch('modal-close', name: 'set-moq');
     }
 
 

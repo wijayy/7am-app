@@ -12,7 +12,7 @@
             <div class="col-span-2 text-center">SKU</div>
             <div class="col-span-2 text-center">Category</div>
             <div class="col-span-2 text-center">Price</div>
-            <div class="col-span-2 text-center">Freshness</div>
+            <div class="col-span-2 text-center">MOQ</div>
             <div class="col-span-2 text-center">Action</div>
         </div>
         @foreach ($products as $key => $item)
@@ -27,15 +27,30 @@
                     </div>
                 </div>
                 <div class="col-span-2 text-center">{{ $item['product_code'] }}</div>
-                <div class="col-span-2 text-center">{{ $item['product_categories_string'] }}</div>
-                <div class="col-span-2 text-center">{{ $item['price'] }}</div>
-                <div class="col-span-2 text-center">{{ $item['active'] }}</div>
+                <div class="col-span-2 text-center">{{ $item['category']['name'] }}</div>
+                <div class="col-span-2 text-center">Rp. {{ number_format($item['price'], 0, ',', '.') }}</div>
+                <div class="col-span-2 text-center">{{ $item['moq'] }}</div>
                 <div class="col-span-2 justify-center flex gap-2">
-
+                    <flux:tooltip content="Set MOQ">
+                        <flux:button size="sm" icon="pencil-square" variant="primary" color="amber"
+                            wire:click="setMOQ({{ $item['id'] }})"></flux:button>
+                    </flux:tooltip>
                 </div>
             </div>
         @endforeach
 
+
+        <flux:modal name="set-moq">
+            <div class="mt-4">Set MOQ for {{ $name }}</div>
+            <form wire:submit='save'>
+                <div class="mt-4">
+                    <flux:input wire:model.live='moq' label="Minimum Order Quantity" type="number"></flux:input>
+                </div>
+                <div class="flex justify-center mt-4">
+                    <flux:button type="submit" variant="primary">Save</flux:button>
+                </div>
+            </form>
+        </flux:modal>
         <div class="mt-4">
             {{ $products->links() }}
         </div>

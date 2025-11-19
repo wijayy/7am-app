@@ -34,7 +34,5 @@ class OutletSeeder extends Seeder
         foreach ($outlets as $key => $item) {
             Outlet::factory()->create($item);
         }
-
-        
     }
 }

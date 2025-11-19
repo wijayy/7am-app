@@ -32,12 +32,13 @@ class OutletCreate extends Component
         // $this->images[] = ['image' => null];
         return [
             'image' => [$this->id ? 'nullable' : 'required', 'image', 'max:2048'],
+            // 'images.*.image' => ['nullable', 'file', 'image', 'max:20480'],
         ];
     }
 
     public function addImage()
     {
-        $this->images[] = ['image' => null, 'id' => null, 'temp_id' => uniqid('img_'),];
+        $this->images[] = ['image' => '', 'id' => null, 'temp_id' => uniqid('img_'),];
     }
 
     public function addSection()
@@ -118,7 +119,7 @@ class OutletCreate extends Component
                 $manager = new ImageManager(Driver::class);
 
                 // Baca file dan kompres
-                $image = $manager->read($this->image->getRealPath())->toJpeg(70);
+                $image = $manager->read($this->image->getRealPath())->toJpeg(50);
 
                 // dd($image);
 
