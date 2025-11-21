@@ -63,11 +63,11 @@
         <div>
             <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-2">Our Social Media</h3>
             <div class="flex gap-4 ">
-                <flux:button variant='filled' icon='instagram' href="https://www.instagram.com/7am.bakers/"
+                <flux:button variant='primary' icon='instagram' href="https://www.instagram.com/7am.bakers/"
                     target="_blank" class="size-5"></flux:button>
-                <flux:button variant='filled' icon='tiktok' href="https://www.tiktok.com/@7am.bakersbali"
+                <flux:button variant='primary' icon='tiktok' href="https://www.tiktok.com/@7am.bakersbali"
                     target="_blank" class="size-5"></flux:button>
-                <flux:button variant='filled' icon='whatsapp' href="https://wa.me/628113850303" target="_blank"
+                <flux:button variant='primary' icon='whatsapp' href="https://wa.me/628113850303" target="_blank"
                     class="size-5"></flux:button>
             </div>
         </div>

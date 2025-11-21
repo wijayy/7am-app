@@ -11,15 +11,17 @@
             </flux:container>
         </div>
     </div>
-    <flux:container class="bg-white px-8 py-8 md:px-12 md:py-12 my-10 rounded-lg shadow-md">
+    <flux:container class="bg-white dark:bg-gray-700 px-8 py-8 md:px-12 md:py-12 my-10 rounded-lg shadow-md">
         <div class="flex flex-col md:flex-row gap-6 md:gap-20 justify-between items-center">
-            <div class="w-[40%]">
-                <img src="/assets/b2b/wholesale/register-image2.jpg" alt=""
-                    class="object-cover rounded-lg shadow-md">
+            <div class="w-full md:w-[40%]">
+                <div class="bg-cover rounded-lg aspect-4/3 bg-no-repeat bg-center"
+                    style="background-image: url({{ asset('assets/b2b/DSC07365.jpg') }})">
+
+                </div>
             </div>
-            <div class="w-[60%]">
-                <h3 class="text-4xl text-black font-semibold dark:text-black">Register Your Account</h3>
-                <ol class="list-decimal list-outside pl-4 mt-4 space-y-2 text-gray-700">
+            <div class="w-full md:w-[60%]">
+                <h3 class="text-4xl text-black font-semibold dark:text-white">Register Your Account</h3>
+                <ol class="list-decimal list-outside pl-4 mt-4 space-y-2 text-white">
                     <li>Register</li>
                     <li>Fill in your business details</li>
                     <li>Upload required documents</li>
@@ -31,7 +33,7 @@
 
         <div class="flex flex-col lg:flex-row justify-between mt-32 gap-8">
             <!-- Left Content -->
-            <div class="flex flex-col justify-between w-full lg:w-2/3 space-y-8 max-h-[500px]">
+            <div class="flex flex-col justify-between w-full lg:w-2/3 space-y-8 ">
                 <!-- Section 1 -->
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
                     <div
@@ -44,10 +46,10 @@
                     </div>
                     <div class="flex-1 text-left">
                         <span class="text-neutral-400 mb-12">7AM Bakery</span>
-                        <h3 class="text-4xl font-semibold mb-4 text-gray-800">
+                        <h3 class="text-4xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
                             Perfect Bakery Wholesale Solutions
                         </h3>
-                        <p class="text-gray-700 leading-relaxed">
+                        <p class="text-black dark:text-white leading-relaxed">
                             Explore our extensive range of freshly baked goods — from artisanal breads to
                             delectable pastries.
                         </p>
@@ -81,9 +83,9 @@
             </div>
 
             <!-- Right Image -->
-            <div class="w-full lg:w-1/3 max-h-[500px]">
-                <img src="/assets/b2b/wholesale/register-image.jpg" alt="Wholesale Bakery"
-                    class="h-full w-full object-cover rounded-lg shadow-md">
+            <div class="w-full lg:w-1/3">
+                <div class="bg-center bg-cover bg-no-repeat aspect-4/3  lg:aspect-12/16 h-full rounded-lg shadow-md"
+                    style="background-image: url('{{ asset('assets/b2b/IMG_0536.jpg') }}')"></div>
             </div>
         </div>
     </flux:container>
