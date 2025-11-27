@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Bussiness;
 use App\Models\SetCategory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Validate;
 
 class BusinessModal extends Component
@@ -53,7 +54,7 @@ class BusinessModal extends Component
         $this->setCategory = SetCategory::all();
         $this->id = $this->business->id;
         $this->name = $this->business->name;
-        $this->status = $this->business->status;
+        $this->status = $this->business->status == 'requested' ? 'approved' : $this->business->status;
         $this->set_category_id = $this->business?->set_category_id ?? '';
 
         $this->dispatch('modal-show', name: 'business-modal');
@@ -74,6 +75,12 @@ class BusinessModal extends Component
                 default => 'Business berhasil diupdate!'
             };
             session()->flash('Success', $message);
+
+            if ($this->status == 'approved') {
+                Mail::to($business->user->email)->send(new \App\Mail\Business\Accept($business->id));
+            } elseif ($this->status == 'rejected') {
+                Mail::to($business->user->email)->send(new \App\Mail\Business\Decline($business->id));
+            }
 
             $this->resetForm();
             $this->dispatch('modal-close', name: 'business-modal');

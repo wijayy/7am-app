@@ -2,6 +2,7 @@
 
 namespace App\Mail\Business;
 
+use App\Models\Bussiness;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,12 +14,13 @@ class Accept extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $user;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($id)
     {
-        //
+        $this->user = Bussiness::findOrFail($id)->user;
     }
 
     /**
@@ -27,7 +29,7 @@ class Accept extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Accept',
+            subject: 'Your Business Has Been Accepted',
         );
     }
 
@@ -37,7 +39,7 @@ class Accept extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.business.accept',
         );
     }
 

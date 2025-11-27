@@ -3,6 +3,9 @@
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Address')" :subheading="__('Keep your billing and delivery details up to date for smooth transactions.')">
+        @if (session()->has('info'))
+            <div class="text-sky-400! text-sm font-semibold">{{ session('info') }}</div>
+        @endif
         <div class="flex flex-col gap-4">
             @foreach ($addressess as $item)
                 <div class="p-4 flex items-center justify-between rounded-lg border-2 border-mine-200">

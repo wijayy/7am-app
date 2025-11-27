@@ -2,9 +2,11 @@
 
 namespace App\Mail\Order;
 
+use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+// use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -13,12 +15,15 @@ class Order extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $order;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($slug)
     {
-        //
+        $order = Transaction::where('slug', $slug)->first();
+        $this->order = $order;
     }
 
     /**
@@ -27,7 +32,7 @@ class Order extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Order',
+            subject: 'Order Successfully Created',
         );
     }
 
@@ -37,7 +42,10 @@ class Order extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.order.order',
+            with: [
+                'order' => $this->order,
+            ],
         );
     }
 

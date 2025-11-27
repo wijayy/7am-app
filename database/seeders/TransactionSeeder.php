@@ -16,27 +16,43 @@ class TransactionSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::latest()->first();
+        $user = User::first();
 
-        $transactions = Transaction::factory(5)->create([
-            'user_id' => $user->id,
-        ]);
-
-        foreach ($transactions as $key => $item) {
+        foreach (range(1, 5) as $key => $item) {
+            $transaction = Transaction::factory(1)->create([
+                'user_id' => $user->id,
+            ]);
+            $transaction = $transaction->first();
             foreach (range(1, mt_rand(1, 5)) as $key => $itm) {
                 $product = Product::inRandomOrder()->first();
                 $qty = mt_rand(1, 5);
                 $subtotal = $product->price * $qty;
 
-                TransactionItem::factory()->recycle($product, $item)->create([
+                TransactionItem::factory()->recycle($product, $transaction)->create([
                     'qty' => $qty,
                     'subtotal' => $subtotal,
                     'price' => $product->price,
                 ]);
             }
-            $total = $item->items->sum('subtotal');
 
-            $item->update(['total' => $total, 'packaging_fee' => $total * 0.03]);
+            $shipping = $user->addresses()->inRandomOrder()->first();
+
+            // dd($shipping);
+
+            Shipping::create([
+                'user_id' => $user->id,
+                'transaction_id' => $transaction->id,
+                'type' => 'delivery',
+                'address' => $shipping->address,
+                'name' => $shipping->name,
+                'phone' => $shipping->phone,
+                'email' => $user->email,
+            ]);
+
+            dd($transaction->items);
+            $total = $transaction->items->sum('subtotal');
+
+            $transaction->update(['total' => $total, 'packaging_fee' => $total * 0.03]);
         }
     }
 }

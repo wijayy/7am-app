@@ -172,7 +172,7 @@
                     </div>
                     <div class="flex justify-between text-gray-800 mb-3">
                         <div class="dark:text-white">Packaging Fee</div>
-                        <div class="dark:text-white">Rp. {{ number_format($packaging_fee, 2, ',', '.') }}</div>
+                        <div class="dark:text-white">Rp. {{ number_format($packaging_fee, 0, ',', '.') }}</div>
                     </div>
 
                     @if ($c ?? false)

@@ -56,6 +56,10 @@ Route::prefix('b2b')->group(function () {
     Volt::route('shop', 'shop-index')->name('shop.index');
     Volt::route('shop/{slug}', 'shop-show')->name('shop.show');
 
+    Volt::route('checkout/{slug}', 'checkout')->name('checkout');
+    Volt::route('invoice/{slug}', 'invoice')->name('invoice');
+
+
     Volt::route('wholesale', 'wholesale-index')->name('wholesale.index');
 });
 Route::prefix('b2b')->middleware(['auth', 'verified', 'sales-admin'])->group(function () {
@@ -78,9 +82,7 @@ Route::prefix('b2b')->middleware(['auth', 'verified', 'sales-admin'])->group(fun
 
 Route::prefix('b2b')->middleware(['auth', 'verified', 'customer'])->group(function () {
     Volt::route('cart', 'cart')->name('cart');
-    Volt::route('checkout/{slug}', 'checkout')->name('checkout');
     Volt::route('history', 'history')->name('history');
-    Volt::route('invoice/{slug}', 'invoice')->name('invoice');
 });
 
 Route::prefix('b2b')->middleware(['auth', 'verified', 'admin'])->group(function () {
@@ -101,6 +103,8 @@ Route::prefix('b2b')->middleware(['auth', 'verified', 'admin'])->group(function 
 });
 
 Volt::route('outlets/{slug}', 'outlet-show')->name('outlet-show');
+
+Route::get('/test-email', [App\Http\Controllers\MailController::class, 'sendTestEmail']);
 
 
 require __DIR__ . '/auth.php';

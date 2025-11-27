@@ -29,6 +29,7 @@ class Transaction extends Model
         ];
     }
     protected $guarded = ['id'];
+    protected $with = ['items'];
 
     /**
      * Get the attributes that should be cast.

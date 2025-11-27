@@ -1,4 +1,5 @@
-<flux:container class="mt-32 mb-8 min-h-[55vh] bg-white py-8 px-4 md:px-8 lg:px-16 rounded-xl shadow-md w-full">
+<flux:container
+    class="mt-32 mb-8 min-h-[55vh] bg-white dark:bg-gray-700 py-8 px-4 md:px-8 lg:px-16 rounded-xl shadow-md w-full">
     <div class="relative mb-6 w-full">
         <flux:heading size="xl" level="1">{{ __('Business Info') }}</flux:heading>
         <flux:subheading size="lg" class="mb-6">{{ __('Manage your business information and settings') }}
@@ -14,17 +15,17 @@
             <flux:separator text="Bussiness Identity">
             </flux:separator>
             <div class="space-y-4">
-    
+
                 <flux:input :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])"
                     label="Bussiness Name/Outlet Name" required wire:model.live='name'></flux:input>
                 <flux:input only_number :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])"
                     label="Bussiness Registration Number" placeholder="NPWP, Tax ID, VAT, or Government-issued number"
                     required wire:model.live='npwp'>
                 </flux:input>
-                <flux:input :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])" label="Address" required
-                    wire:model.live='address'></flux:input>
+                <flux:input :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])" label="Address"
+                    required wire:model.live='address'></flux:input>
             </div>
-    
+
         </div>
         <div class="mt-12">
             <flux:separator text="Bank Information">
@@ -44,8 +45,8 @@
             </flux:separator>
             <div class="space-y-4">
                 <div class="w-full sm:w-80">
-                    <flux:input aspect="16/10" type="file" label="Representative ID Card" preview="{{ $preview }}"
-                        required wire:model.live='id_card'
+                    <flux:input aspect="16/10" type="file" label="Representative ID Card"
+                        preview="{{ $preview }}" required wire:model.live='id_card'
                         :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])">
                     </flux:input>
                 </div>

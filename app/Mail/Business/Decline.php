@@ -27,7 +27,7 @@ class Decline extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Decline',
+            subject: 'Your Business Has Been Declined',
         );
     }
 
@@ -37,7 +37,7 @@ class Decline extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.business.decline',
         );
     }
 

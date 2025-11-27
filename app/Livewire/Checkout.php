@@ -13,6 +13,7 @@ use Livewire\Attributes\On;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class Checkout extends Component
 {
@@ -103,6 +104,7 @@ class Checkout extends Component
                 'payment_status' => 'paid',
             ]);
             DB::commit();
+            Mail::to(Auth::user()->email)->send(new \App\Mail\Order\Paid($transaction->slug));
 
             return redirect(route('invoice', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {

@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Bussiness;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -55,6 +57,12 @@ class BussinessInfo extends Component
 
             $business = Bussiness::create($validated);
             DB::commit();
+            Mail::to(Auth::user()->email)->send(new \App\Mail\Request_User(Auth::user()->id));
+
+            foreach (User::where('role', 'sales-admin')->get() as $key => $item) {
+                Mail::to($item->email)->send(new \App\Mail\Request_Admin(Auth::user()->id));
+            }
+
             Session::flash('success', 'Thank you for submitting your business registration. Your request has been received and is currently under review. Please wait up to 24 hours for further confirmation.');
         } catch (\Throwable $th) {
             DB::rollBack();

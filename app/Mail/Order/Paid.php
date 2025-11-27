@@ -2,6 +2,7 @@
 
 namespace App\Mail\Order;
 
+use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,12 +14,14 @@ class Paid extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $order;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($slug)
     {
-        //
+        $this->order = Transaction::where('slug', $slug)->firstOrFail();
     }
 
     /**
@@ -27,7 +30,7 @@ class Paid extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Paid',
+            subject: 'Payment Received — Order Confirmed',
         );
     }
 
@@ -37,7 +40,7 @@ class Paid extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.order.paid',
         );
     }
 

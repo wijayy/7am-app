@@ -17,6 +17,7 @@ use App\Models\Payment;
 use App\Models\TransactionItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Minimum;
 use Session;
 
@@ -27,8 +28,18 @@ class Cart extends Component
 
     public function mount()
     {
+
+        if (Auth::user()->addresses->isEmpty()) {
+            return redirect(route('settings.address'))->with('info', 'Please add your address before checkout');
+        }
+
+
         $this->carts();
-        $this->addresses = Auth::user()->addresses;
+
+
+        $this->addresses = Auth::user()->addresses ?? collect();
+
+        // dd($this->addresses);
         $this->address = $this->addresses->first();
 
         if ($this->carts->count() == 0) {
@@ -119,6 +130,7 @@ class Cart extends Component
             ModelsCart::where('user_id', Auth::user()->id)->delete();
 
             DB::commit();
+            Mail::to(Auth::user()->email)->send(new \App\Mail\Order\Order($transaction->slug));
             $this->redirect(route('checkout', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {
             DB::rollBack();
