@@ -104,8 +104,14 @@
                         @endforeach
                     </flux:modal>
 
+                    @if (session()->has('info'))
+                        <div class="mt-4 text-sm font-semibold text-sky-400">
+                            {{ session('info') }}
+                        </div>
+                    @endif
+
                     <div
-                        class="grid grid-cols-6 font-semibold text-center text-sm border-b border-gray-300 pb-2 text-gray-800 dark:text-white">
+                        class="grid grid-cols-6 font-semibold text-center text-sm border-b mt-4 border-gray-300 pb-2 text-gray-800 dark:text-white">
                         <div class="col-span-2">Product</div>
                         <div>Price</div>
                         <div>Qty</div>

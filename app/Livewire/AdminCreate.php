@@ -39,6 +39,7 @@ class AdminCreate extends Component
             'phone' => [
                 'required',
                 'string',
+                'doesnt_start_with:0',
                 // Email harus unik, tapi abaikan user yang sedang diedit
                 Rule::unique('users', 'phone')->ignore($userId),
             ],
@@ -50,6 +51,13 @@ class AdminCreate extends Component
                 'string',
                 'min:8',
             ],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'phone.doesnt_start_with' => "Phone number must start with a country code"
         ];
     }
 

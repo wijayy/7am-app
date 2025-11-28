@@ -37,7 +37,7 @@ class BussinessInfo extends Component
     #[Validate('required')]
     public $representative = '';
 
-    #[Validate('required|doesnt_start_with:0')]
+    #[Validate('required|doesnt_start_with:0', message: ['doesnt_start_with' => 'Phone number must start with a country code'])]
     public $phone = '';
 
     #[Validate('required|file|image')]

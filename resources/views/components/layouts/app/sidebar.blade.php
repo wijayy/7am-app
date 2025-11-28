@@ -48,6 +48,10 @@
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
                         Outlets
                     </a>
+                    <a href="{{ route('business.index') }}" current="{{ request()->routeIs('business.index') }}"
+                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
+                        Businesses
+                    </a>
                     <a href="{{ route('set-category.index') }}"
                         current="{{ request()->routeIs('set-category.index') }}"
                         class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">

@@ -26,7 +26,7 @@ class ReservationCreate extends Component
     #[Validate('required|string|max:255')]
     public $name = '', $section_id;
 
-    #[Validate('required|string|max:15|doesnt_start_with:0')]
+    #[Validate('required|string|max:15|doesnt_start_with:0', message: ['doesnt_start_with' => 'Phone number must start with a country code'])]
     public $phone = '';
 
     #[Validate('required|numeric|min:1')]

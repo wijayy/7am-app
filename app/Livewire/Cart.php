@@ -165,6 +165,7 @@ class Cart extends Component
         $cart = ModelsCart::where('id', $id)->first();
         if ($cart->qty <= $cart->product->moq) {
             $cart->update(['qty' => $cart->product->moq]);
+            session()->flash('info', "{$cart->product->name} has MOQ on {$cart->product->moq} pcs");
         } else {
             $cart->decrement('qty');
         }
@@ -183,6 +184,7 @@ class Cart extends Component
             $cart = ModelsCart::where('id', $item['id'])->first();
             if ($item['qty'] <= $cart->product->moq) {
                 $cart->update(['qty' => $cart->product->moq]);
+                session()->flash('info', "{$cart->product->name} has MOQ on {$cart->product->moq} pcs");
             } else {
                 $cart->update(['qty' => $item['qty']]);
             }
