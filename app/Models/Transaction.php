@@ -104,6 +104,38 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(PaymentInvoice::class);
+    }
+
+    public function activePayment()
+    {
+        return $this->invoices()
+            ->where('status', 'pending')
+            ->where('expired_at', '>', now())
+            ->latest()
+            ->first();
+    }
+
+    public function hasActivePaymentLink(): bool
+    {
+        return $this->invoices()
+            ->where('status', 'pending')
+            ->where('expired_at', '>', now())
+            ->exists();
+    }
+
+    public static function generateOrderId(): string
+    {
+        // Hitung jumlah payment yang sudah pernah dibuat
+        $count = $this->invoices()->count() + 1;
+
+        // Format order_id
+        return sprintf('INV-%s-%s', $this->id, $count);
+    }
+
+
     public function scopeFilters(Builder $query, array $filters)
     {
         $query->when($filters["date"] ?? date('Y-m-d'), function ($query, $search) {

@@ -6,6 +6,7 @@ use Exception;
 use Midtrans\Snap;
 use Midtrans\Config;
 use App\Models\Payment;
+use App\Models\PaymentInvoice;
 use Livewire\Component;
 use App\Models\Shipping;
 use App\Models\Transaction;
@@ -30,8 +31,12 @@ class Checkout extends Component
         try {
             $this->transaction = Transaction::where('slug', $slug)->first();
 
+
+
             if (!$this->transaction) {
                 throw new Exception("Sorry, Your order not found!");
+            } else if ($this->transaction->status != 'ordered') {
+                throw new Exception("Sorry, You have paid this order");
             }
 
             Config::$serverKey = config('midtrans.serverKey');
@@ -40,11 +45,11 @@ class Checkout extends Component
             Config::$is3ds = config('midtrans.is3ds');
 
 
-            if (!$this->transaction->snap_token) {
-
+            if (!$this->transaction->hasActivePaymentLink()) {
+                $order_id = Transaction::generateOrderId();
                 $midtransParams = [
                     'transaction_details' => [
-                        'order_id' => $this->transaction->transaction_number,
+                        'order_id' => $order_id,
                         'gross_amount' => $this->transaction->total,
                     ],
                     'customer_details' => [
@@ -56,10 +61,14 @@ class Checkout extends Component
                 ];
                 $this->snapToken = Snap::getSnapToken($midtransParams);
 
-                $this->transaction->snap_token = $this->snapToken;
-                $this->transaction->save();
+                $paymentInvoice = PaymentInvoice::create([
+                    'transaction_id' => $this->transaction->id,
+                    'midtrans_order_id' => $order_id,
+                    'expired_at' => Auth::user()->bussinesses->tenor == 0 ? now()->setTime(19, 0) : now()->addDay(),
+                    'snap_token' => $this->snapToken,
+                ]);
             } else {
-                $this->snapToken = $this->transaction->snap_token;
+                $this->snapToken = $this->transaction->activePayment()->snap_token;
             }
 
             // dd(env('MIDTRANS_TARGET_LINK'));
@@ -91,7 +100,9 @@ class Checkout extends Component
 
         try {
             DB::beginTransaction();
-            $transaction = Transaction::where('transaction_number', $result['order_id'])->firstOrFail();
+            $invoice = PaymentInvoice::where('midtrans_order_id', $result['order_id'])->firstOrFail();
+
+            $transaction = $invoice->transaction;
 
             // dd($transaction);
 

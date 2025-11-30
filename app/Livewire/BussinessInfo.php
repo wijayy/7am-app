@@ -20,7 +20,7 @@ class BussinessInfo extends Component
 
 
     #[Validate('required')]
-    public $name = '';
+    public $name = '', $tenor = 0;
 
     #[Validate('required')]
     public $address = '';
@@ -78,6 +78,7 @@ class BussinessInfo extends Component
     {
         $user = Auth::user();
         $this->name = $user->bussinesses?->name ?? null;
+        $this->tenor = $user->bussinesses?->tenor ?? 0;
         $this->npwp = $user->bussinesses?->npwp ?? null;
         $this->address = $user->bussinesses?->address ?? null;
         $this->bank = $user->bussinesses?->bank ?? null;

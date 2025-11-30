@@ -70,6 +70,19 @@
             <a target="_blank" href="https://wa.me/{{ $business?->phone }}" class="w-2/3">:
                 {{ $business?->phone }}</a>
         </div>
+
+
+        <flux:separator text="Tenor">
+        </flux:separator>
+        <div class="space-y-4">
+            <flux:select label=" Tenor" required wire:model.live='tenor'>
+                <flux:select.option value="0">Pay after ordering</flux:select.option>
+                <flux:select.option value="7">7 Days</flux:select.option>
+                <flux:select.option value="14">14 Days</flux:select.option>
+                <flux:select.option value="30">30 Days</flux:select.option>
+            </flux:select>
+        </div>
+
         <div class="flex justify-center flex-wrap gap-4">
             <flux:button variant="primary" type="submit">Submit</flux:button>
         </div>

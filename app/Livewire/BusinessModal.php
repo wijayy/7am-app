@@ -19,7 +19,7 @@ class BusinessModal extends Component
     public $status = '';
 
     #[Validate('required_if:status,appproved')]
-    public $name = '', $set_category_id;
+    public $name = '', $set_category_id, $tenor;
 
     protected $listeners = [
         'openCreateBusinessModal' => 'openCreateBusinessModal',
@@ -32,13 +32,14 @@ class BusinessModal extends Component
             'name' => 'nullable|string|max:100',
             'status' => 'nullable|string|max:50',
             'set_category_id' => 'nullable|exists:set_categories,id',
+            'tenor' => 'nullable|integer',
         ];
     }
 
     private function resetForm()
     {
         $this->resetValidation();
-        $this->reset(['id', 'business', 'setCategory', 'status', 'name', 'set_category_id']);
+        $this->reset(['id', 'business', 'setCategory', 'status', 'name', 'set_category_id', 'tenor']);
     }
 
     // public function openCreateBusinessModal()
@@ -56,6 +57,7 @@ class BusinessModal extends Component
         $this->name = $this->business->name;
         $this->status = $this->business->status == 'requested' ? 'approved' : $this->business->status;
         $this->set_category_id = $this->business?->set_category_id ?? '';
+        $this->tenor = $this->business?->tenor ?? '';
 
         $this->dispatch('modal-show', name: 'business-modal');
     }

@@ -65,8 +65,6 @@ class Cart extends Component
             return;
         }
 
-
-
         if ($this->fulfillment === 'delivery') {
             $minimumOrder = MinimumOrder::where('village_id', $this->address->village_id)->first();
             if ($this->subtotal < $minimumOrder->minimum) {
@@ -84,6 +82,7 @@ class Cart extends Component
                 'total' => $this->subtotal + $this->packaging_fee - $this->countDiscount(),
                 'packaging_fee' => $this->packaging_fee,
                 'shipping_date' => $this->shipping_date,
+                'due_date' => Carbon::now()->addDays(Auth::user()->bussinesses->tenor)->setTime(19, 0)->toDateTimeString(),
                 'user_id' => Auth::user()->id,
                 'status' => 'ordered'
             ]);

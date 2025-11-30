@@ -5,108 +5,180 @@
     @include('partials.head')
 </head>
 
-<body class="min-h-screen bg-mine-100 dark:bg-gray-800">
-    <div class="flex min-h-screen w-full">
-        <!-- 🧭 SIDEBAR -->
-        <aside
-            class="sidebar w-2/12 stick top-0 bg-[#DFD5BA]  dark:bg-gray-900 flex flex-col justify-between border-r border-gray-200 dark:border-zinc-700">
-            <div>
-                <!-- Logo -->
-                <div class="py-8 flex items-center justify-center border-b border-gray-300 dark:border-zinc-700">
-                    <a href="{{ route('b2b-home') }}" class="flex items-center space-x-2 rtl:space-x-reverse">
-                        <x-app-logo />
-                    </a>
-                </div>
+<body class="min-h-screen bg-neutral-100 dark:bg-gray-800">
+    <flux:sidebar sticky stashable class="border-e border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900">
+        <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-                <!-- Navigation Menu -->
-                <nav class="flex flex-col px-4 py-6 space-y-2 text-zinc-800 dark:text-zinc-200">
-                    <a href="{{ route('dashboard') }}" current="{{ request()->routeIs('dashboard') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Dashboard
-                    </a>
-                    <a href="{{ route('reservation.index') }}" current="{{ request()->routeIs('reservation.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Reservation
-                    </a>
-                    <a href="{{ route('type.index') }}" current="{{ request()->routeIs('type.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Membership Type
-                    </a>
-                    <a href="{{ route('card.index') }}" current="{{ request()->routeIs('card.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Cards
-                    </a>
-                    <a href="{{ route('member.index') }}" current="{{ request()->routeIs('member.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Member
-                    </a>
-                    <a href="{{ route('redeem.index') }}" current="{{ request()->routeIs('redeem.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Redeem Reward
-                    </a>
-                    <a href="{{ route('outlet.index') }}" current="{{ request()->routeIs('outlet.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Outlets
-                    </a>
-                    <a href="{{ route('business.index') }}" current="{{ request()->routeIs('business.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Businesses
-                    </a>
-                    <a href="{{ route('set-category.index') }}"
-                        current="{{ request()->routeIs('set-category.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Set Categories
-                    </a>
-                    <a href="{{ route('category.index') }}" current="{{ request()->routeIs('category.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Categories
-                    </a>
-                    <a href="{{ route('product.index') }}" current="{{ request()->routeIs('product.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Products
-                    </a>
-                    <a href="{{ route('coupon.index') }}" current="{{ request()->routeIs('coupon.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Coupon
-                    </a>
-                    <a href="{{ route('transaction.index') }}" current="{{ request()->routeIs('transaction.*') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Transaction
-                    </a>
-                    <a href="{{ route('minimum-order.index') }}" current="{{ request()->routeIs('minimum-order.*') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Minimum Orders
-                    </a>
-                    <a href="{{ route('newsletter.index') }}" current="{{ request()->routeIs('newsletter.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Newsletters
-                    </a>
-                    <a href="{{ route('admin.index') }}" current="{{ request()->routeIs('admin.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Admin
-                    </a>
-                    <a href="{{ route('setting.index') }}" current="{{ request()->routeIs('setting.index') }}"
-                        class="px-3 py-2 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">
-                        Settings
-                    </a>
-                </nav>
-            </div>
+        <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+            <x-app-logo />
+        </a>
 
+        <flux:navlist variant="outline">
+            @if (in_array(Auth::user()->role, ['admin', 'accounting', 'sales-admin']))
+                <flux:navlist.group :heading="__('Platform')" class="grid">
+                    <flux:navlist.item :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                        wire:navigate>
+                        {{ __('Dashboard') }}</flux:navlist.item>
+                </flux:navlist.group>
+            @endif
+            @if (in_array(Auth::user()->role, ['admin', 'accounting', 'outlet-admin']))
+                <flux:navlist.group :heading="__('Reservations')" class="grid">
+                    <flux:navlist.item :href="route('outlet.index')" :current="request()->routeIs('outlet.index')"
+                        wire:navigate>{{ __('Outlets') }}</flux:navlist.item>
+                    <flux:navlist.item :href="route('reservation.index')"
+                        :current="request()->routeIs('reservation.index')" wire:navigate>{{ __('Reservations') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+                <flux:navlist.group :heading="__('Membership')" class="grid">
+                    <flux:navlist.item :href="route('member.index')" :current="request()->routeIs('member.index')"
+                        wire:navigate>{{ __('Members') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('type.index')" :current="request()->routeIs('type.index')"
+                        wire:navigate>{{ __('Membership Types') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('card.index')" :current="request()->routeIs('card.index')"
+                        wire:navigate>{{ __('Cards') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('redeem.index')" :current="request()->routeIs('redeem.index')"
+                        wire:navigate>{{ __('Redeem Rewards') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+            @endif
+            @if (in_array(Auth::user()->role, ['admin', 'accounting', 'sales-admin']))
+                <flux:navlist.group :heading="__('B2B')" class="grid">
+                    <flux:navlist.item :href="route('business.index')" :current="request()->routeIs('business.index')"
+                        wire:navigate>{{ __('Businessess') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('set-category.index')"
+                        :current="request()->routeIs('set-category.index')" wire:navigate>{{ __('Set Categories') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('category.index')" :current="request()->routeIs('category.index')"
+                        wire:navigate>{{ __('Categories') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('product.index')" :current="request()->routeIs('product.index')"
+                        wire:navigate>{{ __('Products') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('minimum-order.index')"
+                        :current="request()->routeIs('minimum-order.index')" wire:navigate>
+                        {{ __('Minimum Orders') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('transaction.index')"
+                        :current="request()->routeIs('transaction.index')" wire:navigate>{{ __('Orders') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item :href="route('coupon.index')" :current="request()->routeIs('coupon.index')"
+                        wire:navigate>{{ __('Coupons') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+            @endif
+            @if (in_array(Auth::user()->role, ['admin', 'accounting']))
+                <flux:navlist.group :heading="__('Admin')" class="grid">
+                    <flux:navlist.item :href="route('admin.index')" :current="request()->routeIs('admin.index')"
+                        wire:navigate>
+                        {{ __('Admins') }}</flux:navlist.item>
+                    <flux:navlist.item :href="route('setting.index')" :current="request()->routeIs('setting.index')"
+                        wire:navigate>
+                        {{ __('Settings') }}</flux:navlist.item>
+                </flux:navlist.group>
+            @endif
+        </flux:navlist>
 
-            <!-- Logout or Footer Section -->
-            <div class="p-4 border-t border-gray-300 dark:border-zinc-700">
-                <button class="w-full py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition">
-                    Logout
-                </button>
-            </div>
-        </aside>
+        <flux:spacer />
 
-        <!-- 📦 MAIN CONTENT SLOT -->
-        <div class="flex-1 overflow-y-auto">
-            {{ $slot }}
-        </div>
+        <!-- Desktop User Menu -->
+        <flux:dropdown class="hidden lg:block" position="bottom" align="start">
+            <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
+                icon:trailing="chevrons-up-down" data-test="sidebar-menu-button" />
 
-    </div>
+            <flux:menu class="w-[220px]">
+                <flux:menu.radio.group>
+                    <div class="p-0 text-sm font-normal">
+                        <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                            <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
+                                <span
+                                    class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                    {{ auth()->user()->initials() }}
+                                </span>
+                            </span>
+
+                            <div class="grid flex-1 text-start text-sm leading-tight">
+                                <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
+                                <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </flux:menu.radio.group>
+
+                <flux:menu.separator />
+
+                <flux:menu.radio.group>
+                    <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
+                        {{ __('Settings') }}
+                    </flux:menu.item>
+                </flux:menu.radio.group>
+
+                <flux:menu.separator />
+
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full"
+                        data-test="logout-button">
+                        {{ __('Log Out') }}
+                    </flux:menu.item>
+                </form>
+            </flux:menu>
+        </flux:dropdown>
+    </flux:sidebar>
+
+    <!-- Mobile User Menu -->
+    <flux:header class="lg:hidden">
+        <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+
+        <flux:spacer />
+
+        <flux:dropdown position="top" align="end">
+            <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevron-down" />
+
+            <flux:menu>
+                <flux:menu.radio.group>
+                    <div class="p-0 text-sm font-normal">
+                        <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
+                            <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
+                                <span
+                                    class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                    {{ auth()->user()->initials() }}
+                                </span>
+                            </span>
+
+                            <div class="grid flex-1 text-start text-sm leading-tight">
+                                <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
+                                <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </flux:menu.radio.group>
+
+                <flux:menu.separator />
+
+                <flux:menu.radio.group>
+                    <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
+                        {{ __('Settings') }}
+                    </flux:menu.item>
+                </flux:menu.radio.group>
+
+                <flux:menu.separator />
+
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full"
+                        data-test="logout-button">
+                        {{ __('Log Out') }}
+                    </flux:menu.item>
+                </form>
+            </flux:menu>
+        </flux:dropdown>
+    </flux:header>
+
+    {{ $slot }}
 
     @fluxScripts
 </body>

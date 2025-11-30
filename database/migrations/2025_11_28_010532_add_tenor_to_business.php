@@ -9,12 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('bussinesses', function (Blueprint $table) {
-            $table->integer('tenor')->default(0)->after('status');
-        });
-    }
+    public function up(): void {}
 
     /**
      * Reverse the migrations.

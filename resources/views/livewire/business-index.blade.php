@@ -16,22 +16,26 @@
         <div class="space-y-2">
             <div class="flex gap-4 py-2">
                 <div class="w-10">#</div>
-                <div class="w-1/5">Business Name</div>
-                <div class="w-1/5 text-center">Registered Number</div>
-                <div class="w-1/5 text-center">Set Category</div>
-                <div class="w-1/5 text-center">Status</div>
-                <div class="w-1/5 text-center">Action</div>
+                <div class="w-1/6">Business Name</div>
+                <div class="w-1/6 text-center">Registered Number</div>
+                <div class="w-1/6 text-center">Set Category</div>
+                <div class="w-1/6 text-center">Status</div>
+                <div class="w-1/6 text-center">Tenor</div>
+                <div class="w-1/6 text-center">Action</div>
             </div>
             @foreach ($businesses as $item)
                 <div class="flex gap-4">
                     <div class="w-10">{{ $loop->iteration }}</div>
-                    <div class="w-1/5">{{ $item->name }}</div>
-                    <div class="w-1/5 text-center">{{ $item->npwp }}</div>
-                    <div class="w-1/5 text-center">{{ $item->setCategory?->name ?? '' }}</div>
-                    <div class="w-1/5 text-center">
+                    <div class="w-1/6">{{ $item->name }}</div>
+                    <div class="w-1/6 text-center">{{ $item->npwp }}</div>
+                    <div class="w-1/6 text-center">{{ $item->setCategory?->name ?? '' }}</div>
+
+                    <div class="w-1/6 text-center">
                         {{ $item->status }}
                     </div>
-                    <div class="w-1/5 text-center flex gap-2 justify-center">
+                    <div class="w-1/6 text-center">
+                        {{ $item->tenor == 0 ? 'Pay after ordering' : $item->tenor . ' Days' }}</div>
+                    <div class="w-1/6 text-center flex gap-2 justify-center">
                         <flux:tooltip content="Edit Business">
                             <flux:button
                                 wire:click="$dispatch('openEditBusinessModal', { id: {{ $item->id }} }).global"
@@ -103,6 +107,13 @@
                         <div class="w-1/3">Phone Number</div>
                         <a target="_blank" href="https://wa.me/{{ $business?->phone }}" class="w-2/3">:
                             {{ $business?->phone }}</a>
+                    </div>
+                    <flux:separator text="Tenor"></flux:separator>
+                    <div class="flex gap-4 text-start">
+                        <div class="w-1/3">Tenor</div>
+                        <div class="w-2/3">:
+                            {{ $business?->tenor == 0 ? 'Pay after ordering' : $business->tenor . ' Days' }}
+                        </div>
                     </div>
                 </div>
             </flux:modal>

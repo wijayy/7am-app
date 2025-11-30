@@ -24,10 +24,10 @@ return new class extends Migration {
             $table->float('discount', 2);
             $table->float('packaging_fee', 2);
             $table->date('shipping_date');
+            $table->dateTime('due_date')->default(now()->addDays(1));
             $table->foreignIdFor(Coupon::class)->nullable()->constrained();
             $table->enum('status', ['ordered', 'paid', 'checkout'])->default('ordered');
             $table->text('note')->nullable();
-            $table->text('snap_token')->nullable();
             $table->timestamps();
         });
     }

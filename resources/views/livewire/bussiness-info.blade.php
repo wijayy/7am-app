@@ -56,6 +56,19 @@
                     label="Representative Phone Number" only_number required wire:model.live='phone'></flux:input>
             </div>
         </div>
+        <div class="mt-12">
+            <flux:separator text="Tenor">
+            </flux:separator>
+            <div class="space-y-4">
+                <flux:select :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])"
+                    label="Request Tenor" required wire:model.live='tenor'>
+                    <flux:select.option value="0">Pay after ordering</flux:select.option>
+                    <flux:select.option value="7">7 Days</flux:select.option>
+                    <flux:select.option value="14">14 Days</flux:select.option>
+                    <flux:select.option value="30">30 Days</flux:select.option>
+                </flux:select>
+            </div>
+        </div>
         @if (!in_array(Auth::user()->business, ['requested', 'accepted']))
             <div class="mt-4">
                 <flux:button type="submit" variant="primary">Submit</flux:button>
