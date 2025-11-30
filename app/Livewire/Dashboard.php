@@ -26,8 +26,7 @@ class Dashboard extends Component
         $lastMonth = $now->copy()->subMonth();
 
         // Bulan ini
-        $this->earningThisMonth = Transaction::
-            whereYear('created_at', $now->year)
+        $this->earningThisMonth = Transaction::whereYear('created_at', $now->year)
             ->whereMonth('created_at', $now->month)
             ->sum('total');
 
@@ -59,8 +58,7 @@ class Dashboard extends Component
             $this->transactionRatio = 0;
         }
 
-        $this->productSoldThisMonth = TransactionItem::
-            whereYear('created_at', $now->year)
+        $this->productSoldThisMonth = TransactionItem::whereYear('created_at', $now->year)
             ->whereMonth('created_at', $now->month)
             ->sum('qty');
 
@@ -106,13 +104,20 @@ class Dashboard extends Component
             ->take(4)
             ->get();
 
-        // === Earning Growth 12 Bulan Terakhir ===
+        $driver = DB::connection()->getDriverName();
+
+        if ($driver === 'sqlite') {
+            $monthFormat = "strftime('%Y-%m', created_at)";
+        } else {
+            $monthFormat = "DATE_FORMAT(created_at, '%Y-%m')";
+        }
+
         $earnings = DB::table('transactions')
             ->select(
-                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+                DB::raw("$monthFormat as month"),
                 DB::raw('SUM(total) as total')
             )
-            ->where('created_at', '>=', Carbon::now()->subMonths(11)->startOfMonth())
+            ->where('created_at', '>=', now()->subMonths(11)->startOfMonth())
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('total', 'month')
@@ -128,10 +133,15 @@ class Dashboard extends Component
             'total' => $earnings[$m] ?? 0,
         ]);
 
-        $topMonth = Transaction::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(total) as total')
+        $topMonth = Transaction::selectRaw(
+            Transaction::yearFormat() . ' as year, ' .
+                Transaction::onlyMonthFormat() . ' as month, ' .
+                'SUM(total) as total'
+        )
             ->groupBy('year', 'month')
             ->orderByDesc('total')
             ->first();
+
 
         if ($topMonth) {
             $topMonth->name = Carbon::create($topMonth->year, $topMonth->month, 1)->translatedFormat('F Y');
@@ -140,11 +150,10 @@ class Dashboard extends Component
         $this->topMonthName = $topMonth?->name;
 
         // === Top Year (Tahun dengan Penjualan Tertinggi Sepanjang Waktu) ===
-        $this->topYear = DB::table('transactions')
-            ->select(
-                DB::raw('YEAR(created_at) as year'),
-                DB::raw('SUM(total) as total')
-            )
+        $this->topYear = Transaction::selectRaw(
+            Transaction::yearFormat() . ' as year, ' . '
+                SUM(total) as total'
+        )
             ->groupBy('year')
             ->orderByDesc('total')
             ->first();

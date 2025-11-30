@@ -8,6 +8,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Transaction extends Model
 {
@@ -141,5 +142,32 @@ class Transaction extends Model
         $query->when($filters["date"] ?? date('Y-m-d'), function ($query, $search) {
             return $query->whereDate("shipping_date",  $search);
         });
+    }
+
+    public static function monthFormat()
+    {
+        $driver = DB::getDriverName();
+
+        return $driver === 'sqlite'
+            ? "strftime('%Y-%m', created_at)"    // SQLite
+            : "DATE_FORMAT(created_at, '%Y-%m')"; // MySQL
+    }
+
+    public static function yearFormat()
+    {
+        $driver = DB::getDriverName();
+
+        return $driver === 'sqlite'
+            ? "strftime('%Y', created_at)"     // SQLite
+            : "YEAR(created_at)";              // MySQL
+    }
+
+    public static function onlyMonthFormat()
+    {
+        $driver = DB::getDriverName();
+
+        return $driver === 'sqlite'
+            ? "strftime('%m', created_at)"     // SQLite
+            : "MONTH(created_at)";             // MySQL
     }
 }
