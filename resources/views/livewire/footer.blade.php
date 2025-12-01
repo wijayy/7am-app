@@ -31,7 +31,10 @@
             <ul class="space-y-1 text-gray-600 dark:text-gray-300">
                 <li>7AM Bakers | 7PM Dinners Ubud</li>
                 <li>7AM Bakers | 7PM Dinners Pererenan</li>
-                <li>7AM Bakers | Umalas</li>
+                <li>7AM Bakers Umalas</li>
+                <li>7AM Bakers Senayan City</li>
+                <li>7AM Bakers Margo City</li>
+                <li>7AM Bakers Grand Indonesia</li>
             </ul>
         </div>
 
