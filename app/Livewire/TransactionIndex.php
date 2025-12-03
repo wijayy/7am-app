@@ -28,7 +28,7 @@ class TransactionIndex extends Component
 
     public function getTransaction()
     {
-        return Transaction::where('shipping_date', $this->date)->get();
+        return Transaction::whereDate('shipping_date', $this->date)->get();
     }
 
     public function updateDate()
