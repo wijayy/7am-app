@@ -14,7 +14,7 @@ class OutletIndex extends Component
     #[On('updateOutlet')]
     public function getOutlet()
     {
-        $this->outlets = Outlet::all();
+        $this->outlets = Outlet::where('is_active', true)->get();
     }
 
     public function openCreateModal()

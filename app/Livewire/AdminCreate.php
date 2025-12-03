@@ -74,7 +74,7 @@ class AdminCreate extends Component
         $this->outlet_id = null;
         $this->role = null;
         $this->id = null;
-        $this->outlets = Outlet::all();
+        $this->outlets = Outlet::where('is_active', true)->get();
         $this->title = "Add New Admin";
 
         $this->dispatch('modal-show', name: 'admin-create');
@@ -97,7 +97,7 @@ class AdminCreate extends Component
         $this->outlet_id = $admin->outlet_id;
         $this->role = $admin->role;
         $this->id = $admin->id;
-        $this->outlets = Outlet::all();
+        $this->outlets = Outlet::where('is_active', true)->get();
         $this->title = "Edit Admin $this->name";
 
         $this->dispatch('modal-show', name: 'admin-create');

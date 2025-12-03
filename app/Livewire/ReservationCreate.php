@@ -54,7 +54,7 @@ class ReservationCreate extends Component
         if ($this->outlet_id) {
             $this->sections = Outlet::find($this->outlet_id)->sections;
         }
-        $this->outlets = Outlet::all();
+        $this->outlets = Outlet::where('is_active', true)->get();
 
         // Jika sudah lewat jam 21:00, minimum_date besok
         if (date('H:i') >= '21:00') {

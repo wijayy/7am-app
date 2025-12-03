@@ -14,7 +14,7 @@ class OutletImageSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (Outlet::all() as $key => $item) {
+        foreach (Outlet::where('is_active', true)->get() as $key => $item) {
             foreach (range(1, 20) as $key1 => $value1) {
                 OutletImage::create([
                     'outlet_id' => $item->id,

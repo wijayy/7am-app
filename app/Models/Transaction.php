@@ -127,7 +127,7 @@ class Transaction extends Model
             ->exists();
     }
 
-    public static function generateOrderId(): string
+    public function generateOrderId(): string
     {
         // Hitung jumlah payment yang sudah pernah dibuat
         $count = $this->invoices()->count() + 1;

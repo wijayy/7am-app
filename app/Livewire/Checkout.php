@@ -46,7 +46,7 @@ class Checkout extends Component
 
 
             if (!$this->transaction->hasActivePaymentLink()) {
-                $order_id = Transaction::generateOrderId();
+                $order_id = $this->transaction->generateOrderId();
                 $midtransParams = [
                     'transaction_details' => [
                         'order_id' => $order_id,

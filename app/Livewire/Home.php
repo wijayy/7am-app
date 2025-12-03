@@ -17,7 +17,7 @@ class Home extends Component
     {
 
 
-        $this->outlets = Outlet::all();
+        $this->outlets = Outlet::get();
     }
 
     public function render()

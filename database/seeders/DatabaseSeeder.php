@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
         $this->call(OutletReviewSeeder::class);
 
 
-        foreach (Outlet::all() as $key => $item) {
+        foreach (Outlet::where('is_active', true)->get() as $key => $item) {
             $name = strtolower(array_reverse(explode(' ', $item->name))[0]);
             User::factory()->create([
                 'name' => "Admin $name",

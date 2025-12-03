@@ -32,7 +32,7 @@ class MemberTransaction extends Component
         if (Auth::user()->outlet_id) {
             $this->outlet_id = Auth::user()->outlet_id;
         } else {
-            $this->outlets = \App\Models\Outlet::all();
+            $this->outlets = \App\Models\Outlet::where('is_active', true)->get();
             $this->outlet_id = $this->outlets->first()->id ?? null;
         }
     }

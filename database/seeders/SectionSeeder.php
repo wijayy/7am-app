@@ -33,9 +33,8 @@ class SectionSeeder extends Seeder
 
         ];
 
-        foreach (Outlet::all() as $key => $item) {
+        foreach (Outlet::where('is_active', true)->get() as $key => $item) {
             $item->sections()->createMany($sections[$item->id - 1]);
-
         }
     }
 }

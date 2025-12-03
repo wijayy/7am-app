@@ -15,7 +15,7 @@ class ReservationSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (Outlet::all() as $key => $item) {
+        foreach (Outlet::where('is_active', true)->get() as $key => $item) {
             foreach (range(1, 10) as $key => $value) {
                 Reservation::create([
                     'user_id' => 1,

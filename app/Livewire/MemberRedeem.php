@@ -44,20 +44,16 @@ class MemberRedeem extends Component
         if (Auth::user()->outlet_id) {
             $this->outlet_id = Auth::user()->outlet_id;
         } else {
-            $this->outlets = \App\Models\Outlet::all();
+            $this->outlets = \App\Models\Outlet::where('is_active', true)->get();
             $this->outlet_id = $this->outlets->first()->id ?? null;
         }
 
         $this->redeems = RedeemPoint::all();
 
         $this->dispatch('modal-show', name: 'redeem-point');
-
     }
 
-    public function mount()
-    {
-
-    }
+    public function mount() {}
 
     public function redeem()
     {

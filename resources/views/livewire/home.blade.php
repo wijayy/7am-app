@@ -29,9 +29,11 @@
                         <div class="text-xs">{{ $item->address }}</div>
                     </div>
                     <div class="flex gap-2 p-4 pt-0!">
-                        <flux:button variant="primary" as
-                            href="{{ route('reservation.create', ['outlet' => $item->slug]) }}" icon="notebook-pen"
-                            size="sm">Reserve</flux:button>
+                        @if ($item->is_active)
+                            <flux:button variant="primary" as
+                                href="{{ route('reservation.create', ['outlet' => $item->slug]) }}" icon="notebook-pen"
+                                size="sm">Reserve</flux:button>
+                        @endif
                         <flux:button variant="primary" as href="{{ route('outlet-show', ['slug' => $item->slug]) }}"
                             color="cyan" icon="eye" size="sm">See Detail</flux:button>
                     </div>
