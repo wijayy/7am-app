@@ -18,7 +18,7 @@ class SettingIndex extends Component
     {
         return [
             'state' => "required|array",
-            'state.*' => 'required',
+            'state.*' => 'nullable',
         ];
     }
 

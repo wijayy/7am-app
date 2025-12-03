@@ -12,7 +12,7 @@
                 {{-- @dd($state) --}}
                 @foreach ($state['settings'] as $key => $item)
                     <flux:input wire:model.live="state.settings.{{ $key }}.value" label="{{ $item['key'] }}"
-                        type="{{ $item['type'] }}" required />
+                        type="{{ $item['type'] }}" />
                 @endforeach
             </div>
 
