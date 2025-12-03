@@ -156,6 +156,7 @@ class Cart extends Component
         }
 
         $this->packaging_fee = 0.03 * $this->subtotal;
+        $this->packaging_fee = (int) $this->packaging_fee;
         // dd($this->packaging_fee);
     }
 
