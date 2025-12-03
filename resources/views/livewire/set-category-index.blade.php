@@ -34,7 +34,7 @@
                                 {{ $loop->iteration }}
                             </td>
 
-                            <td class="px-4 py-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                            <td class="px-4 py-2  text-sm text-gray-700 dark:text-gray-300">
                                 {{ $item->name }}
                             </td>
 

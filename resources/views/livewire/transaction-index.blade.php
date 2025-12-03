@@ -109,11 +109,19 @@
                             <div class="">Rp. {{ number_format($item->total, 0, ',', '.') }}</div>
                         </div>
                     </div>
-                    @if ($item->status == 'paid')
+                    @if ($item->mekari_sync_status == 'pending')
                         <div class="flex justify-center ">
-                            <flux:button wire:click='import({{ $item->id }})'>Import to Jurnal</flux:button>
+                            <flux:button wire:click='importInvoice({{ $item->id }})'>Import Invoice to Jurnal
+                            </flux:button>
                         </div>
                     @endif
+                    @if ($item->mekari_sync_status == 'synced' && $item->payment && $item->payment->mekari_sync_status == 'pending')
+                        <div class="flex justify-center ">
+                            <flux:button wire:click='importPayment({{ $item->id }})'>Import Payment to Jurnal
+                            </flux:button>
+                        </div>
+                    @endif
+
                 </div>
             @endforeach
         </div>

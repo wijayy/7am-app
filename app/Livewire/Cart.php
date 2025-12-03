@@ -129,7 +129,7 @@ class Cart extends Component
             ModelsCart::where('user_id', Auth::user()->id)->delete();
 
             DB::commit();
-            Mail::to(Auth::user()->email)->send(new \App\Mail\Order\Order($transaction->slug));
+            Mail::to(Auth::user()->email)->queue(new \App\Mail\Order\Order($transaction->slug));
             $this->redirect(route('checkout', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {
             DB::rollBack();

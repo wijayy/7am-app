@@ -22,6 +22,9 @@
             @auth
                 <li><a href="{{ route('history') }}" current="{{ request()->routeIs('history') }}">History</a></li>
                 {{-- <li><a href="{{ route('checkout') }}" current="{{ request()->routeIs('checkout') }}">Checkout</a></li> --}}
+                @if (in_array(Auth::user()->role, ['admin', 'sales-admin', 'accounting']))
+                    <li><a href="{{ route('dashboard') }}" current="{{ request()->routeIs('dashboard') }}">Dashboard</a>
+                @endif
             @endauth
         </ul>
 

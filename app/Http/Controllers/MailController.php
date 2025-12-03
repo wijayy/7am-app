@@ -12,7 +12,7 @@ class MailController extends Controller
     public function sendTestEmail()
     {
         $business = \App\Models\Bussiness::lastest()->first();
-        Mail::to($business->user->email)->send(new \App\Mail\Business\Accept($business->id));
+        Mail::to($business->user->email)->queue(new \App\Mail\Business\Accept($business->id));
         // return view('mail.order.order');
     }
 }

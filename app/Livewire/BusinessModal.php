@@ -79,9 +79,9 @@ class BusinessModal extends Component
             session()->flash('Success', $message);
 
             if ($this->status == 'approved') {
-                Mail::to($business->user->email)->send(new \App\Mail\Business\Accept($business->id));
+                Mail::to($business->user->email)->queue(new \App\Mail\Business\Accept($business->id));
             } elseif ($this->status == 'rejected') {
-                Mail::to($business->user->email)->send(new \App\Mail\Business\Decline($business->id));
+                Mail::to($business->user->email)->queue(new \App\Mail\Business\Decline($business->id));
             }
 
             $this->resetForm();

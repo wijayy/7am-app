@@ -16,7 +16,7 @@ class SalesAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && !in_array(Auth::user()->role, ['admin', 'customer'])) {
+        if (Auth::check() && !in_array(Auth::user()->role, ['admin', 'sales-admin'])) {
             if ($request->is('b2b/*')) {
                 return redirect(route('b2b-home'));
             }

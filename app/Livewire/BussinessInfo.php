@@ -8,8 +8,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class BussinessInfo extends Component
@@ -51,16 +55,34 @@ class BussinessInfo extends Component
 
             DB::beginTransaction();
 
-            $validated['id_card'] = $this->id_card->store('id');
+            if ($this->id_card instanceof TemporaryUploadedFile) {
+                // Hapus file lama jika ada (saat edit)
+
+                // Buat instance manager dengan driver GD
+                $manager = new ImageManager(Driver::class);
+
+                // Baca file dan kompres
+                $image = $manager->read($this->id_card->getRealPath())->toJpeg(50);
+
+                // dd($image);
+
+                // Simpan file yang sudah dikompres
+                $image_path = 'id_card/' . time() . '.jpg';
+                Storage::disk('public')->put($image_path, (string) $image);
+            } else {
+                $image_path = $this->preview;
+            }
+
+            $validated['id_card'] = $image_path;
 
             Auth::user()->update(['business' => 'requested']);
 
             $business = Bussiness::create($validated);
             DB::commit();
-            Mail::to(Auth::user()->email)->send(new \App\Mail\Request_User(Auth::user()->id));
+            Mail::to(Auth::user()->email)->queue(new \App\Mail\Request_User(Auth::user()->id));
 
             foreach (User::where('role', 'sales-admin')->get() as $key => $item) {
-                Mail::to($item->email)->send(new \App\Mail\Request_Admin(Auth::user()->id));
+                Mail::to($item->email)->queue(new \App\Mail\Request_Admin(Auth::user()->id));
             }
 
             Session::flash('success', 'Thank you for submitting your business registration. Your request has been received and is currently under review. Please wait up to 24 hours for further confirmation.');

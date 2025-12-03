@@ -99,6 +99,8 @@
                     </div>
 
                     <flux:separator text="Representative"></flux:separator>
+                    <div class="aspect-video bg-center bg-no-repeat bg-cover rounded"
+                        style="background-image: url('{{ asset('storage/' . $business?->id_card) }}')"></div>
                     <div class="flex gap-4 text-start">
                         <div class="w-1/3">Representative</div>
                         <div class="w-2/3">: {{ $business?->representative }}</div>

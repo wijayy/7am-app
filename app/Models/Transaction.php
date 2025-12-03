@@ -41,6 +41,7 @@ class Transaction extends Model
     {
         return [
             'shipping_date' => 'datetime',
+            'due_date' => 'datetime',
         ];
     }
 

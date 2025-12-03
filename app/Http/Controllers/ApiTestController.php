@@ -22,7 +22,7 @@ class ApiTestController extends Controller
         // Panggil method `call` dengan method POST, path, dan body
         $response = $this->jurnalApi->request(
             'GET',
-            '/public/jurnal/api/v1/payment_methods?page_size=100',
+            '/public/jurnal/api/v1/terms',
         );
         return $response;
         return response()->json($response);

@@ -75,7 +75,7 @@ class TransactionIndex extends Component
         ]);
     }
 
-    public function import(JurnalApi $jurnalApi, $id)
+    public function importInvoice(JurnalApi $jurnalApi, $id)
     {
         try {
             DB::beginTransaction();
@@ -88,8 +88,8 @@ class TransactionIndex extends Component
                 return;
             }
 
-            if ($transaction->status != 'paid') {
-                Session::flash('error', "Transaction status are $transaction->status");
+            if ($transaction->mekari_sync_status != 'pending') {
+                Session::flash('error', "Transaction status are $transaction->mekari_sync_status");
                 return;
             }
 
@@ -113,8 +113,8 @@ class TransactionIndex extends Component
                     "reference_no" =>  $transaction->transaction_number,
                     "tracking_no" => $transaction->transaction_number,
                     "address" => $transaction->user?->bussinesses->address ?? "dirumah",
-                    "term_name" => $transaction->payment->payment_type,
-                    "due_date" => $transaction->created_at->format('D-m-y'),
+                    "term_name" => 'Cash on Delivery',
+                    "due_date" => $transaction->due_date->format('Y-m-d'),
                     "deposit_to_name" => Setting::where('key', 'deposit_to_name')->value('value'),
                     "deposit" => 0,
                     "discount_unit" => $transaction->discount,
@@ -144,7 +144,7 @@ class TransactionIndex extends Component
                     "discount" => 0,
                     "product_name" => $item->product->name,
                     "line_tax_id" => (int) Setting::where('key', 'line_tax_id')->value('value'),
-                    "line_tax_name" => "Setting::where('key', 'line_tax_name')->value('value')"
+                    "line_tax_name" => Setting::where('key', 'line_tax_name')->value('value')
                 ];
             }
 
@@ -157,11 +157,30 @@ class TransactionIndex extends Component
             // dd($response);
             // dd($response['sales_invoice']['transaction_no']);
 
-            $transaction->update(['number' => $response['sales_invoice']['transaction_no']]);
+            $transaction->update(['number' => $response['sales_invoice']['transaction_no'], 'mekari_sync_status' => 'synced']);
             DB::commit();
+            // dd($response1, $response);
+            Session::flash('success', "Successfully ");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            if (config('app.debug', false)) throw $th;
+            return back()->with('error', '');
+        }
+    }
 
-            // dd($transaction);
-
+    public function importPayment(JurnalApi $jurnalApi, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $transaction = Transaction::where('id', $id)->first();
+            if (!$transaction) {
+                Session::flash('error', "Transaction not found");
+                return;
+            }
+            if ($transaction->payment->mekari_sync_status != 'pending') {
+                Session::flash('error', "Payment status are {$transaction->payment->mekari_sync_status}");
+                return;
+            }
             $body = [
                 "receive_payment" => [
                     "transaction_date" => $transaction->created_at->format('Y-m-d'),
@@ -189,8 +208,10 @@ class TransactionIndex extends Component
                 $body
             );
 
-            // dd($response1, $response);
-            Session::flash('success', "Successfully imported to Jurnal! Transaction number: $transaction->number.");
+            $transaction->payment->update(['mekari_sync_status' => 'synced']);
+
+            DB::commit();
+            Session::flash('success', "Successfully ");
         } catch (\Throwable $th) {
             DB::rollBack();
             if (config('app.debug', false)) throw $th;

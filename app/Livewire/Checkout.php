@@ -115,7 +115,7 @@ class Checkout extends Component
                 'payment_status' => 'paid',
             ]);
             DB::commit();
-            Mail::to(Auth::user()->email)->send(new \App\Mail\Order\Paid($transaction->slug));
+            Mail::to(Auth::user()->email)->queue(new \App\Mail\Order\Paid($transaction->slug));
 
             return redirect(route('invoice', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {
