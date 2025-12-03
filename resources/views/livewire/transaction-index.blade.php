@@ -5,8 +5,6 @@
         <div class="flex gap-4 items-center ">
             <flux:input class="w-fit!" type="date" wire:change='updateDate' wire:model.live='date'></flux:input>
             <div class="">summary</div>
-            <flux:spacer></flux:spacer>
-            <flux:button wire:click='export'>Export</flux:button>
         </div>
         <div class="grid-cols-1 mt-4 grid gap-4">
             @foreach ($transactions as $item)

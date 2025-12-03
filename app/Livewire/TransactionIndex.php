@@ -143,8 +143,6 @@ class TransactionIndex extends Component
                     "rate" => $item->price,
                     "discount" => 0,
                     "product_name" => $item->product->name,
-                    "line_tax_id" => (int) Setting::where('key', 'line_tax_id')->value('value'),
-                    "line_tax_name" => Setting::where('key', 'line_tax_name')->value('value')
                 ];
             }
 

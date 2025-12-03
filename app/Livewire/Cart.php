@@ -149,13 +149,14 @@ class Cart extends Component
         $this->carts = ModelsCart::where('user_id', Auth::user()->id)->get();
         $this->qty = $this->carts->toArray();
 
-        $this->subtotal = 0;
+        $subtotal = 0;
 
         foreach ($this->carts as $key => $item) {
-            $this->subtotal += $item->qty * $item->product->price;
+            $subtotal += $item->qty * $item->product->price;
         }
 
-        $this->packaging_fee = 0.03 * $this->subtotal;
+        $this->subtotal = (int) ($subtotal * 100 / 103);
+        $this->packaging_fee = $subtotal - $this->subtotal;
         $this->packaging_fee = (int) $this->packaging_fee;
         // dd($this->packaging_fee);
     }
