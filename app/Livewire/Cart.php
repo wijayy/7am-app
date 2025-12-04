@@ -26,6 +26,8 @@ class Cart extends Component
     public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $addresses, $address, $outlet, $outlets, $min, $shipping_date, $packaging_fee;
     public $fulfillment = 'delivery';
 
+    public $isProcessing = false;
+
     public function mount()
     {
 
@@ -58,7 +60,11 @@ class Cart extends Component
     public function checkout()
     {
         // dd(Auth::user()->bussinesses?->status);
+        if ($this->isProcessing) {
+            return;
+        }
 
+        $this->isProcessing = true;
 
         if (is_null(Auth::user()->bussinesses) || Auth::user()->bussinesses?->status != 'approved') {
             $this->dispatch('error');

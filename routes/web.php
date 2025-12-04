@@ -10,7 +10,6 @@ Volt::route('/', 'home')->name('home');
 Volt::route('reservation', 'reservation-create')->name('reservation');
 Volt::route('loyality-card', 'loyality-home')->name('loyality.home');
 
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Volt::route('settings/profile', 'profile')->name('settings.profile');
     Volt::route('settings/address', 'address')->name('settings.address');
@@ -29,14 +28,8 @@ Route::middleware(['auth', 'verified', 'outlet-admin'])->group(function () {
     Volt::route('members/{slug}', 'member-show')->name('member.show');
 });
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
-    Volt::route('dashboard', 'dashboard')
-        ->name('dashboard');
-
     Route::redirect('settings', 'settings/profile');
-
-
     // Volt::route('set-categories', 'set-category-index')->name('setcategory.index');
-
 
     Volt::route('outlets', 'outlet-index')->name('outlet.index');
     Volt::route('outlets/add', 'outlet-create')->name('outlet.create');
@@ -59,10 +52,11 @@ Route::prefix('b2b')->group(function () {
     Volt::route('checkout/{slug}', 'checkout')->name('checkout');
     Volt::route('invoice/{slug}', 'invoice')->name('invoice');
 
-
     Volt::route('wholesale', 'wholesale-index')->name('wholesale.index');
 });
 Route::prefix('b2b')->middleware(['auth', 'verified', 'sales-admin'])->group(function () {
+    Volt::route('dashboard', 'dashboard')
+        ->name('dashboard');
     Volt::route('products', 'product-index')->name('product.index');
 
     Volt::route('coupons', 'coupon-index')->name('coupon.index');
@@ -97,7 +91,6 @@ Route::prefix('b2b')->middleware(['auth', 'verified', 'admin'])->group(function 
     Volt::route('newsletters', 'newsletter-index')->name('newsletter.index');
     Volt::route('newsletters/add', 'newsletter-create')->name('newsletter.create');
     Volt::route('newsletters/{slug}/edit', 'newsletter-create')->name('newsletter.edit');
-
 
     route::get('/jurnal/test', [ApiTestController::class, 'index'])->name('jurnal.tests');
 });

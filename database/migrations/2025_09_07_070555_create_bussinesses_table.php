@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->string('representative');
             $table->string('id_card');
             $table->string('phone');
-            $table->integer('tenor')->default(1);
+            $table->integer('tenor')->default(0);
             $table->enum('status', ['requested', 'approved', 'rejected'])->default('requested');
             $table->timestamps();
         });

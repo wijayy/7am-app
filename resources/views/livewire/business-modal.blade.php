@@ -39,7 +39,7 @@
             <div class="w-2/3">: {{ $business?->address }}</div>
         </div>
 
-        <flux:select label="Select Categories" class="h-full" wire:model.live="set_category_id">
+        <flux:select label="Select Categories" class="h-full" required wire:model.live="set_category_id">
             <option value="" disabled selected>Choose Category</option>
             @foreach ($setCategory as $category)
                 <option value={{ $category->id }}>{{ $category->name }}</option>

@@ -18,7 +18,7 @@ class BusinessModal extends Component
     #[Validate('required')]
     public $status = '';
 
-    #[Validate('required_if:status,appproved')]
+    #[Validate('required_if:status,approved')]
     public $name = '', $set_category_id, $tenor;
 
     protected $listeners = [
