@@ -21,14 +21,10 @@
         <flux:separator text="Business Info"></flux:separator>
         <div class="flex gap-4 text-start items-center">
             <div class="w-1/3">Business Name</div>
-            @if ($business?->status != 'approved')
-                <div class="w-2/3 flex items-center">
-                    :
-                    <flux:input wire:model.live="name" />
-                </div>
-            @else
-                <div class="w-2/3">: {{ $name }}</div>
-            @endif
+            <div class="w-2/3 flex items-center">
+                :
+                <flux:input wire:model.live="name" />
+            </div>
         </div>
         <div class="flex gap-4 text-start">
             <div class="w-1/3">Registered Number</div>

@@ -71,7 +71,7 @@
                             <div class="">Rp. {{ number_format($item->subtotal, 0, ',', '.') }}</div>
                         </div>
                         <div class="flex justify-between items-center">
-                            <div class="">Packaging </div>
+                            <div class="">Packaging Fee</div>
                             <div class="">Rp. {{ number_format($item->packaging_fee, 0, ',', '.') }}</div>
                         </div>
                         @if ($item->coupon)

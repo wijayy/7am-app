@@ -8,12 +8,13 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Transaction extends Model
 {
     /** @use HasFactory<\Database\Factories\TransactionFactory> */
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, SoftDeletes;
 
     /**
      * Return the sluggable configuration array for this model.
@@ -52,7 +53,7 @@ class Transaction extends Model
 
         // Hitung jumlah transaksi yang sudah ada hari ini
         $lastTransaction = self::whereDate('created_at', Carbon::today())
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'desc')->withTrashed()
             ->first();
 
         $nextNumber = 1;
@@ -134,7 +135,7 @@ class Transaction extends Model
         $count = $this->invoices()->count() + 1;
 
         // Format order_id
-        return sprintf('INV-%s-%s', $this->id, $count);
+        return "INV/$this->id/$count/" . date('YmdHis');
     }
 
 

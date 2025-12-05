@@ -127,6 +127,23 @@ class Checkout extends Component
         }
     }
 
+    public function cancelOrder($slug)
+    {
+        $transaction = Transaction::where('slug', $slug)->first();
+
+        if (!$transaction) {
+            session()->flash('error', "Transaction not found");
+        }
+
+        if ($transaction->status != 'ordered' || $transaction->mekari_sync_status != 'pending' || now()->diffInMinutes($transaction->created_at) >= 5) {
+            session()->flash('error', "Your order cannot be cancelled");
+            return;
+        }
+
+        $transaction->delete();
+        return redirect(route('history'))->with('success', "Order has been cancelled");
+    }
+
     public function render()
     {
         return view('livewire.checkout')->layout('components.layouts.app.header', ['title' => 'Checkout']);

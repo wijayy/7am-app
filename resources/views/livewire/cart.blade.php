@@ -193,6 +193,14 @@
                         </div>
                     @endif
 
+                    <flux:separator></flux:separator>
+                    <div class="flex justify-between  font-semibold  text-gray-800 mb-3">
+                        <div class="dark:text-white">Total</div>
+                        <div class="dark:text-white">Rp.
+                            {{ number_format($subtotal + $packaging_fee - $this->countDiscount(), 0, ',', '.') }}
+                        </div>
+                    </div>
+
                     <hr class="border-gray-300 mb-3">
 
                     <div class="">
@@ -250,10 +258,12 @@
                             Have a coupon?</button>
                     @endif
 
-                    <button wire:click='checkout'
-                        class="bg-[#B68B62] hover:bg-[#9c724e] text-white w-full py-2 font-medium rounded-md text-sm transition">
-                        Checkout
-                    </button>
+                    <flux:modal.trigger name="checkoutModal">
+                        <button
+                            class="bg-[#B68B62] hover:bg-[#9c724e] text-white w-full py-2 font-medium rounded-md text-sm transition">
+                            Checkout
+                        </button>
+                    </flux:modal.trigger>
 
                     <x-action-message class="me-3 mt-4 text-red-500" on="error">
                         {{ __('Please Verified Your Business First') }}
@@ -262,6 +272,20 @@
             </div>
         </div>
     </flux:container>
+
+    <flux:modal name="checkoutModal">
+        <div class="font-semibold">Checkout</div>
+        <div class="">Are you sure you want to proceed with this checkout?
+        </div>
+        <div class="">
+
+            You can still cancel the order within 5 minutes after checkout.</div>
+        <div class="flex justify-end mt-4">
+            <flux:button variant="primary" wire:click='checkout' class="me-2">
+                Checkout
+            </flux:button>
+        </div>
+    </flux:modal>
 
     @livewire('shop-show')
     @livewire('newsletter')

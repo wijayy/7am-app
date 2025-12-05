@@ -143,6 +143,8 @@ class TransactionIndex extends Component
                     "rate" => $item->price,
                     "discount" => 0,
                     "product_name" => $item->product->name,
+                    "line_tax_id" => (int) Setting::where('key', 'line_tax_id')->value('value'),
+                    "line_tax_name" => Setting::where('key', 'line_tax_name')->value('value')
                 ];
             }
 
@@ -155,14 +157,20 @@ class TransactionIndex extends Component
             // dd($response);
             // dd($response['sales_invoice']['transaction_no']);
 
-            $transaction->update(['number' => $response['sales_invoice']['transaction_no'], 'mekari_sync_status' => 'synced']);
+            if (!isset($response['sales_invoice']['transaction_no'])) {
+                throw new \Exception(($response['error_full_messages'][0] ?? 'Unknown error'));
+            }
+
+            $number = $response['sales_invoice']['transaction_no'];
+
+            $transaction->update(['number' => $number, 'mekari_sync_status' => 'synced']);
             DB::commit();
             // dd($response1, $response);
-            Session::flash('success', "Successfully ");
+            session()->flash('success', "Invoice $number imported successfully.");
         } catch (\Throwable $th) {
             DB::rollBack();
-            if (config('app.debug', false)) throw $th;
-            return back()->with('error', '');
+            session()->flash('error', "Transaction $transaction->transaction_number import failed: " . $th->getMessage());
+            // if (config('app.debug', false)) throw $th;
         }
     }
 

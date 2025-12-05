@@ -15,7 +15,6 @@
             <flux:separator text="Bussiness Identity">
             </flux:separator>
             <div class="space-y-4">
-
                 <flux:input :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])"
                     label="Bussiness Name/Outlet Name" required wire:model.live='name'></flux:input>
                 <flux:input only_number :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])"
@@ -25,7 +24,6 @@
                 <flux:input :readonly="in_array(Auth::user()->business, ['requested', 'accepted'])" label="Address"
                     required wire:model.live='address'></flux:input>
             </div>
-
         </div>
         <div class="mt-12">
             <flux:separator text="Bank Information">

@@ -59,11 +59,29 @@
         </div>
     </div>
 
-
-
-    <div class="flex mt-4 justify-center">
+    @php
+        $canCancel = now()->lessThan($transaction->created_at->addMinutes(5));
+    @endphp
+    <div class="flex mt-4 gap-4 justify-center">
         <flux:button id="pay-button" size="sm" variant="primary" class="">Pay
         </flux:button>
+        @if ($canCancel)
+            <div class=" flex justify-center">
+                <flux:modal.trigger name="cancelOrderModal{{ $transaction->id }}">
+                    <flux:button size="sm" variant="danger">
+                        Cancel
+                    </flux:button>
+                </flux:modal.trigger>
+            </div>
+            <flux:modal name="cancelOrderModal{{ $transaction->id }}">
+                <div class="font-semibold">Cancel Order {{ $transaction->transaction_number }}</div>
+                <div class="">Are you sure you want to cancel this order?</div>
+                <div class="flex justify-end">
+                    <flux:button variant="danger" wire:click="cancelOrder('{{ $transaction->slug }}')">
+                        Confirm</flux:button>
+                </div>
+            </flux:modal>
+        @endif
     </div>
 
     <script src="{{ env('MIDTRANS_TARGET_LINK') }}" data-client-key="{{ config('midtrans.clientKey') }}"></script>

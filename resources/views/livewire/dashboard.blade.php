@@ -1,7 +1,7 @@
 <div class="space-y-4">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="rounded dark:bg-neutral-700 p-4 bg-yellow-50">
-            <div class="p-1 rounded-full bg-yellow-100 w-fit">
+        <div class="rounded dark:bg-gray-700 p-4 bg-gray-50">
+            <div class="p-1 rounded-full bg-gray-100 dark:bg-gray-800 w-fit">
                 <flux:icon.dollar-sign class="size-10!"></flux:icon.dollar-sign>
             </div>
             <div class="mt-5 md:text-xl font-semibold">
@@ -11,8 +11,8 @@
                 {{ $earningRatio }}% {{ $earningRatio < 0 ? 'less' : 'more' }} from last month
             </div>
         </div>
-        <div class="rounded dark:bg-neutral-700 p-4 bg-sky-50">
-            <div class="p-1 rounded-full bg-yellow-100 w-fit">
+        <div class="rounded dark:bg-gray-700 p-4 bg-sky-50">
+            <div class="p-1 rounded-full bg-gray-100 dark:bg-gray-800 w-fit">
                 <flux:icon.dollar-sign class="size-10!"></flux:icon.dollar-sign>
             </div>
             <div class="mt-5 md:text-xl font-semibold">
@@ -22,8 +22,8 @@
                 {{ $transactionRatio }}% {{ $transactionRatio < 0 ? 'less' : 'more' }} from last month
             </div>
         </div>
-        <div class="rounded dark:bg-neutral-700 p-4 bg-teal-50">
-            <div class="p-1 rounded-full bg-yellow-100 w-fit">
+        <div class="rounded dark:bg-gray-700 p-4 bg-teal-50">
+            <div class="p-1 rounded-full bg-gray-100 dark:bg-gray-800 w-fit">
                 <flux:icon.dollar-sign class="size-10!"></flux:icon.dollar-sign>
             </div>
             <div class="mt-5 md:text-xl font-semibold">
@@ -33,8 +33,8 @@
                 {{ $productSoldRatio }}% {{ $productSoldRatio < 0 ? 'less' : 'more' }} from last month
             </div>
         </div>
-        <div class="rounded dark:bg-neutral-700 p-4 bg-fuchsia-50">
-            <div class="p-1 rounded-full bg-yellow-100 w-fit">
+        <div class="rounded dark:bg-gray-700 p-4 bg-fuchsia-50">
+            <div class="p-1 rounded-full bg-gray-100 dark:bg-gray-800 w-fit">
                 <flux:icon.dollar-sign class="size-10!"></flux:icon.dollar-sign>
             </div>
             <div class="mt-5 md:text-xl font-semibold">
@@ -45,12 +45,12 @@
             </div>
         </div>
     </div>
-    <div class="bg-white dark:bg-neutral-700 min-h-96! space-y-4 p-4 rounded">
+    <div class="bg-white dark:bg-gray-700 min-h-96! space-y-4 p-4 rounded">
         <div class="text-lg md:text-xl font-semibold">Last Transaction</div>
 
         <div class="grid-cols-1 md:grid-cols-3 mt-4 grid gap-4">
             @foreach ($lastTransactions as $item)
-                <div class="bg-gray-200 dark:bg-neutral-700 rounded p-4 gap-4" x-data={open:false}>
+                <div class="bg-gray-200 dark:bg-gray-700 rounded p-4 gap-4" x-data={open:false}>
                     <div class="">
                         <div class="sr-only">Shipping Information</div>
                         <div class="">
@@ -69,11 +69,11 @@
         </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="bg-white dark:bg-neutral-700 space-y-4 p-4 rounded">
+        <div class="bg-white dark:bg-gray-700 space-y-4 p-4 rounded">
             <div class="text-lg md:text-xl font-semibold">Top Sold Products</div>
             @foreach ($topProducts as $item)
                 <div
-                    class="py-2 bg-gradient-to-r flex justify-between from-amber-300 to-75% to-transparent px-4 rounded-lg w-[{{ ($item->total_sales / $topProducts->first()->total_sales) * 100 }}%] ">
+                    class="py-2 bg-gradient-to-r flex justify-between from-amber-300 to-75% to-transparent dark:from-gray-900 px-4 rounded-lg w-[{{ ($item->total_sales / $topProducts->first()->total_sales) * 100 }}%] ">
                     <div class="">{{ $item->product->name }}</div>
                     <div class="">
                         Rp. {{ number_format($item->total_sales, 0, ',', '.') }}
@@ -81,11 +81,11 @@
                 </div>
             @endforeach
         </div>
-        <div class="col-span-2 bg-white dark:bg-neutral-700 space-y-4 p-4 rounded">
+        <div class="col-span-2 bg-white dark:bg-gray-700 space-y-4 p-4 rounded">
             <div class="text-lg md:text-xl font-semibold">Earnings Growth</div>
             <canvas id="earningChart" class="h-72!"></canvas>
         </div>
-        <div class="space-y-4 bg-white dark:bg-neutral-700 p-4 rounded">
+        <div class="space-y-4 bg-white dark:bg-gray-700 p-4 rounded">
             <div class="text-lg md:text-xl font-semibold">Top Month</div>
             <div class="text-2xl md:text-3xl font-bold">{{ $topMonthName }}</div>
             <div class="text-lg md:text-xl font-semibold">Top Year</div>

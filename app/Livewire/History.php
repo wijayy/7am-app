@@ -10,12 +10,39 @@ class History extends Component
 {
     public $transactions;
 
-    public function mount() {
-        $this->transactions = Transaction::where('user_id', Auth::user()->id)->get();
+    public function mount()
+    {
+        $this->getHistory();
+
+        // dd($this->transactions);
+    }
+
+    public function getHistory()
+    {
+        $this->transactions = Transaction::where('user_id', Auth::user()->id)->latest('created_at')->get();
+    }
+
+    public function cancelOrder($slug)
+    {
+        $transaction = Transaction::where('slug', $slug)->first();
+
+        if (!$transaction) {
+            session()->flash('error', "Transaction not found");
+        }
+
+        if ($transaction->status != 'ordered' || $transaction->mekari_sync_status != 'pending' || now()->diffInMinutes($transaction->created_at) >= 5) {
+            session()->flash('error', "Your order cannot be cancelled");
+        } else {
+            $transaction->delete();
+
+            $this->getHistory();
+
+            session()->flash('success', "Order has been cancelled");
+        }
     }
 
     public function render()
     {
-        return view('livewire.history')->layout('components.layouts.app.header', ['title'=>'History Transaction']);
+        return view('livewire.history')->layout('components.layouts.app.header', ['title' => 'History Transaction']);
     }
 }

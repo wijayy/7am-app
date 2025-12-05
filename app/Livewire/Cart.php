@@ -45,7 +45,7 @@ class Cart extends Component
         $this->address = $this->addresses->first();
 
         if ($this->carts->count() == 0) {
-            return redirect(route('home'));
+            return redirect(route('b2b-home'));
         }
 
         $this->addresses = Auth::user()->addresses;
@@ -65,6 +65,8 @@ class Cart extends Component
         }
 
         $this->isProcessing = true;
+
+        $this->carts();
 
         if (is_null(Auth::user()->bussinesses) || Auth::user()->bussinesses?->status != 'approved') {
             $this->dispatch('error');
@@ -155,14 +157,12 @@ class Cart extends Component
         $this->carts = ModelsCart::where('user_id', Auth::user()->id)->get();
         $this->qty = $this->carts->toArray();
 
-        $subtotal = 0;
+        $this->subtotal = 0;
 
         foreach ($this->carts as $key => $item) {
-            $subtotal += $item->qty * $item->product->price;
+            $this->subtotal += $item->qty * $item->product->price;
         }
-
-        $this->subtotal = (int) ($subtotal * 100 / 103);
-        $this->packaging_fee = $subtotal - $this->subtotal;
+        $this->packaging_fee = 0.03 * $this->subtotal;
         $this->packaging_fee = (int) $this->packaging_fee;
         // dd($this->packaging_fee);
     }
@@ -196,6 +196,7 @@ class Cart extends Component
                 $cart->update(['qty' => $item['qty']]);
             }
         }
+        $this->carts();
     }
 
     public function delete($id)

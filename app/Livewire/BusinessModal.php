@@ -76,7 +76,7 @@ class BusinessModal extends Component
                 'rejected' => 'Business ditolak!',
                 default => 'Business berhasil diupdate!'
             };
-            session()->flash('Success', $message);
+            session()->flash('success', $message);
 
             if ($this->status == 'approved') {
                 Mail::to($business->user->email)->queue(new \App\Mail\Business\Accept($business->id));
