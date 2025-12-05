@@ -1,6 +1,6 @@
 <div>
-    <flux:container class="mt-30">
-        <div class="bg-[#E8E1D7] min-h-[55vh] dark:bg-gray-800 py-10 flex flex-col items-center">
+    <flux:container class="mt-4">
+        <div class="bg-[#E8E1D7] min-h-[55vh] dark:bg-gray-800 flex flex-col items-center">
             <div class="max-w-7xl w-full flex flex-col lg:flex-row gap-8">
 
                 {{-- Left Section – Cart Items --}}

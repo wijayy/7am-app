@@ -43,6 +43,13 @@
 
         <flux:spacer />
 
+        <flux:navbar>
+            <flux:tooltip :content="__('Cart')" position="bottom">
+                <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="shopping-cart" href="{{ route('cart') }}"
+                    :label="__('Cart')" />
+            </flux:tooltip>
+        </flux:navbar>
+
         <!-- Desktop User Menu -->
         <flux:dropdown position="top" align="end">
             <flux:profile class="cursor-pointer" :initials="auth()->user()->initials()" />
@@ -144,6 +151,7 @@
 
     {{ $slot }}
 
+    @livewire('footer')
     @fluxScripts
 </body>
 
