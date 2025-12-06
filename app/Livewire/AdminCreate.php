@@ -129,7 +129,7 @@ class AdminCreate extends Component
         } catch (\Throwable $th) {
             DB::rollBack();
             if (config('app.debug', false)) throw $th;
-            return back()->with('error', '');
+            session()->flash('error', $th->getMessage());
         }
     }
 

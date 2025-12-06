@@ -92,7 +92,7 @@ class BusinessModal extends Component
             if (config('app.debug') == true) {
                 throw $th;
             } else {
-                return back()->with('error', $th->getMessage());
+                session()->flash('error', $th->getMessage());
             }
         }
     }

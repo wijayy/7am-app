@@ -9,9 +9,9 @@ use Livewire\Component;
 class OutletShow extends Component
 {
     public $outlet, $title, $open = 'gallery', $image1 = [],
-    $image2 = [],
-    $image3 = [],
-    $image4 = [], $limit = 2, $maxLimit;
+        $image2 = [],
+        $image3 = [],
+        $image4 = [], $limit = 2, $maxLimit;
 
     public function mount($slug)
     {
@@ -47,7 +47,7 @@ class OutletShow extends Component
             if (config('app.debug') == true) {
                 throw $th;
             } else {
-                return back()->with('error', $th->getMessage());
+                session()->flash('error', $th->getMessage());
             }
         }
 

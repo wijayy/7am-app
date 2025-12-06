@@ -101,7 +101,11 @@ class CardModal extends Component
             $this->dispatch('modal-close', name: 'create-card');
         } catch (\Throwable $th) {
             DB::rollBack();
-            session()->flash('error', config('app.debug') ? $th->getMessage() : 'Something went wrong.');
+            if (config('app.debug') == true) {
+                throw $th;
+            } else {
+                session()->flash('error', $th->getMessage());
+            }
         }
     }
 

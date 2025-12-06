@@ -58,6 +58,7 @@ class TypeModal extends Component
             $this->dispatch('modal-close', name: 'create-type');
         } catch (\Throwable $th) {
             DB::rollBack();
+            if (config('app.debug', false)) throw $th;
             session()->flash('error', $th->getMessage());
         }
     }

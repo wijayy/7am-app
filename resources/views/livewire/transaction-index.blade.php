@@ -2,12 +2,29 @@
     <flux:session>Transactions</flux:session>
 
     <flux:container-sidebar>
-        <div class="flex gap-4 items-center ">
-            <flux:input class="w-fit!" type="date" wire:change='updateDate' wire:model.live='date'></flux:input>
-            <div class="">summary</div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-8 gap-4 items-end ">
+            <div class=" sm:col-span-3 lg:col-span-3 xl:col-span-5">
+                <flux:input placeholder="Search transactions..." label="Search" class="" type="text"
+                    wire:change='updateDate' wire:model.live='search'>
+                </flux:input>
+            </div>
+            <div class="lg:col-span-2 xl:col-span-1">
+                <flux:input label="Shipping Date" type="date" wire:change='updateDate' wire:model.live='date'>
+                </flux:input>
+            </div>
+            <div class="lg:col-span-2 xl:col-span-1">
+                <flux:select class="lg:col-span-2 xl:col-span-1" label="Order Status" wire:change='updateDate'
+                    wire:model.live='status'>
+                    <option value="">All Status</option>
+                    <option value="ordered">Ordered</option>
+                    <option value="paid">Paid</option>
+                    <option value="need_action">Need Action</option>
+                </flux:select>
+            </div>
+            <flux:button variant="primary" color="rose" wire:click="resetFilters">Reset Filters</flux:button>
         </div>
         <div class="grid-cols-1 mt-4 grid gap-4">
-            @foreach ($transactions as $item)
+            @forelse ($transactions as $item)
                 <div class="bg-gray-200 dark:bg-gray-600 rounded p-4 gap-4" x-data={open:false}>
                     <div class="">
                         <div class="sr-only">Shipping Information</div>
@@ -107,7 +124,10 @@
                             <div class="">Rp. {{ number_format($item->total, 0, ',', '.') }}</div>
                         </div>
                     </div>
-                    @if ($item->mekari_sync_status == 'pending')
+                    @if (
+                        $item->mekari_sync_status == 'pending' &&
+                            (now()->greaterThanOrEqualTo($item->created_at->addMinutes(5)) ||
+                                $item?->payment?->mekari_sync_status == 'paid'))
                         <div class="flex justify-center ">
                             <flux:button wire:click='importInvoice({{ $item->id }})'>Import Invoice to Jurnal
                             </flux:button>
@@ -120,8 +140,14 @@
                         </div>
                     @endif
 
+
                 </div>
-            @endforeach
+            @empty
+                <div class="w-full h-96 flex justify-center items-center">No transactions found.</div>
+            @endforelse
+            <div class="mt-4">
+                {{ $transactions->links() }}
+            </div>
         </div>
     </flux:container-sidebar>
 </div>

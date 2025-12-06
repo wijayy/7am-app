@@ -81,7 +81,11 @@ class CardIndex extends Component
             $this->dispatch('modal-close', name: "delete-$id");
         } catch (\Throwable $th) {
             DB::rollBack();
-            session()->flash('error', config('app.debug') ? $th->getMessage() : 'Failed to delete card.');
+            if (config('app.debug') == true) {
+                throw $th;
+            } else {
+                session()->flash('error', $th->getMessage());
+            }
         }
     }
 

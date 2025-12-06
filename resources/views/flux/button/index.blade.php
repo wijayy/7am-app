@@ -101,7 +101,8 @@
                 'primary'
                     => 'bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,_var(--color-accent),_transparent_10%)]',
                 'filled' => 'bg-zinc-800/5 hover:bg-zinc-800/10 dark:bg-white/10 dark:hover:bg-white/20',
-                'outline' => 'bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600/75',
+                'outline'
+                    => 'bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600/75 dark:hover:bg-gray-500',
                 'danger' => 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-500',
                 'ghost' => 'bg-white/30 hover:bg-gray-800/5 dark:hover:bg-white/15',
                 'subtle' => 'bg-transparent hover:bg-zinc-800/5 dark:hover:bg-white/15',

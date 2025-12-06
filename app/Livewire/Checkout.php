@@ -75,8 +75,11 @@ class Checkout extends Component
 
             // dd($this->snapToken);
         } catch (\Throwable $th) {
-            throw $th;
-            return redirect(route('history'))->with('error', $th->getMessage());
+            if (config('app.debug') == true) {
+                throw $th;
+            } else {
+                return redirect(route('history'))->with('error', $th->getMessage());
+            }
         }
     }
 
@@ -120,10 +123,11 @@ class Checkout extends Component
             return redirect(route('invoice', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {
             DB::rollBack();
-            if (config('app.debug', true)) {
+            if (config('app.debug') == true) {
                 throw $th;
+            } else {
+                session()->flash('error', $th->getMessage());
             }
-            // return back()->with('error', '');
         }
     }
 

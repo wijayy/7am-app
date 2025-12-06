@@ -1,4 +1,4 @@
-<flux:container class="mt-30 space-y-2 px-4 text-sm">
+<flux:container class="mt-6 space-y-2 my-4 px-4 text-sm">
 
     <div class="flex justify-between">
         <div class=" font-semibold text-lg">{{ $transaction->number }}</div>

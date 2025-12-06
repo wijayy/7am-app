@@ -16,25 +16,34 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class TransactionIndex extends Component
 {
-    #[Url(except: null)]
-    public $date;
-    public $transactions;
+    #[Url(except: '')]
+    public $date = '';
+
+    #[Url(except: '')]
+    public $search = '';
+
+    #[Url(except: '')]
+    public $page = '';
+
+    #[Url(except: '')]
+    public $status = '';
 
     public function mount()
     {
         $this->date = $this->date ?? date('Y-m-d');
-        $this->transactions = $this->getTransaction();
-    }
-
-    public function getTransaction()
-    {
-        return Transaction::whereDate('shipping_date', $this->date)->get();
     }
 
     public function updateDate()
     {
-        $this->transactions = $this->getTransaction();
         // dd($this->date);
+    }
+
+    public function resetFilters()
+    {
+        $this->date = '';
+        $this->search = '';
+        $this->status = '';
+        $this->page = '';
     }
 
     public function export()
@@ -217,16 +226,24 @@ class TransactionIndex extends Component
             $transaction->payment->update(['mekari_sync_status' => 'synced']);
 
             DB::commit();
-            Session::flash('success', "Successfully ");
+
+            Session::flash('success', "Payment for transaction $transaction->number imported successfully.");
         } catch (\Throwable $th) {
             DB::rollBack();
             if (config('app.debug', false)) throw $th;
-            return back()->with('error', '');
+            session()->flash('error', $th->getMessage());
         }
     }
 
     public function render()
     {
-        return view('livewire.transaction-index');
+        $transactions = Transaction::latest()
+            ->filters([
+                'shipping_date' => $this->date,
+                'status' => $this->status,
+                'search' => $this->search,
+            ])
+            ->paginate(24)->withQueryString();
+        return view('livewire.transaction-index', compact('transactions'));
     }
 }

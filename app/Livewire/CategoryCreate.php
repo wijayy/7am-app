@@ -35,13 +35,13 @@ class CategoryCreate extends Component
             Category::updateOrCreate(['id' => $this->category], ['name' => $this->name]);
             DB::commit();
 
-            return redirect()->route('category.index')->with('success', $this->category ? "$this->name has been successfully modified" :'New Category Successfully Added');
+            return redirect()->route('category.index')->with('success', $this->category ? "$this->name has been successfully modified" : 'New Category Successfully Added');
         } catch (\Throwable $th) {
             DB::rollBack();
             if (config('app.debug') == true) {
                 throw $th;
             } else {
-                return back()->with('error', $th->getMessage());
+                session()->flash('error', $th->getMessage());
             }
         }
     }

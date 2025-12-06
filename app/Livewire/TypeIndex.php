@@ -41,6 +41,7 @@ class TypeIndex extends Component
             $this->dispatch('modal-close', name: "delete-$id");
         } catch (\Throwable $th) {
             DB::rollBack();
+            if (config('app.debug', false)) throw $th;
             session()->flash('error', $th->getMessage());
         }
     }

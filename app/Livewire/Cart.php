@@ -143,7 +143,7 @@ class Cart extends Component
             DB::rollBack();
             if (config('app.debug', false))
                 throw $th;
-            return back()->with('error', '');
+            session()->flash('error', $th->getMessage());
         }
     }
 
@@ -213,7 +213,7 @@ class Cart extends Component
             if (config('app.debug') == true) {
                 throw $th;
             } else {
-                return back()->with('error', $th->getMessage());
+                session()->flash('error', $th->getMessage());
             }
         }
     }

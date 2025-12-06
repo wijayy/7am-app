@@ -90,10 +90,11 @@ class SetCategoryCreate extends Component
             $this->dispatch('modal-close', name: 'set-category-create');
         } catch (\Throwable $th) {
             DB::rollBack();
-            if (config('app.debug')) {
+            if (config('app.debug') == true) {
                 throw $th;
+            } else {
+                session()->flash('error', $th->getMessage());
             }
-            session()->flash('error', 'Error saving set category');
         }
     }
 

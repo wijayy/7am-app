@@ -141,8 +141,28 @@ class Transaction extends Model
 
     public function scopeFilters(Builder $query, array $filters)
     {
-        $query->when($filters["date"] ?? date('Y-m-d'), function ($query, $search) {
+        $query->when($filters["date"] ?? false, function ($query, $search) {
             return $query->whereDate("shipping_date",  $search);
+        });
+
+        $query->when($filters["status"] ?? false, function ($query, $status) {
+            if ($status == 'need_action') {
+                return $query->where(function ($q) {
+                    $q->where('status', 'ordered')->where('mekari_sync_status', 'pending');
+                })->orWhereHas('payment', function ($q) {
+                    $q->where('status', 'paid')->where('mekari_sync_status', 'pending');
+                });
+            }
+            return $query->where("status",  $status);
+        });
+
+        $query->when($filters["search"] ?? false, function ($query, $search) {
+            return $query->where(function ($query) use ($search) {
+                $query->where("transaction_number", "like", "%$search%")->orWhere('number', 'like', "%$search%")
+                    ->orWhereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'like', "%$search%");
+                    });
+            });
         });
     }
 

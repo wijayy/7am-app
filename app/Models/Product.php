@@ -175,7 +175,6 @@ class Product extends Model
             if (config('app.debug', false)) {
                 throw $th;
             }
-            dd($id);
             session()->flash('error', 'Failed to synchronize products: ' . $th->getMessage());
         }
     }

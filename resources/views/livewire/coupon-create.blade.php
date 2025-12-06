@@ -61,7 +61,7 @@
         <div class="grid grid-cols-2 gap-4 md:grid-cols-4 mt-4">
             @foreach ($products as $item)
                 <div class="p-2 flex border gap-2 items-center rounded-lg cursor-pointer
-                {{ in_array($item->id, $selectedProducts) ? 'border-blue-500 bg-blue-50' : 'border-gray-200' }}"
+                {{ in_array($item->id, $selectedProducts) ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' : 'border-gray-200' }}"
                     wire:click="toggleProduct({{ $item->id }})">
                     <div class="size-10 bg-center bg-no-repeat bg-cover rounded"
                         style="background-image: url({{ $item->image_url }});">
