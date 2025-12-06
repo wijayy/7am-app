@@ -101,7 +101,7 @@
                 'primary'
                     => 'bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,_var(--color-accent),_transparent_10%)]',
                 'filled' => 'bg-zinc-800/5 hover:bg-zinc-800/10 dark:bg-white/10 dark:hover:bg-white/20',
-                'outline' => 'bg-white hover:bg-zinc-50 dark:bg-zinc-700 dark:hover:bg-zinc-600/75',
+                'outline' => 'bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600/75',
                 'danger' => 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-500',
                 'ghost' => 'bg-white/30 hover:bg-gray-800/5 dark:hover:bg-white/15',
                 'subtle' => 'bg-transparent hover:bg-zinc-800/5 dark:hover:bg-white/15',
@@ -113,7 +113,7 @@
             ) {
                 'primary' => 'text-[var(--color-accent-foreground)]',
                 'filled' => 'text-zinc-800 dark:text-white',
-                'outline' => 'text-zinc-800 dark:text-white',
+                'outline' => 'text-gray-800 dark:text-white',
                 'danger' => 'text-white',
                 'ghost' => 'text-gray-800 dark:text-white',
                 'subtle' => 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white',
@@ -125,7 +125,7 @@
             ) {
                 'primary' => 'border border-black/10 dark:border-0',
                 'outline'
-                    => 'border border-zinc-200 hover:border-zinc-200 border-b-zinc-300/80 dark:border-zinc-600 dark:hover:border-zinc-600',
+                    => 'border border-gray-200 hover:border-gray-200 border-b-gray-300/80 dark:border-gray-600 dark:hover:border-gray-600',
                 default => '',
             },
         )
@@ -153,7 +153,7 @@
                 'outline'
                     => '[[data-flux-button-group]_&]:border-s-0 [:is([data-flux-button-group]>&:first-child,_[data-flux-button-group]_:first-child>&)]:border-s-[1px]',
                 'filled'
-                    => '[[data-flux-button-group]_&]:border-e [:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-e-0 [[data-flux-button-group]_&]:border-zinc-200/80 dark:[[data-flux-button-group]_&]:border-zinc-900/50',
+                    => '[[data-flux-button-group]_&]:border-e [:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-e-0 [[data-flux-button-group]_&]:border-gray-200/80 dark:[[data-flux-button-group]_&]:border-gray-900/50',
                 'danger'
                     => '[[data-flux-button-group]_&]:border-e [:is([data-flux-button-group]>&:last-child,_[data-flux-button-group]_:last-child>&)]:border-e-0 [[data-flux-button-group]_&]:border-red-600 dark:[[data-flux-button-group]_&]:border-red-900/25',
                 'primary'
