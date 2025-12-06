@@ -76,6 +76,9 @@
                 <flux:menu.separator />
 
                 <flux:menu.radio.group>
+                    <flux:menu.item :href="route('settings.profile')" icon="briefcase-business" wire:navigate>
+                        {{ __('Business Info') }}
+                    </flux:menu.item>
                     <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>
                         {{ __('Settings') }}
                     </flux:menu.item>
