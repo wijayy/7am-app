@@ -239,7 +239,7 @@ class TransactionIndex extends Component
     {
         $transactions = Transaction::latest()
             ->filters([
-                'shipping_date' => $this->date,
+                'date' => $this->date,
                 'status' => $this->status,
                 'search' => $this->search,
             ])
