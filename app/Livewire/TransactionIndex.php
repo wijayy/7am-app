@@ -112,7 +112,7 @@ class TransactionIndex extends Component
 
             $body = [
                 "sales_invoice" => [
-                    "transaction_date" => $transaction->created_at->format('Y-m-d'),
+                    "transaction_date" => $transaction->created_at->addDay()->format('Y-m-d'),
                     "transaction_lines_attributes" => [],
                     "shipping_date" => $transaction->shipping_date->format('Y-m-d'),
                     "shipping_price" => 0,
@@ -123,7 +123,7 @@ class TransactionIndex extends Component
                     "tracking_no" => $transaction->transaction_number,
                     "address" => $transaction->user?->bussinesses->address ?? "dirumah",
                     "term_name" => 'Cash on Delivery',
-                    "due_date" => $transaction->due_date->format('Y-m-d'),
+                    "due_date" => $transaction->due_date->addDay()->format('Y-m-d'),
                     "deposit_to_name" => Setting::where('key', 'deposit_to_name')->value('value'),
                     "deposit" => 0,
                     "discount_unit" => $transaction->discount,
@@ -198,7 +198,7 @@ class TransactionIndex extends Component
             }
             $body = [
                 "receive_payment" => [
-                    "transaction_date" => $transaction->created_at->format('Y-m-d'),
+                    "transaction_date" => $transaction->created_at->addDay()->format('Y-m-d'),
                     "records_attributes" => [
                         [
                             "transaction_no" => $transaction->number,
