@@ -112,7 +112,7 @@ class TransactionIndex extends Component
 
             $body = [
                 "sales_invoice" => [
-                    "transaction_date" => $transaction->created_at->addDay()->format('Y-m-d'),
+                    "transaction_date" => $transaction->shipping_date->format('Y-m-d'),
                     "transaction_lines_attributes" => [],
                     "shipping_date" => $transaction->shipping_date->format('Y-m-d'),
                     "shipping_price" => 0,
@@ -121,19 +121,19 @@ class TransactionIndex extends Component
                     "ship_via" => "ship",
                     "reference_no" =>  $transaction->transaction_number,
                     "tracking_no" => $transaction->transaction_number,
-                    "address" => $transaction->user?->bussinesses->address ?? "dirumah",
+                    "address" => '',
                     "term_name" => 'Cash on Delivery',
-                    "due_date" => $transaction->due_date->addDay()->format('Y-m-d'),
+                    "due_date" => $transaction->user->bussinesses->tenor > 0 ? $transaction->shipping_date->addDays($transaction->user->bussinesses->tenor)->format('Y-m-d') : $transaction->shipping_date->format('Y-m-d'),
                     "deposit_to_name" => Setting::where('key', 'deposit_to_name')->value('value'),
                     "deposit" => 0,
                     "discount_unit" => $transaction->discount,
                     "witholding_account_name" => Setting::where('key', 'witholding_account_name')->value('value'),
                     "witholding_value" => (int) Setting::where('key', 'witholding_value')->value('value'),
                     "witholding_type" => Setting::where('key', 'witholding_type')->value('value'),
-                    "discount_type_name" => "percent",
+                    "discount_type_name" => "Value",
                     "warehouse_name" => Setting::where('key', 'warehouse_name')->value('value'),
                     "warehouse_code" => Setting::where('key', 'warehouse_code')->value('value'),
-                    "person_name" => $transaction->user?->bussinesses->name ?? "Toko 1",
+                    "person_name" => $transaction->user->bussinesses->name ?? "Toko 1",
                     "tags" => [],
                     "email" => $transaction->shipping->email,
                     "transaction_no" => "",
@@ -141,8 +141,8 @@ class TransactionIndex extends Component
                     "memo" => $memo,
                     "custom_id" => "",
                     "source" => "Website B2B 7AM",
-                    "use_tax_inclusive" => false,
-                    "tax_after_discount" => true,
+                    "use_tax_inclusive" => Setting::where('key', 'use_tax_inclusive')->value('value') === 'true',
+                    "tax_after_discount" => Setting::where('key', 'tax_after_discount')->value('value') === 'true',
                 ],
             ];
 
@@ -151,6 +151,7 @@ class TransactionIndex extends Component
                     "quantity" => $item->qty,
                     "rate" => $item->price,
                     "discount" => 0,
+                    'product_id ' => $item->product->jurnal_id,
                     "product_name" => $item->product->name,
                     "line_tax_id" => (int) Setting::where('key', 'line_tax_id')->value('value'),
                     "line_tax_name" => Setting::where('key', 'line_tax_name')->value('value')
@@ -163,10 +164,10 @@ class TransactionIndex extends Component
                 $body
             );
             // return response()->json($response);
-            // dd($response);
+            dd($response);
             // dd($response['sales_invoice']['transaction_no']);
 
-            if (!isset($response['sales_invoice']['transaction_no'])) {
+            if (!isset($response['sales_invoice'])) {
                 throw new \Exception(($response['error_full_messages'][0] ?? 'Unknown error'));
             }
 
@@ -198,7 +199,7 @@ class TransactionIndex extends Component
             }
             $body = [
                 "receive_payment" => [
-                    "transaction_date" => $transaction->created_at->addDay()->format('Y-m-d'),
+                    "transaction_date" => $transaction->shipping_date->format('Y-m-d'),
                     "records_attributes" => [
                         [
                             "transaction_no" => $transaction->number,

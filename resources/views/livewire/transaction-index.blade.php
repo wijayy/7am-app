@@ -140,8 +140,6 @@
                             </flux:button>
                         </div>
                     @endif
-
-
                 </div>
             @empty
                 <div class="w-full h-96 flex justify-center items-center">No transactions found.</div>

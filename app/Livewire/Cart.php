@@ -14,6 +14,7 @@ use App\Models\Transaction;
 use App\Models\CouponProduct;
 use App\Models\MinimumOrder;
 use App\Models\Payment;
+use App\Models\Setting;
 use App\Models\TransactionItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,6 @@ class Cart extends Component
         if (Auth::user()->addresses->isEmpty()) {
             return redirect(route('settings.address'))->with('info', 'Please add your address before checkout');
         }
-
 
         $this->carts();
 
@@ -59,13 +59,6 @@ class Cart extends Component
 
     public function checkout()
     {
-        // dd(Auth::user()->bussinesses?->status);
-        if ($this->isProcessing) {
-            return;
-        }
-
-        $this->isProcessing = true;
-
         $this->carts();
 
         if (is_null(Auth::user()->bussinesses) || Auth::user()->bussinesses?->status != 'approved') {
@@ -80,6 +73,12 @@ class Cart extends Component
                 return;
             }
         }
+
+        if ($this->isProcessing) {
+            return;
+        }
+
+        $this->isProcessing = true;
 
         try {
             DB::beginTransaction();
@@ -130,7 +129,7 @@ class Cart extends Component
             }
 
             if ($this->coupon ?? false) {
-                CouponUsage::create(['coupon_id' => $this->coupon->id, 'transaction_id' => $transaction->id]);
+                CouponUsage::create(['coupon_id' => $this->c->id, 'transaction_id' => $transaction->id]);
             }
 
             // $this->carts()->delete();
@@ -157,12 +156,18 @@ class Cart extends Component
         $this->carts = ModelsCart::where('user_id', Auth::user()->id)->get();
         $this->qty = $this->carts->toArray();
 
-        $this->subtotal = 0;
+        $subtotal = 0;
 
         foreach ($this->carts as $key => $item) {
-            $this->subtotal += $item->qty * $item->product->price;
+            $subtotal += $item->qty * $item->product->price;
         }
-        $this->packaging_fee = 0.03 * $this->subtotal;
+        if (Setting::where('key', 'use_tax_inclusive')->value('value') === 'true') {
+            $this->subtotal = $subtotal * 100 / 103;
+            $this->packaging_fee = $subtotal - $this->subtotal;
+        } else {
+            $this->subtotal = $subtotal;
+            $this->packaging_fee = 0.03 * $subtotal;
+        }
         $this->packaging_fee = (int) $this->packaging_fee;
         // dd($this->packaging_fee);
     }

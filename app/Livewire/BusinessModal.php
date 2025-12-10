@@ -19,7 +19,7 @@ class BusinessModal extends Component
     public $status = '';
 
     #[Validate('required_if:status,approved')]
-    public $name = '', $set_category_id, $tenor;
+    public $name = '', $set_category_id = '', $tenor = 0;
 
     protected $listeners = [
         'openCreateBusinessModal' => 'openCreateBusinessModal',
@@ -56,16 +56,23 @@ class BusinessModal extends Component
         $this->id = $this->business->id;
         $this->name = $this->business->name;
         $this->status = $this->business->status == 'requested' ? 'approved' : $this->business->status;
-        $this->set_category_id = $this->business?->set_category_id ?? '';
-        $this->tenor = $this->business?->tenor ?? '';
+        // cast to int so the bound value type matches the option values
+        $this->set_category_id = $this->business->set_category_id !== null ? (int) $this->business->set_category_id : '';
+        $this->tenor = $this->business->tenor ?? '';
 
+        // force a component refresh so the select picks up the loaded options
+        $this->dispatch('$refresh');
         $this->dispatch('modal-show', name: 'business-modal');
+        // dd($this->business);
+        // dd($this->set_category_id);
     }
 
     public function save()
     {
         $business = $this->business;
         $validated = $this->validate();
+
+        // dd($validated);
 
         try {
             DB::beginTransaction();
@@ -87,6 +94,7 @@ class BusinessModal extends Component
             $this->resetForm();
             $this->dispatch('modal-close', name: 'business-modal');
             $this->redirect(route('business.index'));
+            dd($business);
         } catch (\Throwable $th) {
             DB::rollBack();
             if (config('app.debug') == true) {
