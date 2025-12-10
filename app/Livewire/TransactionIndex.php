@@ -9,7 +9,9 @@ use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Services\JurnalApi;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\Validate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -28,9 +30,16 @@ class TransactionIndex extends Component
     #[Url(except: '')]
     public $status = '';
 
+    #[Validate('required')]
+    public $cancellation_reason = '';
+
+    public $transaction, $transaction_number = '';
+
     public function mount()
     {
         $this->date = $this->date ?? date('Y-m-d');
+
+        $this->transaction = collect(['transaction_number' => '6']);
     }
 
     public function updateDate()
@@ -181,6 +190,54 @@ class TransactionIndex extends Component
             DB::rollBack();
             session()->flash('error', "Transaction $transaction->transaction_number import failed: " . $th->getMessage());
             // if (config('app.debug', false)) throw $th;
+        }
+    }
+
+    public function showCancelOrderModal($id)
+    {
+        $transaction = Transaction::where('id', $id)->first();
+
+        if (!$transaction) {
+            session()->flash('error', "Transaction not found");
+            return;
+        }
+
+        $this->transaction = $transaction;
+        $this->transaction_number = $transaction->transaction_number;
+        $this->cancellation_reason = '';
+        $this->dispatch('modal-show', name: 'cancel-order');
+    }
+
+    public function cancelOrder()
+    {
+        $transaction = $this->transaction;
+
+        if (!$transaction) {
+            session()->flash('error', "Transaction not found");
+        }
+
+        if ($transaction->status != 'ordered' || $transaction->mekari_sync_status != 'pending') {
+            session()->flash('error', "Your order cannot be cancelled");
+        }
+        try {
+            DB::beginTransaction();
+            $transaction->update([
+                'cancellation_reason' => $this->cancellation_reason,
+            ]);
+
+            $transaction->delete();
+
+            // $this->getHistory();
+
+            DB::commit();
+            $this->dispatch('modal-close', name: 'cancel-order');
+            Mail::to($transaction->user->email)->queue(new \App\Mail\Order\Cancel($transaction->slug));
+
+            session()->flash('success', "Order has been cancelled");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            if (config('app.debug', false)) throw $th;
+            session()->flash('error', $th->getMessage());
         }
     }
 

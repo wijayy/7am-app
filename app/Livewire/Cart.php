@@ -65,6 +65,12 @@ class Cart extends Component
             $this->dispatch('error');
             return;
         }
+        // jika ada transaksi yang sudah melewati due_date (overdue) untuk user
+        // yang memiliki tenor, blokir checkout sampai pelunasan.
+        if ($this->checkPayment()) {
+            $this->isProcessing = false;
+            return;
+        }
 
         if ($this->fulfillment === 'delivery') {
             $minimumOrder = MinimumOrder::where('village_id', $this->address->village_id)->first();
@@ -112,7 +118,7 @@ class Cart extends Component
                     'name' => Auth::user()->bussinesses->name,
                     'phone' => Auth::user()->phone,
                     'email' => Auth::user()->email,
-                    'address' => $this->outlet->address,
+                    'address' => $this->outlet->name,
                 ];
             }
 
@@ -137,6 +143,9 @@ class Cart extends Component
 
             DB::commit();
             Mail::to(Auth::user()->email)->queue(new \App\Mail\Order\Order($transaction->slug));
+            if (Auth::user()->bussinesses->tenor > 0) {
+                $this->redirect(route('history'));
+            }
             $this->redirect(route('checkout', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -144,6 +153,39 @@ class Cart extends Component
                 throw $th;
             session()->flash('error', $th->getMessage());
         }
+    }
+
+    /**
+     * Cek apakah user memiliki transaksi yang sudah lewat tenor (overdue).
+     * Hanya berlaku untuk user yang memiliki bisnis dengan tenor > 0.
+     *
+     * @return bool true jika ada overdue (block checkout), false jika tidak
+     */
+    public function checkPayment()
+    {
+        $business = Auth::user()->bussinesses;
+        if (is_null($business) || ($business->tenor ?? 0) <= 0) {
+            return false;
+        }
+
+        // Cari transaksi milik user yang belum 'paid' dan due_date sudah lewat
+        $overdueExists = Transaction::where('user_id', Auth::user()->id)
+            ->where(function ($q) {
+                $q->where('status', '!=', 'paid')
+                    ->orWhereNull('status');
+            })
+            ->whereNotNull('due_date')
+            ->where('due_date', '<', Carbon::now())
+            ->exists();
+
+        if ($overdueExists) {
+            session()->flash('error', 'You have overdue transactions. Please settle outstanding invoices before checkout.');
+            // juga bisa dispatch event untuk UI
+            $this->dispatch('error', ['message' => 'overdue']);
+            return true;
+        }
+
+        return false;
     }
 
     public function pn($state)

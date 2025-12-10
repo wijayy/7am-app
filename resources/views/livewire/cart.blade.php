@@ -43,13 +43,13 @@
                                     <h3 class="font-semibold mb-2">
                                         Your Address
                                     </h3>
-                                    <div class="text-sm md:text-md">{{ $address->name }} /
-                                        {{ $address->phone }}
+                                    <div class="text-sm md:text-md">{{ $address?->name ?? '' }} /
+                                        {{ $address?->phone ?? '' }}
                                     </div>
-                                    <div class="mt-2 text-sm md:text-md">Phone : {{ $address->address }} </div>
-                                    <div class="text-xs md:text-sm">{{ $address->regency->name }} -
-                                        {{ $address->district->name }} -
-                                        {{ $address->village->name }}</div>
+                                    <div class="mt-2 text-sm md:text-md">Phone : {{ $address?->address ?? '' }} </div>
+                                    <div class="text-xs md:text-sm">{{ $address?->regency?->name ?? '' }} -
+                                        {{ $address?->district?->name ?? '' }} -
+                                        {{ $address?->village?->name ?? '' }}</div>
                                 </div>
                                 <flux:modal.trigger class="trigger" name="address">
                                     <button
@@ -63,10 +63,10 @@
                                     <h3 class="font-semibold mb-2">
                                         Our Outlet
                                     </h3>
-                                    <div class="text-sm md:text-md">{{ $outlet->name }} /
-                                        {{ $outlet->address }}
+                                    <div class="text-sm md:text-md">{{ $outlet?->name ?? '' }} /
+                                        {{ $outlet?->address ?? '' }}
                                     </div>
-                                    {{-- <div class="mt-2 text-sm md:text-md">Phone : {{ $address->phone }} </div> --}}
+                                    {{-- <div class="mt-2 text-sm md:text-md">Phone : {{ $address?->phone ?? '' }} </div> --}}
                                 </div>
                                 <flux:modal.trigger class="trigger" name="outlet">
                                     <button
@@ -81,7 +81,7 @@
                         <div class="md:text-lg font-semibold">Choose Your Address</div>
                         @foreach ($addresses as $item)
                             <div wire:click='changeAddress({{ $item->id }})'
-                                class=" cursor-pointer border mt-4 p-4  {{ $item->id == $address->id ? 'border-mine-200 bg-mine-200/5' : 'border-gray-200' }} rounded-lg w-full space-y-4">
+                                class=" cursor-pointer border mt-4 p-4  {{ $item->id == ($address?->id ?? null) ? 'border-mine-200 bg-mine-200/5' : 'border-gray-200' }} rounded-lg w-full space-y-4">
                                 <div class="">
                                     <div class="text-sm md:text-md font-semibold">{{ $item->name }} /
                                         {{ $item->phone }}</div>
@@ -96,7 +96,7 @@
                         <div class="md:text-lg font-semibold">Choose Our Outlet</div>
                         @foreach ($outlets as $item)
                             <div wire:click='changeOutlet({{ $item->id }})'
-                                class=" cursor-pointer border mt-4 p-4  {{ $item->id == $outlet->id ? 'border-mine-200 bg-mine-200/5' : 'border-gray-200' }} rounded-lg w-full space-y-4">
+                                class=" cursor-pointer border mt-4 p-4  {{ $item->id == ($outlet?->id ?? null) ? 'border-mine-200 bg-mine-200/5' : 'border-gray-200' }} rounded-lg w-full space-y-4">
                                 <div class="">
                                     <div class="text-sm md:text-md font-semibold">{{ $item->name }}</div>
                                     <div class="mt-2">{{ $item->address }}</div>
@@ -124,20 +124,19 @@
                     @forelse ($carts as $key => $item)
                         <div class="grid grid-cols-6 items-center py-4 border-b border-gray-200 text-center">
                             <button class="flex items-center gap-2 col-span-2 text-left"
-                                wire:click="openShowModal('{{ $item->product->jurnal_id }}')">
+                                wire:click="openShowModal('{{ $item->product?->jurnal_id ?? '' }}')">
                                 <div class="size-20 rounded bg-center bg-cover bg-no-repeat"
                                     style="background-image: url({{ $item->image_url }})">
                                 </div>
                                 <div class="">
                                     <div class="font-semibold text-[#4B2E05] dark:text-white">
-                                        {{ $item->product->name }}</div>
+                                        {{ $item->product?->name ?? 'Product' }}</div>
                                     <div class="text-xs md:text-sm dark:text-neutral-300">
-                                        {{ $item->product->category->name }}</div>
+                                        {{ $item->product?->category?->name ?? '' }}</div>
                                 </div>
                             </button>
-
                             <div class="text-gray-800 font-medium dark:text-neutral-300">Rp.
-                                {{ number_format($item->product->price, 0, ',', '.') }}
+                                {{ number_format($item->product?->price ?? 0, 0, ',', '.') }}
                             </div>
 
                             <div class="flex items-center justify-center gap-2">
@@ -147,7 +146,7 @@
                                 </button>
                                 <input wire:model.live='qty.{{ $key }}.qty'
                                     class="w-12 text-center! border rounded-md h-7" wire:change='change'
-                                    min="{{ $item->product->moq }}" type="number"></input>
+                                    min="{{ $item->product?->moq ?? 1 }}" type="number"></input>
                                 <button wire:click='plus({{ $item->id }})' icon="plus"
                                     class="bg-[#B68B62] dark:bg-gray-600 px-1 text-white h-7 rounded-md text-sm font-bold cursor-pointer">
                                     <flux:icon icon="plus" class="w-5" />
@@ -155,7 +154,7 @@
                             </div>
 
                             <div class="flex items-center justify-center font-medium">
-                                Rp. {{ number_format($item->product->price * $item->qty, 0, ',', '.') }}
+                                Rp. {{ number_format(($item->product?->price ?? 0) * $item->qty, 0, ',', '.') }}
                             </div>
 
                             <div class="text-center">

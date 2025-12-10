@@ -160,23 +160,23 @@
                                 @php
                                     $canCancel = now()->lessThan($item->created_at->addMinutes(5));
                                 @endphp
-                                <div class="mt-4 flex justify-center">
-                                    <flux:modal.trigger name="cancelOrderModal{{ $item->id }}">
-                                        <flux:button variant="danger">
-                                            Cancel
-                                        </flux:button>
-                                    </flux:modal.trigger>
-                                </div>
-                                <flux:modal name="cancelOrderModal{{ $item->id }}">
-                                    <div class="font-semibold">Cancel Order {{ $item->transaction_number }}</div>
-                                    <div class="">Are you sure you want to cancel this order?</div>
-                                    <div class="flex justify-end">
-                                        <flux:button variant="danger"
-                                            wire:click="cancelOrder('{{ $item->slug }}')">
-                                            Confirm</flux:button>
-                                    </div>
-                                </flux:modal>
                                 @if ($canCancel)
+                                    <div class="mt-4 flex justify-center">
+                                        <flux:modal.trigger name="cancelOrderModal{{ $item->id }}">
+                                            <flux:button variant="danger">
+                                                Cancel
+                                            </flux:button>
+                                        </flux:modal.trigger>
+                                    </div>
+                                    <flux:modal name="cancelOrderModal{{ $item->id }}">
+                                        <div class="font-semibold">Cancel Order {{ $item->transaction_number }}</div>
+                                        <div class="">Are you sure you want to cancel this order?</div>
+                                        <div class="flex justify-end">
+                                            <flux:button variant="danger"
+                                                wire:click="cancelOrder('{{ $item->slug }}')">
+                                                Confirm</flux:button>
+                                        </div>
+                                    </flux:modal>
                                 @endif
                             </div>
                         @endif

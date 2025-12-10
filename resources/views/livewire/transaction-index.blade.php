@@ -19,6 +19,7 @@
                     <option value="ordered">Ordered</option>
                     <option value="paid">Paid</option>
                     <option value="need_action">Need Action</option>
+                    <option value="cancelled">Cancelled</option>
                 </flux:select>
             </div>
             <flux:button variant="primary" color="rose" wire:click="resetFilters">Reset Filters</flux:button>
@@ -125,21 +126,31 @@
                             <div class="">Rp. {{ number_format($item->total, 0, ',', '.') }}</div>
                         </div>
                     </div>
+                    <div class="">{{ $item->deleted_at }}</div>
                     @if (
-                        $item->mekari_sync_status == 'pending' &&
-                            (now()->greaterThanOrEqualTo($item->created_at->addMinutes(5)) ||
-                                $item?->payment?->mekari_sync_status == 'paid'))
-                        <div class="flex justify-center ">
+                        !$item->deleted_at &&
+                            ($item->mekari_sync_status == 'pending' &&
+                                (now()->greaterThanOrEqualTo($item->created_at->addMinutes(5)) ||
+                                    $item?->payment?->mekari_sync_status == 'paid')))
+                        <div class="flex justify-center gap-4 mt-4">
                             <flux:button wire:click='importInvoice({{ $item->id }})'>Import Invoice to Jurnal
+                            </flux:button>
+                            <flux:button wire:click='showCancelOrderModal({{ $item->id }})' variant="danger">
+                                Delete Order
                             </flux:button>
                         </div>
                     @endif
-                    @if ($item->mekari_sync_status == 'synced' && $item->payment && $item->payment->mekari_sync_status == 'pending')
+                    @if (
+                        !$item->deleted_at &&
+                            $item->mekari_sync_status == 'synced' &&
+                            $item->payment &&
+                            $item->payment->mekari_sync_status == 'pending')
                         <div class="flex justify-center ">
                             <flux:button wire:click='importPayment({{ $item->id }})'>Import Payment to Jurnal
                             </flux:button>
                         </div>
                     @endif
+
                 </div>
             @empty
                 <div class="w-full h-96 flex justify-center items-center">No transactions found.</div>
@@ -147,6 +158,20 @@
             <div class="mt-4">
                 {{ $transactions->links() }}
             </div>
+
+            <flux:modal name="cancel-order">
+                <div class="font-semibold">Cancel Order {{ $transaction_number ?? '' }}</div>
+                <div class="">Are you sure you want to cancel this order?</div>
+                <form wire:submit.prevent="cancelOrder" class="mt-4">
+                    <flux:input wire:model.live="cancellation_reason" label="Cancellation Reason" required
+                        type="text">
+                    </flux:input>
+                    <div class="flex justify-end">
+                        <flux:button type="submit" variant="danger">
+                            Confirm</flux:button>
+                    </div>
+                </form>
+            </flux:modal>
         </div>
     </flux:container-sidebar>
 </div>

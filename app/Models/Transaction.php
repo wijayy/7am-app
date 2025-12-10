@@ -152,6 +152,8 @@ class Transaction extends Model
                 })->orWhereHas('payment', function ($q) {
                     $q->where('status', 'paid')->where('mekari_sync_status', 'pending');
                 });
+            } elseif ($status == 'cancelled') {
+                return $query->onlyTrashed();
             }
             return $query->where("status",  $status);
         });
