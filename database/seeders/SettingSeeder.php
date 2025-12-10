@@ -108,6 +108,11 @@ class SettingSeeder extends Seeder
                 'value' => 'true',
                 'type' => 'text',
             ],
+            [
+                'key' => 'b2b_whatsapp_number',
+                'value' => '6281339276640',
+                'type' => 'text',
+            ],
         ];
 
         foreach ($settings as $key => $item) {

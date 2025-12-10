@@ -13,6 +13,8 @@
                         <div class="text-red-500 text-sm font-semibold">{{ session('error') }}</div>
                     @endif
 
+                    <div class="">{{ date('H:i') }}</div>
+
                     <h4 class="font-medium text-gray-800 dark:text-neutral-300 mb-2">Shipping</h4>
                     <div class="flex border border-gray-300 rounded-lg overflow-hidden mb-3">
                         <label class="flex-1">

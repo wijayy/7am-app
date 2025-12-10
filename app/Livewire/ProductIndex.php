@@ -29,8 +29,11 @@ class ProductIndex extends Component
     #[Validate('required')]
     public $name = '';
 
-    #[Validate()]
-    public $moq = 1;
+    #[Validate('required|integer')]
+    public $moq = 1, $maximum_order = 0;
+
+    #[Validate('required_unless:maximum_order, 0|nullable')]
+    public $cutoff_time = '';
 
 
     public function mount(JurnalApi $jurnalApi)
@@ -54,6 +57,8 @@ class ProductIndex extends Component
         $product = Product::find($id);
         $this->name = $product->name;
         $this->moq = $product->moq ?? 1;
+        $this->maximum_order = $product->maximum_order ?? 0;
+        $this->cutoff_time = $product->cutoff_time;
 
         $this->dispatch('modal-show', name: 'set-moq');
     }
@@ -64,6 +69,8 @@ class ProductIndex extends Component
 
         $product = Product::find($this->id);
         $product->moq = $this->moq;
+        $product->maximum_order = $this->maximum_order;
+        $product->cutoff_time = $this->cutoff_time;
         $product->save();
 
         $this->dispatch('modal-close', name: 'set-moq');

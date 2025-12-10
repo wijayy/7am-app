@@ -167,9 +167,11 @@ class Cart extends Component
         } else {
             $this->subtotal = $subtotal;
             $this->packaging_fee = 0.03 * $subtotal;
+            $this->packaging_fee = (int) $this->packaging_fee;
         }
-        $this->packaging_fee = (int) $this->packaging_fee;
         // dd($this->packaging_fee);
+
+        $this->setMinShippingDate();
     }
 
     public function minus($id)
@@ -273,20 +275,58 @@ class Cart extends Component
 
         $min = 1;
 
+        $add = 0;
+
         if (!$now->lt($now->copy()->setTime(17, 0))) {
             // sebelum jam 5 sore → minimal besok
             $min++;
         }
 
-        // Jika ada produk sourdough di cart, min++
+        // Jika ada produk yang qty-nya melebihi maximum_order dan cutoff_time
+        // sudah lewat (atau tidak disetel), tambahkan 1 hari minimum pengiriman.
         foreach ($this->carts as $item) {
-            if (stripos($item->product->name, 'sourdough') !== false) {
-                $min++;
-                break;
+            $product = $item->product;
+            $max = $product->maximum_order ?? 0;
+
+            // jika maximum_order tidak disetel atau nol => tidak ada batas
+            if (!$max || $max <= 0) {
+                continue;
             }
+
+            if ($item->qty <= $max) {
+                // masih dalam batas
+                continue;
+            }
+
+            // pada titik ini: ada produk dengan qty > maximum_order
+            // Periksa cutoff_time: jika disetel dan sekarang masih sebelum cutoff,
+            // maka maximum_order TIDAK berlaku (boleh dikirim besok).
+            $cutoff = $product->cutoff_time ?? null;
+            if ($cutoff) {
+                try {
+                    // parse cutoff time (mis. "15:00:00" atau "15:00")
+                    $cutoffToday = Carbon::parse($cutoff);
+
+                    // pastikan cutoffToday berada pada hari ini
+                    $cutoffToday->year = $now->year;
+                    $cutoffToday->month = $now->month;
+                    $cutoffToday->day = $now->day;
+                } catch (\Throwable $e) {
+                    $cutoffToday = null;
+                }
+
+                // jika ada cutoff dan sekarang masih sebelum cutoff -> lewati (maximum tidak berlaku)
+                if ($cutoffToday && $now->lt($cutoffToday)) {
+                    continue;
+                }
+            }
+
+            // tidak ada cutoff atau sekarang sudah melewati cutoff -> maximum berlaku
+            $add = 1;
+            break;
         }
 
-        $this->min = $now->copy()->addDays($min)->toDateString();
+        $this->min = $now->copy()->addDays($min + $add)->toDateString();
         $this->shipping_date = $this->min;
     }
 

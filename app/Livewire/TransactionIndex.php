@@ -164,7 +164,7 @@ class TransactionIndex extends Component
                 $body
             );
             // return response()->json($response);
-            dd($response);
+            // dd($response);
             // dd($response['sales_invoice']['transaction_no']);
 
             if (!isset($response['sales_invoice'])) {

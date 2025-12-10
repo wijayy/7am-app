@@ -94,7 +94,7 @@ class BusinessModal extends Component
             $this->resetForm();
             $this->dispatch('modal-close', name: 'business-modal');
             $this->redirect(route('business.index'));
-            dd($business);
+            // dd($business);
         } catch (\Throwable $th) {
             DB::rollBack();
             if (config('app.debug') == true) {

@@ -41,11 +41,23 @@
 
 
         <flux:modal name="set-moq">
-            <div class="mt-4">Set MOQ for {{ $name }}</div>
+            <div class="mt-4">Adjust Information for {{ $name }}</div>
             <form wire:submit='save'>
                 <div class="mt-4">
                     <flux:input wire:model.live='moq' label="Minimum Order Quantity" type="number"></flux:input>
                 </div>
+                <div class="mt-4">
+                    <flux:input wire:model.live='maximum_order'
+                        description="Set to 0 if any order quantity can be delivered the next day"
+                        label="Maximum Order for Next Day Shipping" type="number"></flux:input>
+                </div>
+                @if ($maximum_order > 0)
+                    <div class="mt-4">
+                        <flux:input wire:model.live='cutoff_time'
+                            description="Maximum time for order to be eligible for next day shipping"
+                            label="Cutoff Time" type="time"></flux:input>
+                    </div>
+                @endif
                 <div class="flex justify-center mt-4">
                     <flux:button type="submit" variant="primary">Save</flux:button>
                 </div>
