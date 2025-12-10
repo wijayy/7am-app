@@ -38,12 +38,6 @@ class Cart extends Component
 
         $this->carts();
 
-
-        $this->addresses = Auth::user()->addresses ?? collect();
-
-        // dd($this->addresses);
-        $this->address = $this->addresses->first();
-
         if ($this->carts->count() == 0) {
             return redirect(route('b2b-home'));
         }
@@ -73,9 +67,17 @@ class Cart extends Component
         }
 
         if ($this->fulfillment === 'delivery') {
+            // ensure address is selected
+            if (empty($this->address) || is_null($this->address->id)) {
+                $this->isProcessing = false;
+                session()->flash('error', 'Please select a delivery address before checkout.');
+                return;
+            }
+
             $minimumOrder = MinimumOrder::where('village_id', $this->address->village_id)->first();
-            if ($this->subtotal < $minimumOrder->minimum) {
-                Session::flash('error', 'Minimum order to ' . $minimumOrder->village->name . ' is Rp. ' . number_format($minimumOrder->minimum, 0, ',', '.'));
+            if ($minimumOrder && $this->subtotal < $minimumOrder->minimum) {
+                Session::flash('error', 'Minimum order to ' . ($minimumOrder->village->name ?? '') . ' is Rp. ' . number_format($minimumOrder->minimum, 0, ',', '.'));
+                $this->isProcessing = false;
                 return;
             }
         }
@@ -101,24 +103,33 @@ class Cart extends Component
             ]);
 
             if ($this->fulfillment === 'delivery') {
+                // At this point address should be present (guarded above), but double-check to avoid exceptions.
                 $shippingData = [
                     'user_id' => Auth::user()->id,
                     'transaction_id' => $transaction->id,
-                    'name' => $this->address->name,
+                    'name' => $this->address?->name ?? '',
                     'type' => $this->fulfillment,
-                    'phone' => $this->address->phone,
+                    'phone' => $this->address?->phone ?? '',
                     'email' => Auth::user()->email,
-                    'address' => $this->address->address,
+                    'address' => $this->address?->address ?? '',
                 ];
             } else {
+                // pickup: ensure outlet exists
+                if (empty($this->outlet) || is_null($this->outlet->id)) {
+                    $this->isProcessing = false;
+                    session()->flash('error', 'Please select an outlet before checkout.');
+                    DB::rollBack();
+                    return;
+                }
+
                 $shippingData = [
                     'user_id' => Auth::user()->id,
                     'transaction_id' => $transaction->id,
                     'type' => $this->fulfillment,
-                    'name' => Auth::user()->bussinesses->name,
+                    'name' => Auth::user()->bussinesses?->name ?? Auth::user()->name ?? '',
                     'phone' => Auth::user()->phone,
                     'email' => Auth::user()->email,
-                    'address' => $this->outlet->name,
+                    'address' => $this->outlet?->name ?? '',
                 ];
             }
 
