@@ -19,7 +19,7 @@ class BusinessModal extends Component
     public $status = '';
 
     #[Validate('required_if:status,approved')]
-    public $name = '', $set_category_id = '', $tenor = 0;
+    public $name = '', $set_category_id = '', $tenor = 0, $minimum_order = 0;
 
     protected $listeners = [
         'openCreateBusinessModal' => 'openCreateBusinessModal',
@@ -58,7 +58,8 @@ class BusinessModal extends Component
         $this->status = $this->business->status == 'requested' ? 'approved' : $this->business->status;
         // cast to int so the bound value type matches the option values
         $this->set_category_id = $this->business->set_category_id !== null ? (int) $this->business->set_category_id : '';
-        $this->tenor = $this->business->tenor ?? '';
+        $this->tenor = $this->business->tenor ?? 0;
+        $this->minimum_order = $this->business->minimum_order ?? 0;
 
         // force a component refresh so the select picks up the loaded options
         $this->dispatch('$refresh');

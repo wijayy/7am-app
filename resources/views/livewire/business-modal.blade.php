@@ -42,8 +42,6 @@
             @endforeach
         </flux:select>
 
-        <div class="">{{ $set_category_id }}</div>
-
         <flux:separator text="Bank Info"></flux:separator>
         <div class="flex gap-4 text-start">
             <div class="w-1/3">Bank</div>
@@ -71,7 +69,6 @@
                 {{ $business?->phone }}</a>
         </div>
 
-
         <flux:separator text="Tenor">
         </flux:separator>
         <div class="space-y-4">
@@ -81,6 +78,7 @@
                 <flux:select.option value="14">14 Days</flux:select.option>
                 <flux:select.option value="30">30 Days</flux:select.option>
             </flux:select>
+            <flux:input label="Minimum Order (Rp)" type="number" wire:model.live='minimum_order' />
         </div>
 
         <div class="flex justify-center flex-wrap gap-4">

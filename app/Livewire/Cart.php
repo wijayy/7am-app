@@ -74,11 +74,26 @@ class Cart extends Component
                 return;
             }
 
-            $minimumOrder = MinimumOrder::where('village_id', $this->address->village_id)->first();
-            if ($minimumOrder && $this->subtotal < $minimumOrder->minimum) {
-                Session::flash('error', 'Minimum order to ' . ($minimumOrder->village->name ?? '') . ' is Rp. ' . number_format($minimumOrder->minimum, 0, ',', '.'));
-                $this->isProcessing = false;
-                return;
+            if (Auth::user()->bussinesses->minimum_order > 0) {
+                if (Setting::where('use_tax_inclusive')->value('value') === 'true') {
+                    $subtotal = $this->subtotal;
+                } else {
+                    $subtotal = $this->subtotal + $this->packaging_fee;
+                }
+
+                if ($subtotal < Auth::user()->bussinesses->minimum_order) {
+                    Session::flash('error', 'Minimum order for your business is Rp. ' . number_format(Auth::user()->bussinesses->minimum_order, 0, ',', '.'));
+                    $this->isProcessing = false;
+                    return;
+                }
+            } else {
+                $minimumOrder = MinimumOrder::where('village_id', $this->address->village_id)->first();
+
+                if ($minimumOrder && $this->subtotal < $minimumOrder->minimum) {
+                    Session::flash('error', 'Minimum order to ' . ($minimumOrder->village->name ?? '') . ' is Rp. ' . number_format($minimumOrder->minimum, 0, ',', '.'));
+                    $this->isProcessing = false;
+                    return;
+                }
             }
         }
 
