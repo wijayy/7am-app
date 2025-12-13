@@ -49,7 +49,7 @@ class Cart extends Component
         $this->outlet = $this->outlets->first();
 
         $this->setMinShippingDate();
-                $this->shipping_date = $this->min;
+        $this->shipping_date = $this->min;
     }
 
     public function checkout()
@@ -66,6 +66,8 @@ class Cart extends Component
             $this->isProcessing = false;
             return;
         }
+
+        $this->setMinShippingDate();
 
         // Validasi shipping date: pastikan tidak kurang dari minimal tanggal pengiriman
         if (empty($this->shipping_date)) {
@@ -87,12 +89,6 @@ class Cart extends Component
             session()->flash('error', 'Shipping date must be on or after ' . $minDate->toDateString() . '. Please adjust shipping date.');
             $this->isProcessing = false;
             return;
-        }
-
-        $this->setMinShippingDate()
-
-        if() {
-
         }
 
         if ($this->fulfillment === 'delivery') {
