@@ -49,6 +49,7 @@ class Cart extends Component
         $this->outlet = $this->outlets->first();
 
         $this->setMinShippingDate();
+                $this->shipping_date = $this->min;
     }
 
     public function checkout()
@@ -64,6 +65,34 @@ class Cart extends Component
         if ($this->checkPayment()) {
             $this->isProcessing = false;
             return;
+        }
+
+        // Validasi shipping date: pastikan tidak kurang dari minimal tanggal pengiriman
+        if (empty($this->shipping_date)) {
+            session()->flash('error', 'Please choose a shipping date.');
+            $this->isProcessing = false;
+            return;
+        }
+
+        try {
+            $minDate = Carbon::parse($this->min)->startOfDay();
+            $shipDate = Carbon::parse($this->shipping_date)->startOfDay();
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Invalid shipping date format.');
+            $this->isProcessing = false;
+            return;
+        }
+
+        if ($shipDate->lt($minDate)) {
+            session()->flash('error', 'Shipping date must be on or after ' . $minDate->toDateString() . '. Please adjust shipping date.');
+            $this->isProcessing = false;
+            return;
+        }
+
+        $this->setMinShippingDate()
+
+        if() {
+
         }
 
         if ($this->fulfillment === 'delivery') {
@@ -395,7 +424,6 @@ class Cart extends Component
         }
 
         $this->min = $now->copy()->addDays($min + $add)->toDateString();
-        $this->shipping_date = $this->min;
     }
 
     public function openShowModal($jurnal_id)
