@@ -16,6 +16,9 @@
                 </flux:input>
                 <flux:input wire:model.live='end_time' type="time" label="End Working Hour" required></flux:input>
             </div>
+            <div class="">
+                <flux:input wire:model.live='description' label="Description" required></flux:input>
+            </div>
 
             <flux:separator text="Outlet Section">
             </flux:separator>
