@@ -14,21 +14,21 @@ class OutletSeeder extends Seeder
     public function run(): void
     {
         $outlets = [
-            [
-                'name' => "7AM Bakers | 7PM Dinners Ubud",
-                'image' => "outlets/ubud.jpg",
+            // [
+            //     'name' => "7AM Bakers | 7PM Dinners Ubud",
+            //     'image' => "outlets/ubud.jpg",
 
-            ],
-            [
-                'name' => "7AM Bakers | 7PM Dinners Pererenan",
-                'image' => "outlets/pererenan.jpg",
+            // ],
+            // [
+            //     'name' => "7AM Bakers | 7PM Dinners Pererenan",
+            //     'image' => "outlets/pererenan.jpg",
 
-            ],
-            [
-                'name' => "7AM Bakers Umalas",
-                'image' => "outlets/umalas.jpg",
+            // ],
+            // [
+            //     'name' => "7AM Bakers Umalas",
+            //     'image' => "outlets/umalas.jpg",
 
-            ],
+            // ],
             [
                 'name' => "7AM Bakers Grand Indonesia",
                 'image' => "outlets/grand_indonesia.jpg",
