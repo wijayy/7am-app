@@ -23,7 +23,7 @@ class B2bHome extends Component
             $setCategory = Setting::where('key', 'default_set_category')->value('value');
             // dd(false, $this->categories, $defaultSetCategory);
         }
-        dd($setCategory);
+        // dd($setCategory);
         $this->products = Product::latest()->filters(['set_category' => $setCategory])->take(12)->get();
     }
 
