@@ -16,7 +16,7 @@ return new class extends Migration {
         Schema::create('shippings', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained();
-            $table->foreignIdFor(Transaction::class)->constrained();
+            $table->foreignIdFor(Transaction::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->enum('type', ['delivery', 'pickup']);
             $table->text('address');
             $table->string('name');

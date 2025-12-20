@@ -105,9 +105,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RedeemPointSeeder::class);
 
-        // $this->call(CategorySeeder::class);
-        // $this->call(SetCategorySeeder::class);
-        // $this->call(ProductSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(SetCategorySeeder::class);
+        $this->call(ProductSeeder::class);
 
         // Cart::factory(3)->recycle([$user, Product::all()])->create();
 
@@ -116,6 +116,6 @@ class DatabaseSeeder extends Seeder
         //     'set_category_id' => 1
         // ]);
 
-        // $this->call(TransactionSeeder::class);
+        $this->call(TransactionSeeder::class);
     }
 }

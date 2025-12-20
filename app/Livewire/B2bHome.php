@@ -17,12 +17,13 @@ class B2bHome extends Component
         // Jika user login, punya relasi bussinesses, dan relasi setCategory pada salah satu bussinesses
         if ($user && $user->bussinesses && $user->bussinesses->setCategory) {
             // Jika user punya bisnis dan bisnis itu punya setCategory
-            $setCategory = $user->bussinesses->setCategory;
+            $setCategory = $user->bussinesses->setCategory->id;
         } else {
             // Jika tidak, gunakan set category default dari setting
             $setCategory = Setting::where('key', 'default_set_category')->value('value');
             // dd(false, $this->categories, $defaultSetCategory);
         }
+        dd($setCategory);
         $this->products = Product::latest()->filters(['set_category' => $setCategory])->take(12)->get();
     }
 

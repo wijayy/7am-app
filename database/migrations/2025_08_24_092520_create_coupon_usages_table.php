@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('coupon_usages', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Coupon::class)->constrained();
-            $table->foreignIdFor(Transaction::class)->constrained();
+            $table->foreignIdFor(Transaction::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

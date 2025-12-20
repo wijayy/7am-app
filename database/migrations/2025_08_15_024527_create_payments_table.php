@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Transaction::class)->constrained();
+            $table->foreignIdFor(Transaction::class)->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->enum('payment_status', ['unpaid', 'partial', 'paid']);
             $table->integer('amount')->default(0);
             $table->string('payment_type');

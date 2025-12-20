@@ -49,7 +49,7 @@ class TransactionSeeder extends Seeder
                 'email' => $user->email,
             ]);
 
-            dd($transaction->items);
+            // dd($transaction->items);
             $total = $transaction->items->sum('subtotal');
 
             $transaction->update(['total' => $total, 'packaging_fee' => $total * 0.03]);

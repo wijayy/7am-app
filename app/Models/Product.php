@@ -143,7 +143,7 @@ class Product extends Model
             // dd($activeCategoryJurnalIds);
 
             self::whereNotIn('category_id', $activeCategoryJurnalIds)->delete();
-
+            // dd($products);
             // 4. Update atau buat produk baru dari data Jurnal
             foreach ($products as $key => $item) {
                 // Dapatkan Jurnal ID kategori dari produk ini

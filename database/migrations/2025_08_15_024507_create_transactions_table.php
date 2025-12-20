@@ -26,7 +26,7 @@ return new class extends Migration {
             $table->date('shipping_date');
             $table->dateTime('due_date')->default(now()->addDays(1));
             $table->foreignIdFor(Coupon::class)->nullable()->constrained();
-            $table->enum('status', ['ordered', 'paid', 'checkout'])->default('ordered');
+            $table->enum('status', ['ordered', 'paid', 'checkout', 'canceled'])->default('ordered');
             $table->text('note')->nullable();
             $table->timestamps();
         });

@@ -91,13 +91,11 @@ Route::prefix('b2b')->middleware(['auth', 'verified', 'admin'])->group(function 
     Volt::route('newsletters', 'newsletter-index')->name('newsletter.index');
     Volt::route('newsletters/add', 'newsletter-create')->name('newsletter.create');
     Volt::route('newsletters/{slug}/edit', 'newsletter-create')->name('newsletter.edit');
-
-    route::get('/jurnal/test', [ApiTestController::class, 'index'])->name('jurnal.tests');
 });
 
 Volt::route('outlets/{slug}', 'outlet-show')->name('outlet-show');
 
 Route::get('/test-email', [App\Http\Controllers\MailController::class, 'sendTestEmail']);
-
+route::get('/jurnal/test', [ApiTestController::class, 'index'])->name('jurnal.tests');
 
 require __DIR__ . '/auth.php';
