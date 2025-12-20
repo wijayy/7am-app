@@ -100,7 +100,7 @@ class Cart extends Component
             }
 
             if (Auth::user()->bussinesses->minimum_order > 0) {
-                if (Setting::where('use_tax_inclusive')->value('value') === 'true') {
+                if (Setting::where('key', 'use_tax_inclusive')->value('value') === 'true') {
                     $subtotal = $this->subtotal;
                 } else {
                     $subtotal = $this->subtotal + $this->packaging_fee;
