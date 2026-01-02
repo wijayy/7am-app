@@ -11,6 +11,7 @@ use App\Services\JurnalApi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -291,6 +292,18 @@ class TransactionIndex extends Component
             if (config('app.debug', false)) throw $th;
             session()->flash('error', $th->getMessage());
         }
+    }
+
+    #[On('update-transaction')]
+    public function updateTransaction()
+    {
+        $this->render();
+    }
+
+    public function payTransaction($id)
+    {
+        // dd($id);
+        $this->dispatch('pay-modal', id: $id);
     }
 
     public function render()

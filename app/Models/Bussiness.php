@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Bussiness extends Model
 {
@@ -20,5 +22,15 @@ class Bussiness extends Model
     public function setCategory()
     {
         return $this->belongsTo(SetCategory::class);
+    }
+
+    public function scopeFilters(Builder $query, array $filters)
+    {
+        $query->when($filters["search"] ?? false, function ($query, $search) {
+            return $query->where("name", "like", "%{$search}%");
+        });
+        $query->when($filters["status"] ?? false, function ($query, $search) {
+            return $query->where("status", $search);
+        });
     }
 }

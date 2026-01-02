@@ -61,7 +61,10 @@ class Product extends Model
     public function scopeFilters(Builder $query, array $filters)
     {
         $query->when($filters["search"] ?? false, function ($query, $search) {
-            return $query->where("name", "like", "%$search%")->orwhere("product_code", "like", "%$search%");
+            return $query->where(function ($q) use ($search) {
+                $q->where("name", "like", "%{$search}%")
+                    ->orWhere("product_code", "like", "%{$search}%");
+            });
         });
 
         $query->when($filters["min"] ?? false, function ($query, $search) {
@@ -78,7 +81,7 @@ class Product extends Model
             });
         });
 
-        $query->when($filters["set_category"] ?? false, function ($query, $setCategoryId) {
+        $query->when($filters["set_category"] ?? null, function ($query, $setCategoryId) {
             return $query->whereHas('category', function ($q) use ($setCategoryId) {
                 $q->whereHas('setCategories', function ($sq) use ($setCategoryId) {
                     $sq->where('set_categories.id', $setCategoryId);

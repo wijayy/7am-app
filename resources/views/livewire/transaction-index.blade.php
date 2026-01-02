@@ -1,5 +1,16 @@
 <div class="space-y-4">
-    <flux:session>Transactions</flux:session>
+    <div class="py-2 px-4 w-full bg-white h-fit rounded dark:bg-gray-700">
+        <div class="font-semibold md:text-lg">Transaction</div>
+        <div class="">
+            @if (session()->has('success'))
+                <div class="text-green-400 text-sm">{{ session('success') }}</div>
+            @endif
+            @if (session()->has('error'))
+                <div class="text-rose-400 text-sm">{{ session('error') }}</div>
+            @endif
+        </div>
+        {{-- <div class="text-rose-400 text-sm">{{ session('error') }}</div> --}}
+    </div>
 
     <flux:container-sidebar>
         <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-8 gap-4 items-end ">
@@ -127,29 +138,37 @@
                         </div>
                     </div>
                     <div class="">{{ $item->deleted_at }}</div>
-                    @if (
-                        !$item->deleted_at &&
-                            ($item->mekari_sync_status == 'pending' &&
-                                (now()->greaterThanOrEqualTo($item->created_at->addMinutes(5)) ||
-                                    $item?->payment?->mekari_sync_status == 'paid')))
-                        <div class="flex justify-center gap-4 mt-4">
+                    <div class="flex justify-center gap-4 mt-4">
+
+                        @if (
+                            !$item->deleted_at &&
+                                ($item->mekari_sync_status == 'pending' &&
+                                    (now()->greaterThanOrEqualTo($item->created_at->addMinutes(5)) ||
+                                        $item?->payment?->mekari_sync_status == 'paid')))
                             <flux:button wire:click='importInvoice({{ $item->id }})'>Import Invoice to Jurnal
                             </flux:button>
+                        @endif
+                        @if (!$item->deleted_at && $item->mekari_sync_status == 'pending' && $item->payment == null)
                             <flux:button wire:click='showCancelOrderModal({{ $item->id }})' variant="danger">
                                 Delete Order
                             </flux:button>
-                        </div>
-                    @endif
-                    @if (
-                        !$item->deleted_at &&
-                            $item->mekari_sync_status == 'synced' &&
-                            $item->payment &&
-                            $item->payment->mekari_sync_status == 'pending')
-                        <div class="flex justify-center ">
+                        @endif
+                        @if (
+                            !$item->deleted_at &&
+                                $item->mekari_sync_status == 'synced' &&
+                                $item->payment &&
+                                $item->payment->mekari_sync_status == 'pending')
                             <flux:button wire:click='importPayment({{ $item->id }})'>Import Payment to Jurnal
                             </flux:button>
-                        </div>
-                    @endif
+                        @endif
+
+                        {{-- <div class="">{{ $item->payment ?? 'null' }}</div> --}}
+
+                        @if (!$item->payment)
+                            <flux:button wire:click="payTransaction({{ $item->id }})" variant="primary">
+                                Pay Transaction</flux:button>
+                        @endif
+                    </div>
 
                 </div>
             @empty
@@ -174,4 +193,6 @@
             </flux:modal>
         </div>
     </flux:container-sidebar>
+
+    @livewire('transaction-pay')
 </div>

@@ -19,12 +19,14 @@ use App\Models\TransactionItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Minimum;
-use Session;
+
+use function Pest\Laravel\session;
 
 class Cart extends Component
 {
-    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $addresses, $address, $outlet, $outlets, $min, $shipping_date, $packaging_fee;
+    public $carts, $qty, $subtotal, $coupon, $cpn = false, $c, $message, $addresses, $address, $outlet, $note, $outlets, $min, $shipping_date, $packaging_fee;
     public $fulfillment = 'delivery';
 
     public $isProcessing = false;
@@ -54,10 +56,12 @@ class Cart extends Component
 
     public function checkout()
     {
+        $this->dispatch('modal-close', name: 'checkoutModal');
+
         $this->carts();
 
         if (is_null(Auth::user()->bussinesses) || Auth::user()->bussinesses?->status != 'approved') {
-            $this->dispatch('error');
+            Session::flash('error', 'Your business is not approved yet. Please contact admin.');
             return;
         }
         // jika ada transaksi yang sudah melewati due_date (overdue) untuk user
@@ -67,11 +71,13 @@ class Cart extends Component
             return;
         }
 
+        // return;
+
         $this->setMinShippingDate();
 
         // Validasi shipping date: pastikan tidak kurang dari minimal tanggal pengiriman
         if (empty($this->shipping_date)) {
-            session()->flash('error', 'Please choose a shipping date.');
+            Session::flash('error', 'Please choose a shipping date.');
             $this->isProcessing = false;
             return;
         }
@@ -80,13 +86,13 @@ class Cart extends Component
             $minDate = Carbon::parse($this->min)->startOfDay();
             $shipDate = Carbon::parse($this->shipping_date)->startOfDay();
         } catch (\Throwable $e) {
-            session()->flash('error', 'Invalid shipping date format.');
+            Session::flash('error', 'Invalid shipping date format.');
             $this->isProcessing = false;
             return;
         }
 
         if ($shipDate->lt($minDate)) {
-            session()->flash('error', 'Shipping date must be on or after ' . $minDate->toDateString() . '. Please adjust shipping date.');
+            Session::flash('error', 'Shipping date must be on or after ' . $minDate->toDateString() . '. Please adjust shipping date.');
             $this->isProcessing = false;
             return;
         }
@@ -95,7 +101,7 @@ class Cart extends Component
             // ensure address is selected
             if (empty($this->address) || is_null($this->address->id)) {
                 $this->isProcessing = false;
-                session()->flash('error', 'Please select a delivery address before checkout.');
+                Session::flash('error', 'Please select a delivery address before checkout.');
                 return;
             }
 
@@ -139,7 +145,10 @@ class Cart extends Component
                 'shipping_date' => $this->shipping_date,
                 'due_date' => Carbon::now()->addDays(Auth::user()->bussinesses->tenor)->setTime(19, 0)->toDateTimeString(),
                 'user_id' => Auth::user()->id,
-                'status' => 'ordered'
+                'status' => 'ordered',
+                'note' => $this->note ?? null,
+                'coupon_id' => $this->c->id ?? null,
+
             ]);
 
             if ($this->fulfillment === 'delivery') {
@@ -157,7 +166,7 @@ class Cart extends Component
                 // pickup: ensure outlet exists
                 if (empty($this->outlet) || is_null($this->outlet->id)) {
                     $this->isProcessing = false;
-                    session()->flash('error', 'Please select an outlet before checkout.');
+                    Session::flash('error', 'Please select an outlet before checkout.');
                     DB::rollBack();
                     return;
                 }
@@ -200,9 +209,12 @@ class Cart extends Component
             $this->redirect(route('checkout', ['slug' => $transaction->slug]));
         } catch (\Throwable $th) {
             DB::rollBack();
+            $this->dispatch('modal-close', name: 'checkoutModal');
+            return;
+
             if (config('app.debug', false))
                 throw $th;
-            session()->flash('error', $th->getMessage());
+            Session::flash('error', $th->getMessage());
         }
     }
 
@@ -230,7 +242,7 @@ class Cart extends Component
             ->exists();
 
         if ($overdueExists) {
-            session()->flash('error', 'You have overdue transactions. Please settle outstanding invoices before checkout.');
+            Session::flash('error', 'You have overdue transactions. Please settle outstanding invoices before checkout.');
             // juga bisa dispatch event untuk UI
             $this->dispatch('error', ['message' => 'overdue']);
             return true;
@@ -272,7 +284,7 @@ class Cart extends Component
         $cart = ModelsCart::where('id', $id)->first();
         if ($cart->qty <= $cart->product->moq) {
             $cart->update(['qty' => $cart->product->moq]);
-            session()->flash('info', "{$cart->product->name} has MOQ on {$cart->product->moq} pcs");
+            Session::flash('info', "{$cart->product->name} has MOQ on {$cart->product->moq} pcs");
         } else {
             $cart->decrement('qty');
         }
@@ -291,7 +303,7 @@ class Cart extends Component
             $cart = ModelsCart::where('id', $item['id'])->first();
             if ($item['qty'] <= $cart->product->moq) {
                 $cart->update(['qty' => $cart->product->moq]);
-                session()->flash('info', "{$cart->product->name} has MOQ on {$cart->product->moq} pcs");
+                Session::flash('info', "{$cart->product->name} has MOQ on {$cart->product->moq} pcs");
             } else {
                 $cart->update(['qty' => $item['qty']]);
             }
@@ -313,7 +325,7 @@ class Cart extends Component
             if (config('app.debug') == true) {
                 throw $th;
             } else {
-                session()->flash('error', $th->getMessage());
+                Session::flash('error', $th->getMessage());
             }
         }
     }

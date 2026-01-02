@@ -13,7 +13,25 @@
     @endif
 
     <flux:container-sidebar>
-        <div class="space-y-2">
+        <div class="flex gap-4">
+            <div class="w-3/5">
+                <flux:input wire:model.live='search' placeholder="Search a business ....">
+                </flux:input>
+            </div>
+            <div class="w-1/5">
+                <flux:select wire:model.live='sts'>
+                    <flux:select.option value=''>All Status
+                    </flux:select.option>
+                    <flux:select.option value='pending'>Requested</flux:select.option>
+                    <flux:select.option value='accepted'>Accepted</flux:select.option>
+                    <flux:select.option value='rejected'>Rejected</flux:select.option>
+                </flux:select>
+            </div>
+            <div class="w-1/4">
+                <flux:button class="w-full!" wire:click='resetFilter' variant="danger">Reset</flux:button>
+            </div>
+        </div>
+        <div class="space-y-2 mt-4">
             <div class="flex gap-4 py-2">
                 <div class="w-10">#</div>
                 <div class="w-1/6">Business Name</div>
@@ -119,9 +137,6 @@
                     </div>
                 </div>
             </flux:modal>
-        </div>
-        <div class="mt-4">
-            {{ $businesses->links() }}
         </div>
     </flux:container-sidebar>
 

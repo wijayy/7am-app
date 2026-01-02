@@ -57,7 +57,7 @@
             <flux:navbar>
                 <flux:tooltip :content="__('Cart')" position="bottom">
                     <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="shopping-cart" href="{{ route('cart') }}"
-                        :label="__('Cart')" />
+                        :current="request()->routeIs('cart')" :label="__('Cart')" />
                 </flux:tooltip>
             </flux:navbar>
 
