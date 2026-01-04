@@ -28,7 +28,7 @@ class ShopIndex extends Component
         // Jika user login, punya relasi bussinesses, dan relasi setCategory pada salah satu bussinesses
         if ($user && $user->bussinesses && $user->bussinesses->setCategory) {
             // Jika user punya bisnis dan bisnis itu punya setCategory
-            $this->categories = $user->bussinesses->setCategory->categories ?? collect();
+            $this->categories = $user->bussinesses?->setCategory?->categories ?? collect();
 
             // dd(true, $this->categories);
         } else {
@@ -64,12 +64,22 @@ class ShopIndex extends Component
 
     public function render()
     {
+        // Ambil set_category terbaru langsung dari DB (menghindari relasi Auth yang stale)
+        $setCategoryId = null;
+        if (Auth::check()) {
+            $setCategoryId = \App\Models\Bussiness::where('user_id', Auth::id())->value('set_category_id');
+        }
+        $setCategoryId = $setCategoryId ?? Setting::where('key', 'default_set_category')->value('value');
+
+        // Perbarui daftar kategori berdasarkan set_category yang aktif
+        $this->categories = SetCategory::find($setCategoryId)?->categories ?? collect();
+
         $products = Product::filters([
             'search' => $this->search,
             'category' => $this->category,
             'min' => $this->min,
             'max' => $this->max,
-            'set_category' => Auth::user()?->bussinesses?->setCategory->id ?? Setting::where('key', 'default_set_category')->value('value')
+            'set_category' => $setCategoryId
         ])->paginate(24)->withQueryString();
 
         return view('livewire.shop-index', compact('products'))->layout('components.layouts.app.header', ['title' => "Shop"]);
