@@ -34,6 +34,6 @@ class B2bHome extends Component
 
     public function render()
     {
-        return view('livewire.b2b-home')->layout('components.layouts.app.header', ['title' => "Home"]);
+    return view('livewire.b2b-home')->layout('components.layouts.app.header', ['title' => "Home"]);
     }
 }

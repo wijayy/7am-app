@@ -9,9 +9,9 @@
         </div>
 
         <div class="overflow-x-auto mt-4 rounded-lg">
-            <div class="w-full mx-auto border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
+            <div class="w-full mx-auto border border-gray-200 dark:border-gray-800 rounded-lg min-w-2xl overflow-x-auto">
                 <div
-                    class="hidden md:grid grid-cols-5 bg-gray-100 dark:bg-gray-800/60 text-sm font-semibold text-gray-700 dark:text-gray-300 px-4 py-2">
+                    class=" grid grid-cols-5 bg-gray-100 dark:bg-gray-800/60 text-sm font-semibold text-gray-700 dark:text-gray-300 px-4 py-2">
                     <div>#</div>
                     <div>Name</div>
                     <div class="text-center">Minimum Point</div>
@@ -22,7 +22,7 @@
                 <div class="divide-y divide-gray-100 dark:divide-neutral-700">
                     @forelse ($types as $item)
                         <div
-                            class="grid md:grid-cols-5 items-center hover:bg-gray-50 dark:hover:bg-neutral-700/40 px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
+                            class="grid grid-cols-5 items-center hover:bg-gray-50 dark:hover:bg-neutral-700/40 px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
                             <div class="font-medium">{{ $loop->iteration }}</div>
 
                             <div class="text-gray-800 dark:text-gray-200">{{ $item->name }}</div>

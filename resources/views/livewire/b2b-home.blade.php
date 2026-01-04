@@ -3,7 +3,7 @@
         style="background-image: url({{ asset('assets/b2b/landing/banner.png') }}); background-position: 50% 45%;">
         <flux:container class="flex h-full items-center justify-start">
             <div
-                class="w-5/12 h-fit bg-white dark:bg-gray-700 rounded-lg p-10 backdrop-blur-xs flex flex-col justify-center space-y-4">
+                class="md:w-5/12 w-9/12 h-fit bg-white dark:bg-gray-700 rounded-lg p-10 backdrop-blur-xs flex flex-col justify-center space-y-4">
                 <div class="text-xl md:text-3xl text-black dark:text-white font-semibold md:leading-[1.4]">Empower Your
                     Business Purchasing</div>
                 <div class="text-sm md:text-lg text-neutral-800 dark:text-neutral-300">
@@ -19,13 +19,13 @@
     </div>
     @livewire('feature')
 
-    <flux:container class="mt-[180px] bg-white dark:bg-gray-700 p-8 rounded-lg shadow-lg mb-16">
+    <flux:container class="mt-4 md:mt-[180px] bg-white dark:bg-gray-700 p-8 rounded-lg shadow-lg mb-16">
         <div class="text-xl text-center md:text-2xl lg:text-4xl font-semibold md:leading-loose">Explore Our Product
             Range</div>
         <div class="text-sm dark:text-neutral-300 text-center md:text-lg">Browse through our complete catalog of
             business-ready products
             designed to support your company’s needs.</div>
-        <div class="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 items-start">
+        <div class="grid grid-cols-2 gap-4 mt-4 sm:grid-cols-2 md:grid-cols-3 items-start">
             @foreach ($products as $item)
                 <button wire:click="openShowModal('{{ $item->jurnal_id }}')" class="text-center mx-1 my-4">
                     <img src="{{ $item->image_url }}" alt="{{ $item->name }}"

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Product;
 use App\Services\JurnalApi;
 use App\Models\Category;
+use App\Models\SetCategory;
 use App\Services\JurnalApiResponse;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Url;
@@ -13,12 +14,18 @@ use Livewire\Component;
 
 class ProductIndex extends Component
 {
-    public $title = 'All Product', $id;
+    public $title = 'All Product', $id, $categories, $set_categories;
 
     protected $jurnalApi;
 
     #[Url(except: '')]
     public $search = '';
+
+    #[Url(except: '')]
+    public $category = '';
+
+    #[Url(except: '')]
+    public $set_category = '';
 
     #[Url(except: 1)]
     public $page = 1;
@@ -35,10 +42,12 @@ class ProductIndex extends Component
     #[Validate('required_unless:maximum_order, 0|nullable')]
     public $cutoff_time = '';
 
-
     public function mount(JurnalApi $jurnalApi)
     {
         $this->jurnalApi = $jurnalApi;
+
+        $this->categories = Category::all();
+        $this->set_categories = SetCategory::all();
     }
 
     public function updatedSearch()
@@ -79,7 +88,9 @@ class ProductIndex extends Component
 
     public function render()
     {
-        $products = Product::filters(['search' => $this->search])->paginate($this->per_page)->withQueryString();
+
+        $this->categories = $this->set_category == "" ? Category::all() : SetCategory::find($this->set_category)->categories;
+        $products = Product::filters(['search' => $this->search, 'category' => $this->category, 'set_category' => $this->set_category])->paginate($this->per_page)->withQueryString();
 
         // dd($products);
 

@@ -1,5 +1,5 @@
 <div>
-    <flux:container class="mt-30 min-h-[55vh] bg-white dark:bg-gray-700 py-4 px-4 md:px-8 lg:px-16 rounded-xl shadow-md">
+    <flux:container class="mt-4 min-h-[55vh] bg-white dark:bg-gray-700 py-4 px-4 md:px-8 lg:px-16 rounded-xl shadow-md">
 
         <div class="text-xl text-center md:text-2xl font-semibold md:leading-loose">Order History</div>
         <div class="text-sm text-center md:text-lg">Review your past orders and track their details.</div>
@@ -10,9 +10,9 @@
                     <div class="">
                         <div class="sr-only">Shipping Information</div>
                         <div class=" p-4 rounded-xl border border-gray-200">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-sm md:text-base">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 ">
                                 {{-- 🟢 Kolom kiri: informasi penerima --}}
-                                <div class="space-y-2 dark:text-neutral-300">
+                                <div class="space-y-2 dark:text-neutral-300 text-sm md:text-base">
                                     <div class="flex">
                                         <div class="w-24 font-semibold">Nama</div>
                                         <div class="flex-1">: {{ $item->shipping->name }}</div>
@@ -28,7 +28,11 @@
                                 </div>
 
                                 {{-- 🟣 Kolom kanan: detail pengiriman --}}
-                                <div class="space-y-2 md:pl-6 dark:text-neutral-300">
+                                <div class="space-y-2 md:pl-6 dark:text-neutral-300 text-xs md:text-sm">
+                                    <div class="flex">
+                                        <div class="w-32 font-semibold">Order Date</div>
+                                        <div class="flex-1">: {{ $item->created_at->format('Y-m-d') }}</div>
+                                    </div>
                                     <div class="flex">
                                         <div class="w-32 font-semibold">Shipping Date</div>
                                         <div class="flex-1">: {{ $item->shipping_date->format('Y-m-d') }}</div>
@@ -46,18 +50,19 @@
                     <div class="grid grid-cols-1 gap-4">
                         <!-- Header -->
                         <div
-                            class="grid grid-cols-6 font-semibold text-gray-800 border-b border-gray-300 py-3 text-center dark:text-white">
+                            class="grid grid-cols-3 font-semibold text-gray-800 border-b border-gray-300 py-3 text-center dark:text-white">
                             <div class="col-span-2 text-left pl-4">Order</div>
-                            <div>Price</div>
-                            <div>Qty</div>
-                            <div>Total</div>
-                            <div></div>
+                            <div class="md:grid md:grid-cols-3 hidden">
+                                <div>Price</div>
+                                <div>Qty</div>
+                                <div>Total</div>
+                            </div>
                         </div>
 
                         <!-- Item Rows -->
                         @foreach ($item->items as $key => $itm)
                             {{-- @dd($itm) --}}
-                            <div class="grid grid-cols-6 items-center py-4 px-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150 border-b border-gray-100 last:border-0"
+                            <div class="grid grid-cols-3 items-center py-4 px-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150 border-b border-gray-100 last:border-0"
                                 x-show="open||{{ $key }} == 0" x-cloak
                                 x-transition:enter="transition ease-out duration-300"
                                 x-transition:enter-start="opacity-0 scale-95"
@@ -78,19 +83,21 @@
                                     </div>
                                 </div>
 
-                                <!-- Price -->
-                                <div class="text-center text-gray-700 dark:text-neutral-300">
-                                    Rp {{ number_format($itm->price, 0, ',', '.') }}
-                                </div>
+                                <div class="text-sm md:text-base">
+                                    <!-- Price -->
+                                    <div class="text-center text-gray-700 dark:text-neutral-300">
+                                        Rp {{ number_format($itm->price, 0, ',', '.') }}
+                                    </div>
 
-                                <!-- Qty -->
-                                <div class="text-center text-gray-700 dark:text-neutral-300">
-                                    {{ $itm->qty }} pcs
-                                </div>
+                                    <!-- Qty -->
+                                    <div class="text-center text-gray-700 dark:text-neutral-300">
+                                        {{ $itm->qty }} pcs
+                                    </div>
 
-                                <!-- Total -->
-                                <div class="text-center font-semibold text-[#4B2E05] dark:text-neutral-300">
-                                    Rp {{ number_format($itm->subtotal, 0, ',', '.') }}
+                                    <!-- Total -->
+                                    <div class="text-center font-semibold text-[#4B2E05] dark:text-neutral-300">
+                                        Rp {{ number_format($itm->subtotal, 0, ',', '.') }}
+                                    </div>
                                 </div>
                             </div>
                         @endforeach

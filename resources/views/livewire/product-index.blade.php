@@ -4,8 +4,21 @@
     <flux:container-sidebar>
         <div class="flex justify-between gap-4 ">
             <flux:input wire:model.live='search' placeholder='Search a Product' size='sm'></flux:input>
+            <flux:select wire:model.live='set_category' size="sm" placeholder="Set Category" class="w-48">
+                <option value="">All Set Categories</option>
+                @foreach ($set_categories as $set_category)
+                    <option value="{{ $set_category->id }}">{{ $set_category->name }}</option>
+                @endforeach
+            </flux:select>
+            <flux:select wire:model.live='category' size="sm" placeholder="Category" class="w-48">
+                <option value="">All Categories</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->slug }}">{{ $category->name }}</option>
+                @endforeach
+            </flux:select>
             <flux:button variant="primary" wire:click='sync' icon="plus" size="sm">Sync</flux:button>
         </div>
+
         <div class="grid grid-cols-14 min-w-4xl font-semibold py-2 mt-4 gap-4">
             <div class="">#</div>
             <div class="col-span-3">Product</div>

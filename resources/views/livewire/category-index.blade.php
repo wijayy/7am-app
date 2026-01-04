@@ -5,14 +5,14 @@
         <div class="flex justify-end">
             <flux:button wire:click='sync' icon='refresh-cw' variant='primary' size='sm'>Sync</flux:button>
         </div>
-        <div class="grid grid-cols-12 font-semibold py-2 gap-4">
+        <div class="grid grid-cols-12 min-w-lg font-semibold py-2 gap-4">
             <div class="">#</div>
             <div class="col-span-6">Category Name</div>
             <div class="text-center">Status</div>
             <div class="text-center col-span-4">Action</div>
         </div>
         @foreach ($categories as $key => $item)
-            <div class="grid grid-cols-12 py-1 gap-4">
+            <div class="grid grid-cols-12 min-w-lg py-1 gap-4">
                 <div class="">{{ $key + 1 }}</div>
                 <div class="col-span-6">{{ $item->name }}</div>
                 <div class="text-center">

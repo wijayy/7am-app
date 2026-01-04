@@ -3,7 +3,7 @@
         <div class="w-[98%] mx-auto text-white py-10">
             <flux:container class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
                 <!-- Text -->
-                <div class="w-[60%]">
+                <div class="w-full text-center md:w-[60%]">
                     <h2 class="text-2xl font-semibold tracking-wide">SUBSCRIBE</h2>
                     <p class="text-gray-300 mt-2">
                         Join our mailing list and receive insights, promotions, and the newest

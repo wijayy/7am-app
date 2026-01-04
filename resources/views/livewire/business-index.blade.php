@@ -31,7 +31,7 @@
                 <flux:button class="w-full!" wire:click='resetFilter' variant="danger">Reset</flux:button>
             </div>
         </div>
-        <div class="space-y-2 mt-4">
+        <div class="space-y-2 mt-4 min-w-3xl">
             <div class="flex gap-4 py-2">
                 <div class="w-10">#</div>
                 <div class="w-1/6">Business Name</div>

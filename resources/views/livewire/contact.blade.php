@@ -3,7 +3,7 @@
         :url="'assets/2nd.jpg'"></flux:secondary-hero>
 
     <flux:container>
-        <div class="grid grid-cols-1 mt-4 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 mt-4 md:grid-cols-3 p-4 gap-4">
             <div class=" md:col-span-2">
                 <div class="mt-4 font-semibold text-lg md:text-xl">Contact Information</div>
                 <div class=" md:text-lg">+628113850303</div>

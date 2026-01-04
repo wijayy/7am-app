@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cache;
 use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Minimum;
 
 use function Pest\Laravel\session;
@@ -56,165 +57,180 @@ class Cart extends Component
 
     public function checkout()
     {
+        if ($this->isProcessing) {
+            return;
+        }
         $this->dispatch('modal-close', name: 'checkoutModal');
 
         $this->carts();
 
-        if (is_null(Auth::user()->bussinesses) || Auth::user()->bussinesses?->status != 'approved') {
-            Session::flash('error', 'Your business is not approved yet. Please contact admin.');
-            return;
-        }
-        // jika ada transaksi yang sudah melewati due_date (overdue) untuk user
-        // yang memiliki tenor, blokir checkout sampai pelunasan.
-        if ($this->checkPayment()) {
-            $this->isProcessing = false;
-            return;
-        }
+        // Acquire a cache lock to prevent concurrent checkout runs for the same user
+        $lockKey = 'checkout_user_' . Auth::id();
+        $lock = Cache::lock($lockKey, 10);
 
-        // return;
-
-        $this->setMinShippingDate();
-
-        // Validasi shipping date: pastikan tidak kurang dari minimal tanggal pengiriman
-        if (empty($this->shipping_date)) {
-            Session::flash('error', 'Please choose a shipping date.');
-            $this->isProcessing = false;
+        if (!$lock->get()) {
+            Session::flash('error', 'Checkout is already in progress. Please wait a moment and try again.');
             return;
         }
 
         try {
-            $minDate = Carbon::parse($this->min)->startOfDay();
-            $shipDate = Carbon::parse($this->shipping_date)->startOfDay();
-        } catch (\Throwable $e) {
-            Session::flash('error', 'Invalid shipping date format.');
-            $this->isProcessing = false;
-            return;
-        }
-
-        if ($shipDate->lt($minDate)) {
-            Session::flash('error', 'Shipping date must be on or after ' . $minDate->toDateString() . '. Please adjust shipping date.');
-            $this->isProcessing = false;
-            return;
-        }
-
-        if ($this->fulfillment === 'delivery') {
-            // ensure address is selected
-            if (empty($this->address) || is_null($this->address->id)) {
+            if (is_null(Auth::user()->bussinesses) || Auth::user()->bussinesses?->status != 'approved') {
+                Session::flash('error', 'Your business is not approved yet. Please contact admin.');
+                return;
+            }
+            // jika ada transaksi yang sudah melewati due_date (overdue) untuk user
+            // yang memiliki tenor, blokir checkout sampai pelunasan.
+            if ($this->checkPayment()) {
                 $this->isProcessing = false;
-                Session::flash('error', 'Please select a delivery address before checkout.');
                 return;
             }
 
-            if (Auth::user()->bussinesses->minimum_order > 0) {
-                if (Setting::where('key', 'use_tax_inclusive')->value('value') === 'true') {
-                    $subtotal = $this->subtotal;
-                } else {
-                    $subtotal = $this->subtotal + $this->packaging_fee;
-                }
+            // return;
 
-                if ($subtotal < Auth::user()->bussinesses->minimum_order) {
-                    Session::flash('error', 'Minimum order for your business is Rp. ' . number_format(Auth::user()->bussinesses->minimum_order, 0, ',', '.'));
-                    $this->isProcessing = false;
-                    return;
-                }
-            } else {
-                $minimumOrder = MinimumOrder::where('village_id', $this->address->village_id)->first();
+            $this->setMinShippingDate();
 
-                if ($minimumOrder && $this->subtotal < $minimumOrder->minimum) {
-                    Session::flash('error', 'Minimum order to ' . ($minimumOrder->village->name ?? '') . ' is Rp. ' . number_format($minimumOrder->minimum, 0, ',', '.'));
-                    $this->isProcessing = false;
-                    return;
-                }
+            // Validasi shipping date: pastikan tidak kurang dari minimal tanggal pengiriman
+            if (empty($this->shipping_date)) {
+                Session::flash('error', 'Please choose a shipping date.');
+                $this->isProcessing = false;
+                return;
             }
-        }
 
-        if ($this->isProcessing) {
-            return;
-        }
+            try {
+                $minDate = Carbon::parse($this->min)->startOfDay();
+                $shipDate = Carbon::parse($this->shipping_date)->startOfDay();
+            } catch (\Throwable $e) {
+                Session::flash('error', 'Invalid shipping date format.');
+                $this->isProcessing = false;
+                return;
+            }
 
-        $this->isProcessing = true;
-
-        try {
-            DB::beginTransaction();
-            $transaction = Transaction::create([
-                'subtotal' => $this->subtotal,
-                'transaction_number' => Transaction::transactionNumberGenerator(),
-                'discount' => $this->countDiscount(),
-                'total' => $this->subtotal + $this->packaging_fee - $this->countDiscount(),
-                'packaging_fee' => $this->packaging_fee,
-                'shipping_date' => $this->shipping_date,
-                'due_date' => Carbon::now()->addDays(Auth::user()->bussinesses->tenor)->setTime(19, 0)->toDateTimeString(),
-                'user_id' => Auth::user()->id,
-                'status' => 'ordered',
-                'note' => $this->note ?? null,
-                'coupon_id' => $this->c->id ?? null,
-
-            ]);
+            if ($shipDate->lt($minDate)) {
+                Session::flash('error', 'Shipping date must be on or after ' . $minDate->toDateString() . '. Please adjust shipping date.');
+                $this->isProcessing = false;
+                return;
+            }
 
             if ($this->fulfillment === 'delivery') {
-                // At this point address should be present (guarded above), but double-check to avoid exceptions.
-                $shippingData = [
-                    'user_id' => Auth::user()->id,
-                    'transaction_id' => $transaction->id,
-                    'name' => $this->address?->name ?? '',
-                    'type' => $this->fulfillment,
-                    'phone' => $this->address?->phone ?? '',
-                    'email' => Auth::user()->email,
-                    'address' => $this->address?->address ?? '',
-                ];
-            } else {
-                // pickup: ensure outlet exists
-                if (empty($this->outlet) || is_null($this->outlet->id)) {
+                // ensure address is selected
+                if (empty($this->address) || is_null($this->address->id)) {
                     $this->isProcessing = false;
-                    Session::flash('error', 'Please select an outlet before checkout.');
-                    DB::rollBack();
+                    Session::flash('error', 'Please select a delivery address before checkout.');
                     return;
                 }
 
-                $shippingData = [
+                if (Auth::user()->bussinesses->minimum_order > 0) {
+                    if (Setting::where('key', 'use_tax_inclusive')->value('value') === 'true') {
+                        $subtotal = $this->subtotal;
+                    } else {
+                        $subtotal = $this->subtotal + $this->packaging_fee;
+                    }
+
+                    if ($subtotal < Auth::user()->bussinesses->minimum_order) {
+                        Session::flash('error', 'Minimum order for your business is Rp. ' . number_format(Auth::user()->bussinesses->minimum_order, 0, ',', '.'));
+                        $this->isProcessing = false;
+                        return;
+                    }
+                } else {
+                    $minimumOrder = MinimumOrder::where('village_id', $this->address->village_id)->first();
+
+                    if ($minimumOrder && $this->subtotal < $minimumOrder->minimum) {
+                        Session::flash('error', 'Minimum order to ' . ($minimumOrder->village->name ?? '') . ' is Rp. ' . number_format($minimumOrder->minimum, 0, ',', '.'));
+                        $this->isProcessing = false;
+                        return;
+                    }
+                }
+            }
+
+
+
+            $this->isProcessing = true;
+
+            try {
+                DB::beginTransaction();
+                $transaction = Transaction::create([
+                    'subtotal' => $this->subtotal,
+                    'transaction_number' => Transaction::transactionNumberGenerator(),
+                    'discount' => $this->countDiscount(),
+                    'total' => $this->subtotal + $this->packaging_fee - $this->countDiscount(),
+                    'packaging_fee' => $this->packaging_fee,
+                    'shipping_date' => $this->shipping_date,
+                    'due_date' => Carbon::now()->addDays(Auth::user()->bussinesses->tenor)->setTime(19, 0)->toDateTimeString(),
                     'user_id' => Auth::user()->id,
-                    'transaction_id' => $transaction->id,
-                    'type' => $this->fulfillment,
-                    'name' => Auth::user()->bussinesses?->name ?? Auth::user()->name ?? '',
-                    'phone' => Auth::user()->phone,
-                    'email' => Auth::user()->email,
-                    'address' => $this->outlet?->name ?? '',
-                ];
-            }
+                    'status' => 'ordered',
+                    'note' => $this->note ?? null,
+                    'coupon_id' => $this->c->id ?? null,
 
-            $shipping = Shipping::create($shippingData);
-
-            foreach ($this->carts as $key => $item) {
-                TransactionItem::create([
-                    'transaction_id' => $transaction->id,
-                    'product_id' => $item->product_id,
-                    'qty' => $item->qty,
-                    'price' => $item->product->price,
-                    'subtotal' => $item->qty * $item->product->price
                 ]);
+
+                if ($this->fulfillment === 'delivery') {
+                    // At this point address should be present (guarded above), but double-check to avoid exceptions.
+                    $shippingData = [
+                        'user_id' => Auth::user()->id,
+                        'transaction_id' => $transaction->id,
+                        'name' => $this->address?->name ?? '',
+                        'type' => $this->fulfillment,
+                        'phone' => $this->address?->phone ?? '',
+                        'email' => Auth::user()->email,
+                        'address' => $this->address?->address ?? '',
+                    ];
+                } else {
+                    // pickup: ensure outlet exists
+                    if (empty($this->outlet) || is_null($this->outlet->id)) {
+                        $this->isProcessing = false;
+                        Session::flash('error', 'Please select an outlet before checkout.');
+                        DB::rollBack();
+                        return;
+                    }
+
+                    $shippingData = [
+                        'user_id' => Auth::user()->id,
+                        'transaction_id' => $transaction->id,
+                        'type' => $this->fulfillment,
+                        'name' => Auth::user()->bussinesses?->name ?? Auth::user()->name ?? '',
+                        'phone' => Auth::user()->phone,
+                        'email' => Auth::user()->email,
+                        'address' => $this->outlet?->name ?? '',
+                    ];
+                }
+
+                $shipping = Shipping::create($shippingData);
+
+                foreach ($this->carts as $key => $item) {
+                    TransactionItem::create([
+                        'transaction_id' => $transaction->id,
+                        'product_id' => $item->product_id,
+                        'qty' => $item->qty,
+                        'price' => $item->product->price,
+                        'subtotal' => $item->qty * $item->product->price
+                    ]);
+                }
+
+                if ($this->coupon ?? false) {
+                    CouponUsage::create(['coupon_id' => $this->c->id, 'transaction_id' => $transaction->id]);
+                }
+
+                // $this->carts()->delete();
+                ModelsCart::where('user_id', Auth::user()->id)->delete();
+
+                DB::commit();
+                Mail::to(Auth::user()->email)->queue(new \App\Mail\Order\Order($transaction->slug));
+                if (Auth::user()->bussinesses->tenor > 0) {
+                    $this->redirect(route('history'));
+                }
+                $this->redirect(route('checkout', ['slug' => $transaction->slug]));
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                $this->dispatch('modal-close', name: 'checkoutModal');
+                return;
+
+                if (config('app.debug', false))
+                    throw $th;
+                Session::flash('error', $th->getMessage());
             }
-
-            if ($this->coupon ?? false) {
-                CouponUsage::create(['coupon_id' => $this->c->id, 'transaction_id' => $transaction->id]);
-            }
-
-            // $this->carts()->delete();
-            ModelsCart::where('user_id', Auth::user()->id)->delete();
-
-            DB::commit();
-            Mail::to(Auth::user()->email)->queue(new \App\Mail\Order\Order($transaction->slug));
-            if (Auth::user()->bussinesses->tenor > 0) {
-                $this->redirect(route('history'));
-            }
-            $this->redirect(route('checkout', ['slug' => $transaction->slug]));
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            $this->dispatch('modal-close', name: 'checkoutModal');
-            return;
-
-            if (config('app.debug', false))
-                throw $th;
-            Session::flash('error', $th->getMessage());
+        } finally {
+            // ensure lock is always released so subsequent checkouts are allowed
+            $lock->release();
         }
     }
 

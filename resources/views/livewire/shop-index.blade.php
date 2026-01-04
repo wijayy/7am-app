@@ -16,7 +16,7 @@
 
     <flux:container class="mt-4">
         <div class="flex flex-wrap md:flex-nowrap gap-4">
-            <div class="w-full sticky top-24 md:w-1/4 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md h-fit">
+            <div class="w-full md:sticky top-24 md:w-1/4 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md h-fit">
                 <div class="font-semibold">Filters</div>
 
                 <div class="mt-4">Price Range</div>

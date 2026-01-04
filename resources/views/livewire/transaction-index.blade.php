@@ -138,18 +138,20 @@
                         </div>
                     </div>
                     <div class="">{{ $item->deleted_at }}</div>
-                    <div class="flex justify-center gap-4 mt-4">
+                    <div class="flex justify-center flex-wrap gap-4 mt-4">
 
                         @if (
                             !$item->deleted_at &&
                                 ($item->mekari_sync_status == 'pending' &&
                                     (now()->greaterThanOrEqualTo($item->created_at->addMinutes(5)) ||
                                         $item?->payment?->mekari_sync_status == 'paid')))
-                            <flux:button wire:click='importInvoice({{ $item->id }})'>Import Invoice to Jurnal
+                            <flux:button size="sm" wire:click='importInvoice({{ $item->id }})'>Import
+                                Invoice to Jurnal
                             </flux:button>
                         @endif
                         @if (!$item->deleted_at && $item->mekari_sync_status == 'pending' && $item->payment == null)
-                            <flux:button wire:click='showCancelOrderModal({{ $item->id }})' variant="danger">
+                            <flux:button size="sm" wire:click='showCancelOrderModal({{ $item->id }})'
+                                variant="danger">
                                 Delete Order
                             </flux:button>
                         @endif
@@ -158,14 +160,16 @@
                                 $item->mekari_sync_status == 'synced' &&
                                 $item->payment &&
                                 $item->payment->mekari_sync_status == 'pending')
-                            <flux:button wire:click='importPayment({{ $item->id }})'>Import Payment to Jurnal
+                            <flux:button size="sm" wire:click='importPayment({{ $item->id }})'>Import
+                                Payment to Jurnal
                             </flux:button>
                         @endif
 
                         {{-- <div class="">{{ $item->payment ?? 'null' }}</div> --}}
 
                         @if (!$item->payment)
-                            <flux:button wire:click="payTransaction({{ $item->id }})" variant="primary">
+                            <flux:button size="sm" wire:click="payTransaction({{ $item->id }})"
+                                variant="primary">
                                 Pay Transaction</flux:button>
                         @endif
                     </div>

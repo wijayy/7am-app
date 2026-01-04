@@ -21,7 +21,7 @@
             </div>
             <div class="w-full md:w-[60%]">
                 <h3 class="text-4xl text-black font-semibold dark:text-white">Register Your Account</h3>
-                <ol class="list-decimal list-outside pl-4 mt-4 space-y-2 text-white">
+                <ol class="list-decimal list-outside pl-4 mt-4 space-y-2 text-black dark:text-white ">
                     <li>Register</li>
                     <li>Fill in your business details</li>
                     <li>Upload required documents</li>
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col lg:flex-row justify-between mt-32 gap-8">
+        <div class="flex flex-col lg:flex-row justify-between mt-4 md:mt-32 gap-8">
             <!-- Left Content -->
             <div class="flex flex-col justify-between w-full lg:w-2/3 space-y-8 ">
                 <!-- Section 1 -->

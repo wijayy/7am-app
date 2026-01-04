@@ -5,7 +5,7 @@
             <flux:button variant="primary" icon="plus" href="{{ route('outlet.create') }}">Add Outlet
             </flux:button>
         </div>
-        <div class="flex gap-4 font-semibold py-2">
+        <div class="flex gap-4 min-w-3xl font-semibold py-2">
             <div class="w-10">#</div>
             <div class="w-1/4 ">Outlet</div>
             <div class="w-1/4 text-center">Address</div>
@@ -14,7 +14,7 @@
         </div>
 
         @foreach ($outlets as $key => $item)
-            <div class="flex gap-4 py-2 items-center">
+            <div class="flex gap-4 min-w-3xl py-2 items-center">
                 <div class="w-10">{{ $key + 1 }}</div>
                 <div class="w-1/4 ">{{ $item->name }}</div>
                 <div class="w-1/4 ">{{ $item->address }}</div>

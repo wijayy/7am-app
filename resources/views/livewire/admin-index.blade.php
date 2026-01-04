@@ -1,12 +1,13 @@
+-- Active: 1764369064570@@127.0.0.1@3306
 <div class="space-y-4">
     <flux:session>{{ $title }}</flux:session>
-    <div class="">
+    <flux:container-sidebar class="">
         <div class="flex justify-end">
             <flux:button variant="primary" icon="plus" wire:click="$dispatch('createModal').global">Add Admin
             </flux:button>
         </div>
         <div class="mt-4">
-            <div class="flex gap-4 font-semibold py-2">
+            <div class="flex gap-4 min-w-2xl font-semibold py-2">
                 <div class="">#</div>
                 <div class="w-1/5">Name</div>
                 <div class="w-1/5 text-center">Email</div>
@@ -16,7 +17,7 @@
             </div>
 
             @foreach ($admins as $item)
-                <div class="flex gap-4 py-2">
+                <div class="flex gap-4 min-w-2xl py-2">
                     <div class="">{{ $loop->iteration }}</div>
                     <div class="w-1/5">{{ $item->name }}</div>
                     <div class="w-1/5 text-center">{{ $item->email }}</div>
@@ -50,6 +51,6 @@
                 </flux:modal>
             @endforeach
         </div>
-    </div>
+    </flux:container-sidebar>
     @livewire('admin-create')
 </div>
