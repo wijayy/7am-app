@@ -84,7 +84,7 @@ class Product extends Model
         $query->when($filters["set_category"] ?? null, function ($query, $setCategoryId) {
             return $query->whereHas('category', function ($q) use ($setCategoryId) {
                 $q->whereHas('setCategories', function ($sq) use ($setCategoryId) {
-                    $sq->where('id', $setCategoryId); // gunakan 'id', bukan 'set_categories.id'
+                    $sq->where('set_categories.id', $setCategoryId);
                 });
             });
         });
