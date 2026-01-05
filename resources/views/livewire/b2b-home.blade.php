@@ -1,5 +1,5 @@
 <div>
-    <div class="bg-center bg-no-repeat bg-cover w-full h-screen flex"
+    <div class="bg-center relative bg-no-repeat bg-cover w-full h-screen flex"
         style="background-image: url({{ asset('assets/b2b/landing/banner.png') }}); background-position: 50% 45%;">
         <flux:container class="flex h-full items-center justify-start">
             <div

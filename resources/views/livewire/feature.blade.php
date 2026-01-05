@@ -1,5 +1,5 @@
 <div
-    class="bg-white dark:bg-gray-700 w-full md:w-[70%] shadow-md  md:absolute md:top-0 md:left-[50%] md:-translate-x-[50%] md:-mt-32 flex justify-center items-center flex-wrap lg:flex-nowrap p-10 rounded-xl gap-4">
+    class="bg-white dark:bg-gray-700 w-full md:w-[70%] shadow-md  md:absolute md:-bottom-0 md:translate-y-1/2 md:left-[50%] md:-translate-x-[50%]  flex justify-center items-center flex-wrap lg:flex-nowrap p-10 rounded-xl gap-4">
     <div class="title">
         <h2 class="text-3xl font-semibold">Why Choose Us?</h2>
     </div>
