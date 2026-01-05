@@ -10,10 +10,10 @@
     <flux:separator text="Products"></flux:separator>
     <div class="">
         @foreach ($transaction->items as $key => $itm)
-            <div class="grid grid-cols-4 text-xs items-center"
-                x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90"
-                x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-300"
-                x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
+            <div class="grid grid-cols-4 text-xs items-center" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-90">
                 <div class="flex items-center col-span-2 gap-2">
                     <div class="size-20 rounded bg-center bg-cover bg-no-repeat"
                         style="background-image: url({{ asset("storage/{$itm->product->image}") }})">
@@ -63,12 +63,11 @@
 
 
     <div class="flex mt-4 justify-center">
-        <flux:button id="pay-button" size="sm" variant="primary" class="">Pay
-        </flux:button>
+        {{-- <flux:button id="pay-button" size="sm" variant="primary" class="">Pay
+        </flux:button> --}}
     </div>
 
-    <script src="{{ env('MIDTRANS_TARGET_LINK') }}" data-client-key="{{ config('midtrans.clientKey') }}">
-    </script>
+    <script src="{{ env('MIDTRANS_TARGET_LINK') }}" data-client-key="{{ config('midtrans.clientKey') }}"></script>
     <script type="text/javascript">
         document.getElementById('pay-button').addEventListener('click', function() {
             window.snap.pay('{{ $snapToken }}', {

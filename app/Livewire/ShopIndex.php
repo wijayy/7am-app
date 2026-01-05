@@ -86,11 +86,11 @@ class ShopIndex extends Component
             'set_category' => $setCategoryId
         ])->paginate(24)->withQueryString();
 
-        dd([
-            'auth' => Auth::id(),
-            'business_set_category' => \App\Models\Bussiness::where('user_id', Auth::id())->first(),
-            'final_set_category_id' => $setCategoryId,
-        ]);
+        // dd([
+        //     'auth' => Auth::id(),
+        //     'business_set_category' => \App\Models\Bussiness::where('user_id', Auth::id())->first(),
+        //     'final_set_category_id' => $setCategoryId,
+        // ]);
 
         return view('livewire.shop-index', compact('products'))->layout('components.layouts.app.header', ['title' => "Shop"]);
     }
