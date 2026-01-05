@@ -67,10 +67,14 @@ class ShopIndex extends Component
         // Ambil set_category terbaru langsung dari DB (menghindari relasi Auth yang stale)
         $setCategoryId = null;
         if (Auth::check()) {
-            $setCategoryId = \App\Models\Bussiness::where('user_id', Auth::id())->value('set_category_id');
+            $setCategoryId = \App\Models\Bussiness::where('user_id', Auth::id())
+                ->whereNotNull('set_category_id')
+                ->value('set_category_id');
         }
-        $setCategoryId = $setCategoryId ?? Setting::where('key', 'default_set_category')->value('value');
 
+        if (!$setCategoryId) {
+            $setCategoryId = Setting::where('key', 'default_set_category')->value('value');
+        }
         // Perbarui daftar kategori berdasarkan set_category yang aktif
         $this->categories = SetCategory::find($setCategoryId)?->categories ?? collect();
 
@@ -81,6 +85,12 @@ class ShopIndex extends Component
             'max' => $this->max,
             'set_category' => $setCategoryId
         ])->paginate(24)->withQueryString();
+
+        dd([
+            'auth' => Auth::id(),
+            'business_set_category' => \App\Models\Bussiness::where('user_id', Auth::id())->first(),
+            'final_set_category_id' => $setCategoryId,
+        ]);
 
         return view('livewire.shop-index', compact('products'))->layout('components.layouts.app.header', ['title' => "Shop"]);
     }
