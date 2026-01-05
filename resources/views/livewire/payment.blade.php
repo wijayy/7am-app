@@ -1,5 +1,4 @@
 <div class=" space-y-2 text-sm">
-
     <div class="flex justify-between">
         <div class=" font-semibold text-lg">{{ $transaction->number }}</div>
     </div>
@@ -59,8 +58,6 @@
             <div class="">Rp. {{ number_format($transaction->total, 0, ',', '.') }}</div>
         </div>
     </div>
-
-
 
     <div class="flex mt-4 justify-center">
         {{-- <flux:button id="pay-button" size="sm" variant="primary" class="">Pay
