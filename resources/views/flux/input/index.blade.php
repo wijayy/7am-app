@@ -23,10 +23,10 @@
     'aspect' => null,
     'only_number' => null,
     'format_number' => null,
+    'required' => $attributes['required'] ?? false,
 ])
 
 @php
-
     // There are a few loading scenarios that this covers:
     // If `:loading="false"` then never show loading.
     // If `:loading="true"` then always show loading.
@@ -147,7 +147,7 @@
     <flux:input.file :$attributes :$name :$size :$aspect />
 </flux:with-field>
 <?php elseif ($as !== 'button'): ?>
-<flux:with-field :$attributes :$name>
+<flux:with-field :$attributes :$required :$name>
     <div {{ $attributes->only('class')->class('w-full relative block group/input') }} data-flux-input>
         <?php if (is_string($iconLeading)): ?>
         <div

@@ -1,5 +1,14 @@
 @php
-    extract(Flux::forwardedAttributes($attributes, ['name', 'descriptionTrailing', 'description', 'label', 'badge']));
+    extract(
+        Flux::forwardedAttributes($attributes, [
+            'name',
+            'descriptionTrailing',
+            'description',
+            'label',
+            'badge',
+            'required',
+        ]),
+    );
 @endphp
 
 @php $descriptionTrailing = $descriptionTrailing ??= $attributes->pluck('description:trailing'); @endphp
@@ -10,12 +19,15 @@
     'description' => null,
     'label' => null,
     'badge' => null,
+    'required' => true,
 ])
 
 <?php if (isset($label) || isset($description)): ?>
 <flux:field :attributes="Flux::attributesAfter('field:', $attributes, [])">
     <?php if (isset($label)): ?>
-    <flux:label :attributes="Flux::attributesAfter('label:', $attributes, ['badge' => $badge])">{{ $label }}
+    <flux:label
+        :attributes="Flux::attributesAfter('label:', $attributes, ['badge' => $badge, 'required' => $required])">
+        {{ $label }}
     </flux:label>
     <?php endif; ?>
 
@@ -30,7 +42,7 @@
     <flux:description :attributes="Flux::attributesAfter('description:', $attributes, [])">{{ $descriptionTrailing }}
     </flux:description>
     <?php endif; ?>
-    
+
     <flux:error :attributes="Flux::attributesAfter('error:', $attributes, ['name' => $name])" />
 </flux:field>
 <?php else: ?>
