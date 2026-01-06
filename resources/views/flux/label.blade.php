@@ -17,7 +17,7 @@
     {{ $slot }}
 
     <?php if (isset($required) && $required): ?>
-    <span class="ms-1.5 text-lg text-red-500" aria-hidden="true">*</span>
+    <span class="ms-1.5 text-red-500" aria-hidden="true">*</span>
     <?php endif; ?>
 
     <?php if (is_string($badge)): ?>
