@@ -68,7 +68,7 @@ class CouponCreate extends Component
             $this->title = "Add new coupon";
         }
 
-        $this->categories = Category::with('products')->get();
+        $this->categories = Category::with('products')->where('active', true)->get();
         $this->products = Product::all();
         $this->selectedProducts = CouponProduct::where('coupon_id', $this->coupon)
             ->pluck('product_id')
