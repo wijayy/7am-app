@@ -54,19 +54,33 @@
         <flux:separator text="Applied discount">
         </flux:separator>
 
-        <div class="flex justify-center">
+        <div class="flex justify-center gap-2">
             <flux:button wire:click='selectAll'>Select All</flux:button>
+            <flux:button wire:click='deselectAll' variant="danger">Deselect All</flux:button>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 md:grid-cols-4 mt-4">
-            @foreach ($products as $item)
-                <div class="p-2 flex border gap-2 items-center rounded-lg cursor-pointer
-                {{ in_array($item->id, $selectedProducts) ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' : 'border-gray-200' }}"
-                    wire:click="toggleProduct({{ $item->id }})">
-                    <div class="size-10 bg-center bg-no-repeat bg-cover rounded"
-                        style="background-image: url({{ $item->image_url }});">
+        <div class="space-y-4 mt-4">
+            @foreach ($categories as $category)
+                <div class="p-3 border rounded">
+                    <div class="flex justify-between items-center">
+                        <div class="font-semibold">{{ $category->name }}</div>
+                        <div>
+                            <flux:button size="sm" wire:click="selectCategory({{ $category->id }})">Toggle Category
+                            </flux:button>
+                        </div>
                     </div>
-                    <div>{{ $item->name }}</div>
+                    <div class="grid grid-cols-2 gap-4 md:grid-cols-4 mt-2">
+                        @foreach ($category->products as $item)
+                            <div class="p-2 flex border gap-2 items-center rounded-lg cursor-pointer
+                            {{ in_array($item->id, $selectedProducts) ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' : 'border-gray-200' }}"
+                                wire:click="toggleProduct({{ $item->id }})">
+                                <div class="size-10 bg-center bg-no-repeat bg-cover rounded"
+                                    style="background-image: url({{ $item->image_url }});">
+                                </div>
+                                <div>{{ $item->name }}</div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             @endforeach
         </div>

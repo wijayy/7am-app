@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Coupon;
 use App\Models\CouponProduct;
 use App\Models\Product;
+use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
@@ -14,7 +15,7 @@ use PHPUnit\Framework\Constraint\Count;
 class CouponCreate extends Component
 {
 
-    public $coupon, $slug, $title, $products, $selectedProducts;
+    public $coupon, $slug, $title, $products, $selectedProducts, $categories;
 
     #[Validate('required|string')]
     public $code = '';
@@ -67,6 +68,7 @@ class CouponCreate extends Component
             $this->title = "Add new coupon";
         }
 
+        $this->categories = Category::with('products')->get();
         $this->products = Product::all();
         $this->selectedProducts = CouponProduct::where('coupon_id', $this->coupon)
             ->pluck('product_id')
@@ -86,12 +88,31 @@ class CouponCreate extends Component
 
     public function selectAll()
     {
-        $this->selectedProducts = collect($this->products)->pluck('id')->toArray();
+        if (!empty($this->categories) && $this->categories->count()) {
+            $this->selectedProducts = $this->categories->flatMap(function ($cat) {
+                return $cat->products->pluck('id');
+            })->toArray();
+        } else {
+            $this->selectedProducts = collect($this->products)->pluck('id')->toArray();
+        }
     }
 
     public function deselectAll()
     {
         $this->selectedProducts = [];
+    }
+
+    public function selectCategory($categoryId)
+    {
+        $category = $this->categories->firstWhere('id', $categoryId);
+        if (!$category) return;
+        $ids = $category->products->pluck('id')->toArray();
+        $allSelected = count(array_intersect($ids, $this->selectedProducts)) === count($ids);
+        if ($allSelected) {
+            $this->selectedProducts = array_diff($this->selectedProducts, $ids);
+        } else {
+            $this->selectedProducts = array_unique(array_merge($this->selectedProducts, $ids));
+        }
     }
 
     public function save()
