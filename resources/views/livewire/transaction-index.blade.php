@@ -91,6 +91,7 @@
                     <flux:separator text="Shipping Info"></flux:separator>
                     <div class="mt-2 text-xs md:text-sm">
                         <div class="">Transaction Number: {{ $item->transaction_number }}</div>
+                        <div class="">Order Time: {{ $item->created_at->format('Y-m-d H:i') }}</div>
                         <div class="">Shipping Date: {{ $item->shipping_date->format('Y-m-d') }}</div>
                         <div class="">Order Status: {{ $item->status }}</div>
                     </div>
